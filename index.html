@@ -15,12 +15,16 @@
 </head>
 <body>
     <header>
-        <h1>Caleb Stone</h1>
-        <a href="about.html">About</a>
-        <a href="galleries.html">Galleries</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="contact.html">Contact</a>
-        
+        <div class="header-left">
+            <h1 class="header-title">Caleb Stone</h1>
+        </div>
+        <button class="header-menu-btn" aria-label="Menu">&#9776;</button>
+        <nav class="header-nav">
+            <a href="about.html">About</a>
+            <a href="galleries.html">Galleries</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="contact.html">Contact</a>
+        </nav>
     </header>
     <section class="about-me">
         <h2>About Me</h2>
@@ -35,5 +39,19 @@
         <p>&copy; 2025 Stones Photos</p>
     </footer>
     <script src="script.js"></script>  <!-- Links to your JS, empty for now -->
+    <script>
+    // Mobile menu toggle
+    document.querySelector('.header-menu-btn').onclick = function() {
+      document.querySelector('.header-nav').classList.toggle('show');
+    };
+    // Optional: close menu when clicking a link (on mobile)
+    document.querySelectorAll('.header-nav a').forEach(link => {
+      link.onclick = () => {
+        if(window.innerWidth <= 700) {
+          document.querySelector('.header-nav').classList.remove('show');
+        }
+      };
+    });
+    </script>
 </body>
 </html>
