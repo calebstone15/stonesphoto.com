@@ -8,12 +8,20 @@ body {
 }
 
 header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
     background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
     color: #fff;
     text-align: left;
     padding: 32px 20px 24px 20px;
     box-shadow: 0 4px 12px rgba(33, 147, 176, 0.15);
     letter-spacing: 2px;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
 }
 
 .header-title {
@@ -28,6 +36,30 @@ header {
     font-style: italic;
     color: #e0f7fa;
     letter-spacing: 1px;
+}
+
+.header-nav {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    margin-top: 6px;
+}
+
+.header-nav a {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 10px 22px;
+    border-radius: 24px;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(33, 147, 176, 0.10);
+    letter-spacing: 1px;
+}
+.header-nav a:hover {
+    background: #e0f7fa;
+    color: #2193b0;
 }
 
 .gallery {
