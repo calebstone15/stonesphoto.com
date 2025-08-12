@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stones Photos - Photography Portfolio</title>
+    <title>Pricing - Caleb Stone Photography</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="Websitelogo.ico">
     <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap" rel="stylesheet">
@@ -14,6 +14,7 @@
     </style>
 </head>
 <body>
+    <!-- header copied from index.html -->
     <header>
         <div class="header-left">
             <h1 class="header-title">Caleb Stone</h1>
@@ -27,19 +28,16 @@
             <a href="contact.html">Contact</a>
         </nav>
     </header>
-    <section class="about-me">
-        <h2>About Me</h2>
-        <div class="about-photo">
-            <img src="aboutmephoto.jpg" />
-        </div>
-        <p>
-            Hello, I'm Caleb and have been a photographer for almost a decade. I do many different types of photography from engagements to rocket launches. My goal is to give you a non traditional photo experience where you get the highest quality and lowest price photos. For me, this is a fun side gig that gets me away from my typical engineering mindset where I can relax and enjoy the art of photography.
-        </p>
-    </section>
+
+    <main>
+        <!-- ...existing pricing page content goes here... -->
+    </main>
+
+    <!-- footer copied from index.html -->
     <footer>
         <p>&copy; 2025 Stones Photos</p>
     </footer>
-    <script src="script.js"></script>  <!-- Links to your JS, empty for now -->
+    <script src="script.js"></script>
     <script>
     // Mobile menu toggle
     document.querySelector('.header-menu-btn').onclick = function() {
@@ -48,7 +46,7 @@
     // Optional: close menu when clicking a link (on mobile)
     document.querySelectorAll('.header-nav a').forEach(link => {
       link.onclick = () => {
-        if(window.innerWidth <= 700) {
+        if (window.innerWidth <= 700) {
           document.querySelector('.header-nav').classList.remove('show');
         }
       };

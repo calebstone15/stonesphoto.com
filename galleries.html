@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Galleries - Caleb Stone Photography</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="Websitelogo.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap" rel="stylesheet">
     <style>
+      body, h1, h2, p, .about-photo, footer {
+        font-family: 'Old Standard TT', serif !important;
+      }
       .carousel-container {
         position: relative;
         width: 100%;
@@ -72,17 +77,22 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="header-left">
-            <h1 class="header-title">Caleb Stone</h1>
-        </div>
-        <nav class="header-nav">
-            <a href="about.html">About</a>
-            <a href="galleries.html">Galleries</a>
-            <a href="pricing.html">Pricing</a>
-            <a href="contact.html">Contact</a>
-        </nav>
-    </header>
+
+  <!-- site header/nav copied from index.html -->
+  <header>
+    <div class="header-left">
+      <h1 class="header-title">Caleb Stone</h1>
+    </div>
+    <button class="header-menu-btn" aria-label="Menu">&#9776;</button>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="galleries.html">Galleries</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
     <main>
         <section class="gallery-section">
             <h2>Couples</h2>
@@ -155,10 +165,24 @@
             </div>
         </section>
     </main>
-    <footer>
-        <!-- ...existing code for footer... -->
-    </footer>
-    <script>
+  <!-- site footer copied from index.html -->
+  <footer>
+    <p>&copy; 2025 Stones Photos</p>
+  </footer>
+  <script src="script.js"></script>
+  <script>
+    // Mobile menu toggle
+    document.querySelector('.header-menu-btn').onclick = function() {
+      document.querySelector('.header-nav').classList.toggle('show');
+    };
+    // Close mobile menu on link click
+    document.querySelectorAll('.header-nav a').forEach(link => {
+      link.onclick = () => {
+        if (window.innerWidth <= 700) {
+          document.querySelector('.header-nav').classList.remove('show');
+        }
+      };
+    });
     // Simple carousel logic for all carousels
     document.querySelectorAll('.carousel-container').forEach(container => {
         const track = container.querySelector('.carousel-track');

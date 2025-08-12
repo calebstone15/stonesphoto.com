@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Caleb Stone Photography</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="Websitelogo.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body, h1, h2, p, .about-photo, footer {
+            font-family: 'Old Standard TT', serif !important;
+        }
+        
+        .contact-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .contact-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #23395d;
+        }
+        
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .contact-form, .contact-info {
+            background: linear-gradient(135deg, #fff 0%, #f8f8f8 100%);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(33, 147, 176, 0.10);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #23395d;
+        }
+        
+        .form-group input, 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Old Standard TT', serif;
+            font-size: 1rem;
+            background: #fff;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .form-group input:focus, 
+        .form-group textarea:focus, 
+        .form-group select:focus {
+            border-color: #2193b0;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(33, 147, 176, 0.2);
+        }
+        
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        .form-error {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #23395d 0%, #181d2f 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: 'Old Standard TT', serif;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(24, 29, 47, 0.3);
+        }
+        
+        .contact-info h2 {
+            color: #23395d;
+            margin-top: 0;
+        }
+        
+        .contact-info p {
+            line-height: 1.7;
+            color: #4e5a6d;
+        }
+        
+        .contact-details {
+            list-style: none;
+            padding: 0;
+            margin-top: 30px;
+        }
+        
+        .contact-details li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #23395d;
+        }
+        
+        .contact-details .icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            color: #181d2f;
+        }
+        
+        .contact-details a {
+            color: #23395d;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .contact-details a:hover {
+            color: #2193b0;
+        }
+        
+        @media (max-width: 768px) {
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header from index.html -->
+    <header>
+        <div class="header-left">
+            <h1 class="header-title">Caleb Stone</h1>
+        </div>
+        <button class="header-menu-btn" aria-label="Menu">&#9776;</button>
+        <nav class="header-nav">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="galleries.html">Galleries</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <div class="contact-container">
+        <h1 class="contact-title">Get In Touch</h1>
+        
+        <div class="contact-wrapper">
+            <div class="contact-form">
+                <h2>Send a Message</h2>
+                <form id="contactForm" action="#" method="POST" novalidate>
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required>
+                        <div class="form-error" id="nameError">Please enter your name</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                        <div class="form-error" id="emailError">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number (Optional)</label>
+                        <input type="tel" id="phone" name="phone">
+                        <div class="form-error" id="phoneError">Please enter a valid phone number</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="interest">What are you interested in?</label>
+                        <select id="interest" name="interest" required>
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="Couples">Couples/Engagement</option>
+                            <option value="Vehicles">Vehicles</option>
+                            <option value="Landscapes">Landscapes</option>
+                            <option value="Portraits">Portraits</option>
+                            <option value="Nature">Nature</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="form-error" id="interestError">Please select your area of interest</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" name="message" required></textarea>
+                        <div class="form-error" id="messageError">Please enter your message</div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+            
+            <div class="contact-info">
+                <h2>Contact Information</h2>
+                <p>Thank you for your interest in my photography services. If you prefer to contact me directly, feel free to use any of the methods below. I look forward to hearing from you and discussing how we can work together to create beautiful images.</p>
+                
+                <ul class="contact-details">
+                    <li>
+                        <span class="icon">📧</span>
+                        <span><a href="mailto:stonephotography15@gmail.com">stonephotography15@gmail.com</a></span>
+                    </li>
+                    <li>
+                        <span class="icon">📱</span>
+                        <span><a href="tel:+5027779035">(502) 777-9035</a></span>
+                    </li>
+                    <li>
+                        <span class="icon">📸</span>
+                        <span><a href="https://instagram.com/cstonesphotos" target="_blank">@cstonesphotos</a></span>
+                    </li>
+                    <li>
+                        <span class="icon">📍</span>
+                        <span>Daytona Beach, Florida</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer from index.html -->
+    <footer>
+        <p>&copy; 2025 Stones Photos</p>
+    </footer>
+    
+    <script src="script.js"></script>
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.header-menu-btn').onclick = function() {
+            document.querySelector('.header-nav').classList.toggle('show');
+        };
+        
+        // Close mobile menu on link click
+        document.querySelectorAll('.header-nav a').forEach(link => {
+            link.onclick = () => {
+                if (window.innerWidth <= 700) {
+                    document.querySelector('.header-nav').classList.remove('show');
+                }
+            };
+        });
+        
+        // Form validation
+        const contactForm = document.getElementById('contactForm');
+        
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            let isValid = true;
+            
+            // Name validation
+            const name = document.getElementById('name');
+            if (name.value.trim() === '') {
+                document.getElementById('nameError').style.display = 'block';
+                name.style.borderColor = '#e74c3c';
+                isValid = false;
+            } else {
+                document.getElementById('nameError').style.display = 'none';
+                name.style.borderColor = '#ddd';
+            }
+            
+            // Email validation
+            const email = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value)) {
+                document.getElementById('emailError').style.display = 'block';
+                email.style.borderColor = '#e74c3c';
+                isValid = false;
+            } else {
+                document.getElementById('emailError').style.display = 'none';
+                email.style.borderColor = '#ddd';
+            }
+            
+            // Phone validation (optional)
+            const phone = document.getElementById('phone');
+            if (phone.value.trim() !== '') {
+                const phoneRegex = /^[\d\s\-\(\)]+$/;
+                if (!phoneRegex.test(phone.value)) {
+                    document.getElementById('phoneError').style.display = 'block';
+                    phone.style.borderColor = '#e74c3c';
+                    isValid = false;
+                } else {
+                    document.getElementById('phoneError').style.display = 'none';
+                    phone.style.borderColor = '#ddd';
+                }
+            }
+            
+            // Interest validation
+            const interest = document.getElementById('interest');
+            if (interest.value === '') {
+                document.getElementById('interestError').style.display = 'block';
+                interest.style.borderColor = '#e74c3c';
+                isValid = false;
+            } else {
+                document.getElementById('interestError').style.display = 'none';
+                interest.style.borderColor = '#ddd';
+            }
+            
+            // Message validation
+            const message = document.getElementById('message');
+            if (message.value.trim() === '') {
+                document.getElementById('messageError').style.display = 'block';
+                message.style.borderColor = '#e74c3c';
+                isValid = false;
+            } else {
+                document.getElementById('messageError').style.display = 'none';
+                message.style.borderColor = '#ddd';
+            }
+            
+            // If all validations pass
+            if (isValid) {
+                // In a real scenario, you'd submit the form to your server
+                // Here we'll just show an alert for demonstration
+                alert('Thank you for your message! I will get back to you soon.');
+                contactForm.reset();
+                
+                // In production, you would use:
+                // contactForm.submit();
+            }
+        });
+        
+        // Clear validation errors when user starts typing
+        const inputs = contactForm.querySelectorAll('input, textarea, select');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                const errorId = this.id + 'Error';
+                const errorElement = document.getElementById(errorId);
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                    this.style.borderColor = '#ddd';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
