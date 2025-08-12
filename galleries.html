@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galleries - Caleb Stone Photography</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+      .carousel-container {
+        position: relative;
+        width: 100%;
+        max-width: 700px;
+        margin: 0 auto 48px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .carousel-arrow {
+        background: #fff;
+        border: 1px solid #bdbdbd;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        font-size: 2rem;
+        color: #181d2f;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s, color 0.2s;
+        margin: 0 12px;
+        z-index: 2;
+      }
+      .carousel-arrow:hover {
+        background: #e0f7fa;
+        color: #2193b0;
+      }
+      .carousel-track {
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        width: 560px; /* 16:9 aspect for 320px height is 568px, but 560px is close and round */
+        height: 315px; /* 16:9 aspect ratio */
+        position: relative;
+      }
+      .carousel-image {
+        flex: 0 0 560px;
+        width: 560px;
+        height: 315px;
+        object-fit: cover;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(33,147,176,0.18);
+        opacity: 0.5;
+        transform: scale(0.7);
+        transition: transform 0.3s, opacity 0.3s;
+        margin: 0 10px;
+        z-index: 1;
+        background: #e3e3e3;
+      }
+      .carousel-image.active {
+        opacity: 1;
+        transform: scale(1.1);
+        z-index: 2;
+        border: 3px solid #2193b0;
+      }
+      .gallery-section {
+        text-align: center;
+      }
+      .gallery-section h2 {
+        text-align: center;
+      }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <h1 class="header-title">Caleb Stone</h1>
+        </div>
+        <nav class="header-nav">
+            <a href="about.html">About</a>
+            <a href="galleries.html">Galleries</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+    <main>
+        <section class="gallery-section">
+            <h2>Couples</h2>
+            <div class="carousel-container" data-gallery="couples">
+                <button class="carousel-arrow left" aria-label="Previous">&#8592;</button>
+                <div class="carousel-track" id="carousel-couples">
+                    <img src="gandp.jpg" alt="Couples Photo 1" class="carousel-image active">
+                    <img src="images/couples2.jpg" alt="Couples Photo 2" class="carousel-image">
+                    <img src="images/couples3.jpg" alt="Couples Photo 3" class="carousel-image">
+                    <img src="images/couples4.jpg" alt="Couples Photo 4" class="carousel-image">
+                    <img src="images/couples5.jpg" alt="Couples Photo 5" class="carousel-image">
+                </div>
+                <button class="carousel-arrow right" aria-label="Next">&#8594;</button>
+            </div>
+        </section>
+        <section class="gallery-section">
+            <h2>Vehicles</h2>
+            <div class="carousel-container" data-gallery="vehicles">
+                <button class="carousel-arrow left" aria-label="Previous">&#8592;</button>
+                <div class="carousel-track" id="carousel-vehicles">
+                    <img src="tritonrocket.jpg" alt="Vehicles Photo 1" class="carousel-image active">
+                    <img src="images/vehicles2.jpg" alt="Vehicles Photo 2" class="carousel-image">
+                    <img src="images/vehicles3.jpg" alt="Vehicles Photo 3" class="carousel-image">
+                    <img src="images/vehicles4.jpg" alt="Vehicles Photo 4" class="carousel-image">
+                    <img src="images/vehicles5.jpg" alt="Vehicles Photo 5" class="carousel-image">
+                </div>
+                <button class="carousel-arrow right" aria-label="Next">&#8594;</button>
+            </div>
+        </section>
+        <section class="gallery-section">
+            <h2>Landscapes</h2>
+            <div class="carousel-container" data-gallery="landscapes">
+                <button class="carousel-arrow left" aria-label="Previous">&#8592;</button>
+                <div class="carousel-track" id="carousel-landscapes">
+                    <img src="beachsunrise.jpeg" alt="Landscapes Photo 1" class="carousel-image active">
+                    <img src="images/landscapes2.jpg" alt="Landscapes Photo 2" class="carousel-image">
+                    <img src="images/landscapes3.jpg" alt="Landscapes Photo 3" class="carousel-image">
+                    <img src="images/landscapes4.jpg" alt="Landscapes Photo 4" class="carousel-image">
+                    <img src="images/landscapes5.jpg" alt="Landscapes Photo 5" class="carousel-image">
+                </div>
+                <button class="carousel-arrow right" aria-label="Next">&#8594;</button>
+            </div>
+        </section>
+        <section class="gallery-section">
+            <h2>Portraits</h2>
+            <div class="carousel-container" data-gallery="portraits">
+                <button class="carousel-arrow left" aria-label="Previous">&#8592;</button>
+                <div class="carousel-track" id="carousel-portraits">
+                    <img src="racedriver.jpeg" alt="Portraits Photo 1" class="carousel-image active">
+                    <img src="kiki.jpeg" alt="Portraits Photo 2" class="carousel-image">
+                    <img src="images/portraits3.jpg" alt="Portraits Photo 3" class="carousel-image">
+                    <img src="images/portraits4.jpg" alt="Portraits Photo 4" class="carousel-image">
+                    <img src="images/portraits5.jpg" alt="Portraits Photo 5" class="carousel-image">
+                </div>
+                <button class="carousel-arrow right" aria-label="Next">&#8594;</button>
+            </div>
+        </section>
+        <section class="gallery-section">
+            <h2>Nature</h2>
+            <div class="carousel-container" data-gallery="nature">
+                <button class="carousel-arrow left" aria-label="Previous">&#8592;</button>
+                <div class="carousel-track" id="carousel-nature">
+                    <img src="eclipse.jpeg" alt="Nature Photo 1" class="carousel-image active">
+                    <img src="images/nature2.jpg" alt="Nature Photo 2" class="carousel-image">
+                    <img src="images/nature3.jpg" alt="Nature Photo 3" class="carousel-image">
+                    <img src="images/nature4.jpg" alt="Nature Photo 4" class="carousel-image">
+                    <img src="images/nature5.jpg" alt="Nature Photo 5" class="carousel-image">
+                </div>
+                <button class="carousel-arrow right" aria-label="Next">&#8594;</button>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <!-- ...existing code for footer... -->
+    </footer>
+    <script>
+    // Simple carousel logic for all carousels
+    document.querySelectorAll('.carousel-container').forEach(container => {
+        const track = container.querySelector('.carousel-track');
+        const images = Array.from(track.querySelectorAll('.carousel-image'));
+        let current = 0;
+
+        function updateCarousel() {
+            images.forEach((img, idx) => {
+                img.classList.toggle('active', idx === current);
+            });
+            // Scroll to center the active image
+            track.scrollLeft = images[current].offsetLeft - (track.offsetWidth - images[current].offsetWidth) / 2;
+        }
+
+        container.querySelector('.carousel-arrow.left').onclick = () => {
+            current = (current - 1 + images.length) % images.length;
+            updateCarousel();
+        };
+        container.querySelector('.carousel-arrow.right').onclick = () => {
+            current = (current + 1) % images.length;
+            updateCarousel();
+        };
+        // Optional: allow click on image to make it active
+        images.forEach((img, idx) => {
+            img.onclick = () => {
+                current = idx;
+                updateCarousel();
+            };
+        });
+        updateCarousel();
+    });
+    </script>
+</body>
+</html>

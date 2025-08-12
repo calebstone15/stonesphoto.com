@@ -1,65 +1,93 @@
 body {
-    font-family: 'Montserrat', Arial, sans-serif;
+    font-family: 'Old Standard TT', serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(135deg, #6dd5ed 0%, #2193b0 100%);
+    background: linear-gradient(135deg, #e3e3e3 0%, #cfcfcf 60%, #bdbdbd 100%);
     color: #23395d;
     min-height: 100vh;
 }
 
 header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
-    color: #fff;
+    background: linear-gradient(90deg, #e3e3e3 0%, #cfcfcf 60%, #bdbdbd 100%);
+    color: #181d2f;
     text-align: left;
     padding: 32px 20px 24px 20px;
-    box-shadow: 0 4px 12px rgba(33, 147, 176, 0.15);
+    box-shadow: 0 4px 12px rgba(180, 180, 180, 0.15);
     letter-spacing: 2px;
+    font-family: 'Old Standard TT', serif;
+    /* Add space for nav on the right */
 }
 
 .header-left {
     display: flex;
     flex-direction: column;
+    padding-left: 100px;
+    flex: 1;
 }
 
 .header-title {
     margin: 0;
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 2.7rem;
+    font-weight: 800;
+    color: #181d2f;
+    font-family: 'Old Standard TT', serif;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 1px 0 #fff;
 }
 
 .header-quote {
     margin-top: 12px;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     font-style: italic;
-    color: #e0f7fa;
+    color: #4e5a6d;
     letter-spacing: 1px;
+    font-family: 'Old Standard TT', serif;
 }
 
 .header-nav {
     display: flex;
     gap: 18px;
     align-items: center;
-    margin-top: 6px;
+    justify-content: center;
+    flex: 1;
+    margin: 0;
+    /* Center in header */
 }
 
 .header-nav a {
-    background: rgba(255,255,255,0.18);
-    color: #fff;
+    background: none;
+    color: #181d2f;
     text-decoration: none;
-    font-weight: 600;
-    padding: 10px 22px;
-    border-radius: 24px;
-    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-    font-size: 1rem;
-    box-shadow: 0 2px 8px rgba(33, 147, 176, 0.10);
+    font-weight: 700;
+    padding: 12px 32px;
+    border-radius: 32px;
+    border: none;
+    transition: 
+        background 0.2s, 
+        color 0.2s, 
+        box-shadow 0.2s, 
+        border-color 0.2s,
+        transform 0.15s;
+    font-size: 1.15rem;
+    box-shadow: none;
     letter-spacing: 1px;
+    font-family: 'Old Standard TT', serif;
+    margin-left: 0;
+    margin-right: 0;
+    outline: none;
+    position: relative;
+    overflow: hidden;
 }
-.header-nav a:hover {
+.header-nav a:hover, .header-nav a:focus {
     background: #e0f7fa;
     color: #2193b0;
+    border: none;
+    box-shadow: none;
+    transform: translateY(-2px) scale(1.04);
+    z-index: 1;
 }
 
 .gallery {
@@ -86,13 +114,65 @@ img:hover {
 }
 
 footer {
-    background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%);
+    background: linear-gradient(90deg, #e3e3e3 0%, #cfcfcf 60%, #bdbdbd 100%);
     color: #fff;
-    text-align: center;
+    text-align: left;
     padding: 16px 10px;
-    box-shadow: 0 -2px 8px rgba(33, 147, 176, 0.10);
+    box-shadow: 0 -2px 8px rgba(180, 180, 180, 0.10);
     letter-spacing: 1px;
 }
 
-/* Import Montserrat font */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+.about-me {
+    text-align: center;
+    padding: 48px 0 40px 0;
+    background: none;
+    border-radius: 0;
+    margin: 32px 0;
+    max-width: none;
+    width: auto;
+    box-shadow: none;
+}
+
+.about-me h2 {
+    margin-top: 0;
+    color: #23395d;
+    font-size: 2.3rem;
+    font-weight: 700;
+    font-family: 'Old Standard TT', serif;
+}
+
+.about-me p {
+    font-size: 1.35rem;
+    color: #181d2f;
+    margin-top: 18px;
+    line-height: 1.7;
+    text-align: center;
+    margin-left: 0;
+    width: 100%;
+    max-width: 1050px;
+    margin-right: auto;
+    margin-left: auto;
+    font-family: 'Old Standard TT', serif;
+}
+
+.about-photo {
+    margin: 24px 0 18px 0;
+    display: flex;
+    justify-content: center;
+    padding-left: 0;
+}
+
+.about-photo img {
+    width: 100%;
+    max-width: 1050px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(33, 147, 176, 0.18);
+    background: #fff;
+    display: block;
+    margin-left: 0;
+}
+
+/* Import Old Standard TT font */
+@import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap');
