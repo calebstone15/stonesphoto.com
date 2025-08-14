@@ -11,68 +11,232 @@
       body, h1, h2, p, .about-photo, footer {
         font-family: 'Old Standard TT', serif !important;
       }
-      .carousel-container {
-        position: relative;
-        width: 100%;
-        max-width: 700px;
-        margin: 0 auto 48px auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .carousel-arrow {
-        background: #fff;
-        border: 1px solid #bdbdbd;
-        border-radius: 50%;
-        width: 44px;
-        height: 44px;
-        font-size: 2rem;
-        color: #181d2f;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background 0.2s, color 0.2s;
-        margin: 0 12px;
-        z-index: 2;
-      }
-      .carousel-arrow:hover {
-        background: #e0f7fa;
-        color: #2193b0;
-      }
-      .carousel-track {
-        display: flex;
-        align-items: center;
-        overflow: hidden;
-        width: 560px; /* 16:9 aspect for 320px height is 568px, but 560px is close and round */
-        height: 315px; /* 16:9 aspect ratio */
-        position: relative;
-      }
-      .carousel-image {
-        flex: 0 0 560px;
-        width: 560px;
-        height: 315px;
-        object-fit: cover;
-        border-radius: 16px;
-        box-shadow: 0 4px 16px rgba(33,147,176,0.18);
-        opacity: 0.5;
-        transform: scale(0.7);
-        transition: transform 0.3s, opacity 0.3s;
-        margin: 0 10px;
-        z-index: 1;
-        background: #e3e3e3;
-      }
-      .carousel-image.active {
-        opacity: 1;
-        transform: scale(1.1);
-        z-index: 2;
-        border: 3px solid #2193b0;
-      }
+      
+      /* Gallery layout and styles */
       .gallery-section {
-        text-align: center;
+        margin: 80px 0;
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
       }
+      
+      .gallery-section.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      
       .gallery-section h2 {
         text-align: center;
+        font-size: 2.2rem;
+        margin-bottom: 40px;
+        color: #23395d;
+        position: relative;
+      }
+      
+      .gallery-section h2:after {
+        content: '';
+        position: absolute;
+        bottom: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #2193b0, #6dd5ed);
+      }
+      
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-auto-rows: 100px;
+        gap: 12px;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      
+      .gallery-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      
+      .gallery-item.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      
+      .gallery-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+      }
+      
+      .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+      
+      .gallery-item:hover img {
+        transform: scale(1.05);
+      }
+      
+      /* Grid pattern - standardized aspect ratios */
+      .gallery-item.portrait {
+        grid-column: 5 / span 4; /* Center position */
+        grid-row: 1 / span 6;    /* Taller height - 2:3 ratio */
+        aspect-ratio: 2/3;       /* Portrait orientation */
+      }
+      
+      .gallery-item.landscape-top-left {
+        grid-column: 1 / span 4;
+        grid-row: 1 / span 3;
+        aspect-ratio: 3/2;       /* Landscape orientation */
+      }
+      
+      .gallery-item.landscape-top-right {
+        grid-column: 9 / span 4;
+        grid-row: 1 / span 3;
+        aspect-ratio: 3/2;
+      }
+      
+      .gallery-item.landscape-bottom-left {
+        grid-column: 1 / span 4;
+        grid-row: 4 / span 3;
+        aspect-ratio: 3/2;
+      }
+      
+      .gallery-item.landscape-bottom-right {
+        grid-column: 9 / span 4;
+        grid-row: 4 / span 3;
+        aspect-ratio: 3/2;
+      }
+      
+      /* Gallery navigation */
+      .gallery-nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 30px;
+      }
+      
+      .gallery-page-indicator {
+        margin: 0 15px;
+        font-size: 1rem;
+        color: #23395d;
+      }
+      
+      .nav-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(145deg, #ffffff, #f0f0f0);
+        box-shadow: 5px 5px 10px #d9d9d9, -5px -5px 10px #ffffff;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      
+      .nav-arrow:hover {
+        background: linear-gradient(145deg, #f0f0f0, #ffffff);
+        transform: translateY(-2px);
+      }
+      
+      .nav-arrow:active {
+        box-shadow: inset 5px 5px 10px #d9d9d9, inset -5px -5px 10px #ffffff;
+        transform: translateY(0);
+      }
+      
+      .nav-arrow svg {
+        width: 24px;
+        height: 24px;
+        fill: #23395d;
+      }
+      
+      /* Responsive adjustments */
+      @media (max-width: 1200px) {
+        .gallery-grid {
+          grid-template-columns: repeat(10, 1fr);
+        }
+        
+        .gallery-item.portrait {
+          grid-column: 4 / span 4;
+        }
+        
+        .gallery-item.landscape-top-left {
+          grid-column: 1 / span 3;
+        }
+        
+        .gallery-item.landscape-top-right {
+          grid-column: 8 / span 3;
+        }
+        
+        .gallery-item.landscape-bottom-left {
+          grid-column: 1 / span 3;
+        }
+        
+        .gallery-item.landscape-bottom-right {
+          grid-column: 8 / span 3;
+        }
+      }
+      
+      @media (max-width: 768px) {
+        .gallery-grid {
+          grid-template-columns: repeat(6, 1fr);
+        }
+        
+        .gallery-item.portrait {
+          grid-column: 1 / span 6;
+          grid-row: 1 / span 4;
+        }
+        
+        .gallery-item.landscape-top-left {
+          grid-column: 1 / span 3;
+          grid-row: 5 / span 2;
+        }
+        
+        .gallery-item.landscape-top-right {
+          grid-column: 4 / span 3;
+          grid-row: 5 / span 2;
+        }
+        
+        .gallery-item.landscape-bottom-left {
+          grid-column: 1 / span 3;
+          grid-row: 7 / span 2;
+        }
+        
+        .gallery-item.landscape-bottom-right {
+          grid-column: 4 / span 3;
+          grid-row: 7 / span 2;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .gallery-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+        }
+        
+        .gallery-item.portrait {
+          grid-column: 1 / span 2;
+          grid-row: 1 / span 3;
+        }
+        
+        .gallery-item.landscape-top-left,
+        .gallery-item.landscape-top-right,
+        .gallery-item.landscape-bottom-left,
+        .gallery-item.landscape-bottom-right {
+          grid-column: 1 / span 2;
+          grid-row: span 1;
+        }
       }
     </style>
 </head>
@@ -93,88 +257,346 @@
     </nav>
   </header>
 
-    <main>
-        <section class="gallery-section">
-            <h2>Couples</h2>
-            <div class="carousel-container" data-gallery="couples">
-                <button class="carousel-arrow left" aria-label="Previous">&#8592;</button>
-                <div class="carousel-track" id="carousel-couples">
-                    <img src="gandp.jpg" alt="Couples Photo 1" class="carousel-image active">
-                    <img src="images/couples2.jpg" alt="Couples Photo 2" class="carousel-image">
-                    <img src="images/couples3.jpg" alt="Couples Photo 3" class="carousel-image">
-                    <img src="images/couples4.jpg" alt="Couples Photo 4" class="carousel-image">
-                    <img src="images/couples5.jpg" alt="Couples Photo 5" class="carousel-image">
-                </div>
-                <button class="carousel-arrow right" aria-label="Next">&#8594;</button>
-            </div>
-        </section>
-        <section class="gallery-section">
-            <h2>Vehicles</h2>
-            <div class="carousel-container" data-gallery="vehicles">
-                <button class="carousel-arrow left" aria-label="Previous">&#8592;</button>
-                <div class="carousel-track" id="carousel-vehicles">
-                    <img src="tritonrocket.jpg" alt="Vehicles Photo 1" class="carousel-image active">
-                    <img src="images/vehicles2.jpg" alt="Vehicles Photo 2" class="carousel-image">
-                    <img src="images/vehicles3.jpg" alt="Vehicles Photo 3" class="carousel-image">
-                    <img src="images/vehicles4.jpg" alt="Vehicles Photo 4" class="carousel-image">
-                    <img src="images/vehicles5.jpg" alt="Vehicles Photo 5" class="carousel-image">
-                </div>
-                <button class="carousel-arrow right" aria-label="Next">&#8594;</button>
-            </div>
-        </section>
-        <section class="gallery-section">
-            <h2>Landscapes</h2>
-            <div class="carousel-container" data-gallery="landscapes">
-                <button class="carousel-arrow left" aria-label="Previous">&#8592;</button>
-                <div class="carousel-track" id="carousel-landscapes">
-                    <img src="beachsunrise.jpeg" alt="Landscapes Photo 1" class="carousel-image active">
-                    <img src="images/landscapes2.jpg" alt="Landscapes Photo 2" class="carousel-image">
-                    <img src="images/landscapes3.jpg" alt="Landscapes Photo 3" class="carousel-image">
-                    <img src="images/landscapes4.jpg" alt="Landscapes Photo 4" class="carousel-image">
-                    <img src="images/landscapes5.jpg" alt="Landscapes Photo 5" class="carousel-image">
-                </div>
-                <button class="carousel-arrow right" aria-label="Next">&#8594;</button>
-            </div>
-        </section>
-        <section class="gallery-section">
-            <h2>Portraits</h2>
-            <div class="carousel-container" data-gallery="portraits">
-                <button class="carousel-arrow left" aria-label="Previous">&#8592;</button>
-                <div class="carousel-track" id="carousel-portraits">
-                    <img src="racedriver.jpeg" alt="Portraits Photo 1" class="carousel-image active">
-                    <img src="kiki.jpeg" alt="Portraits Photo 2" class="carousel-image">
-                    <img src="images/portraits3.jpg" alt="Portraits Photo 3" class="carousel-image">
-                    <img src="images/portraits4.jpg" alt="Portraits Photo 4" class="carousel-image">
-                    <img src="images/portraits5.jpg" alt="Portraits Photo 5" class="carousel-image">
-                </div>
-                <button class="carousel-arrow right" aria-label="Next">&#8594;</button>
-            </div>
-        </section>
-        <section class="gallery-section">
-            <h2>Nature</h2>
-            <div class="carousel-container" data-gallery="nature">
-                <button class="carousel-arrow left" aria-label="Previous">&#8592;</button>
-                <div class="carousel-track" id="carousel-nature">
-                    <img src="eclipse.jpeg" alt="Nature Photo 1" class="carousel-image active">
-                    <img src="images/nature2.jpg" alt="Nature Photo 2" class="carousel-image">
-                    <img src="images/nature3.jpg" alt="Nature Photo 3" class="carousel-image">
-                    <img src="images/nature4.jpg" alt="Nature Photo 4" class="carousel-image">
-                    <img src="images/nature5.jpg" alt="Nature Photo 5" class="carousel-image">
-                </div>
-                <button class="carousel-arrow right" aria-label="Next">&#8594;</button>
-            </div>
-        </section>
-    </main>
+  <main>
+    <!-- Couples Gallery Section -->
+    <section class="gallery-section" id="couples">
+      <h2>Couples</h2>
+      <div class="gallery-grid" id="couples-grid">
+        <!-- First page (5 images) -->
+        <div class="gallery-item portrait" data-page="1">
+          <img src="Photos/Couples/proposal1.jpeg" alt="Couple embracing at sunset">
+        </div>
+        <div class="gallery-item landscape-top-left" data-page="1">
+          <img src="Photos/Couples/gandp.jpg" alt="Couple walking on beach">
+        </div>
+        <div class="gallery-item landscape-top-right" data-page="1">
+          <img src="Photos/Couples/gp2.jpg" alt="Engagement portrait">
+        </div>
+        <div class="gallery-item landscape-bottom-left" data-page="1">
+          <img src="Photos/Couples/gp1.jpg" alt="Couple laughing">
+        </div>
+        <div class="gallery-item landscape-bottom-right" data-page="1">
+          <img src="Photos/Couples/gp3.jpg" alt="Silhouette of couple">
+        </div>
+        
+        <!-- Second page (5 images) - hidden initially -->
+        <div class="gallery-item portrait" data-page="2" style="display:none">
+          <img src="Photos/Couples/mt3.jpg" alt="Couple in autumn forest">
+        </div>
+        <div class="gallery-item landscape-top-left" data-page="2" style="display:none">
+          <img src="Photos/Couples/mt2.jpg" alt="Couple dancing">
+        </div>
+        <div class="gallery-item landscape-top-right" data-page="2" style="display:none">
+          <img src="Photos/Couples/mt1.jpg" alt="Wedding couple">
+        </div>
+        <div class="gallery-item landscape-bottom-left" data-page="2" style="display:none">
+          <img src="Photos/Couples/mt4.jpg" alt="Couple holding hands">
+        </div>
+        <div class="gallery-item landscape-bottom-right" data-page="2" style="display:none">
+          <img src="Photos/Couples/mt5.jpg" alt="Couple under stars">
+        </div>
+        
+        <!-- Third page (5 images) - hidden initially -->
+        <div class="gallery-item portrait" data-page="3" style="display:none">
+          <img src="Photos/Couples/candh.jpg" alt="Romantic dinner">
+        </div>
+        <div class="gallery-item landscape-top-left" data-page="3" style="display:none">
+          <img src="Photos/Couples/c1.jpg" alt="Anniversary shoot">
+        </div>
+        <div class="gallery-item landscape-top-right" data-page="3" style="display:none">
+          <img src="Photos/Couples/c2.jpg" alt="Couple hugging">
+        </div>
+        <div class="gallery-item landscape-bottom-left" data-page="3" style="display:none">
+          <img src="Photos/Couples/c3.jpg" alt="Winter couple portrait">
+        </div>
+        <div class="gallery-item landscape-bottom-right" data-page="3" style="display:none">
+          <img src="Photos/Couples/2025-05-03_18-28-20_260.jpeg" alt="Couple kissing">
+        </div>
+      </div>
+      
+      <div class="gallery-nav" data-gallery="couples">
+        <button class="nav-arrow prev" aria-label="Previous page">
+          <svg viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+        </button>
+        <div class="gallery-page-indicator">
+          <span class="current-page">1</span> / <span class="total-pages">3</span>
+        </div>
+        <button class="nav-arrow next" aria-label="Next page">
+          <svg viewBox="0 0 24 24">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Vehicles Gallery Section -->
+    <section class="gallery-section" id="vehicles">
+      <h2>Vehicles</h2>
+      <div class="gallery-grid" id="vehicles-grid">
+        <!-- First page (5 images) -->
+        <div class="gallery-item portrait" data-page="1">
+          <img src="Photos/Vehicles/f18x2.jpg" alt="Sports car on track">
+        </div>
+        <div class="gallery-item landscape-top-left" data-page="1">
+          <img src="Photos/Vehicles/_NIK0543.JPG" alt="Classic car">
+        </div>
+        <div class="gallery-item landscape-top-right" data-page="1">
+          <img src="Photos/Vehicles/f34.jpg" alt="Motorcycle">
+        </div>
+        <div class="gallery-item landscape-bottom-left" data-page="1">
+          <img src="Photos/Vehicles/2023-02-18_12-03-23_000.jpeg" alt="Off-road vehicle">
+        </div>
+        <div class="gallery-item landscape-bottom-right" data-page="1">
+          <img src="Photos/Vehicles/_NIK0560.JPG" alt="Supercar detail">
+        </div>
+        
+        <!-- Second page (5 images) - hidden initially -->
+        <div class="gallery-item portrait" data-page="2" style="display:none">
+          <img src="Photos/Vehicles/29A5626F-2BE1-4BBB-AC4A-5FC74D49F659.jpg" alt="Luxury sedan">
+        </div>
+        <div class="gallery-item landscape-top-left" data-page="2" style="display:none">
+          <img src="Photos/Vehicles/2023-02-11_02-18-22_090.jpeg" alt="Race car">
+        </div>
+        <div class="gallery-item landscape-top-right" data-page="2" style="display:none">
+          <img src="Photos/Vehicles/tesla.jpeg" alt="Vintage motorcycle">
+        </div>
+        <div class="gallery-item landscape-bottom-left" data-page="2" style="display:none">
+          <img src="Photos/Vehicles/rolex24car2.jpg" alt="Car interior">
+        </div>
+        <div class="gallery-item landscape-bottom-right" data-page="2" style="display:none">
+          <img src="Photos/Vehicles/rolex24car1.jpg" alt="Engine detail">
+        </div>
+        
+        <!-- Third page (5 images) - hidden initially -->
+        <div class="gallery-item portrait" data-page="3" style="display:none">
+          <img src="Photos/Vehicles/IMG_7095.JPG" alt="4x4 truck">
+        </div>
+        <div class="gallery-item landscape-top-left" data-page="3" style="display:none">
+          <img src="Photos/Vehicles/rocket1.jpeg" alt="Car show">
+        </div>
+        <div class="gallery-item landscape-top-right" data-page="3" style="display:none">
+          <img src="Photos/Vehicles/rocket2.jpg" alt="Sports bike">
+        </div>
+        <div class="gallery-item landscape-bottom-left" data-page="3" style="display:none">
+          <img src="Photos/Vehicles/tritonrocket.jpg" alt="Headlight detail">
+        </div>
+        <div class="gallery-item landscape-bottom-right" data-page="3" style="display:none">
+          <img src="Photos/Vehicles/rocket3.jpg" alt="Custom paint job">
+        </div>
+        
+        <!-- Fourth page (5 images) - hidden initially -->
+        <div class="gallery-item portrait" data-page="4" style="display:none">
+          <img src="Photos/Vehicles/car1.jpeg" alt="Supercar">
+        </div>
+        <div class="gallery-item landscape-top-left" data-page="4" style="display:none">
+          <img src="Photos/vehicles17.jpg" alt="Vintage convertible">
+        </div>
+        <div class="gallery-item landscape-top-right" data-page="4" style="display:none">
+          <img src="Photos/vehicles18.jpg" alt="Rally car">
+        </div>
+        <div class="gallery-item landscape-bottom-left" data-page="4" style="display:none">
+          <img src="Photos/vehicles19.jpg" alt="Car wheel">
+        </div>
+        <div class="gallery-item landscape-bottom-right" data-page="4" style="display:none">
+          <img src="Photos/vehicles20.jpg" alt="Dashboard">
+        </div>
+      </div>
+      
+      <div class="gallery-nav" data-gallery="vehicles">
+        <button class="nav-arrow prev" aria-label="Previous page">
+          <svg viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+        </button>
+        <div class="gallery-page-indicator">
+          <span class="current-page">1</span> / <span class="total-pages">4</span>
+        </div>
+        <button class="nav-arrow next" aria-label="Next page">
+          <svg viewBox="0 0 24 24">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Landscapes Gallery Section -->
+    <section class="gallery-section" id="landscapes">
+      <h2>Landscapes</h2>
+      <div class="gallery-grid" id="landscapes-grid">
+        <!-- First page (5 images) -->
+        <div class="gallery-item portrait" data-page="1">
+          <img src="Photos/Nature/2024-02-01_08-25-08_430.jpeg" alt="Mountain vista">
+        </div>
+        <div class="gallery-item landscape-top-left" data-page="1">
+          <img src="Photos/Nature/bird1.jpg" alt="Ocean sunset">
+        </div>
+        <div class="gallery-item landscape-top-right" data-page="1">
+          <img src="Photos/Nature/lizard.jpg" alt="Desert panorama">
+        </div>
+        <div class="gallery-item landscape-bottom-left" data-page="1">
+          <img src="Photos/Nature/gator.jpg" alt="Forest trail">
+        </div>
+        <div class="gallery-item landscape-bottom-right" data-page="1">
+          <img src="Photos/Nature/DSC_7359.jpg" alt="Waterfall">
+        </div>
+        
+        <!-- Second page (5 images) - hidden initially -->
+        <div class="gallery-item portrait" data-page="2" style="display:none">
+          <img src="Photos/Nature/starstreaks.png" alt="Canyon view">
+        </div>
+        <div class="gallery-item landscape-top-left" data-page="2" style="display:none">
+          <img src="Photos/Nature/moon.jpeg" alt="Rolling hills">
+        </div>
+        <div class="gallery-item landscape-top-right" data-page="2" style="display:none">
+          <img src="Photos/Nature/nature1.jpeg" alt="Snowy peaks">
+        </div>
+        <div class="gallery-item landscape-bottom-left" data-page="2" style="display:none">
+          <img src="Photos/Nature/Monkey.png" alt="Lake reflection">
+        </div>
+        <div class="gallery-item landscape-bottom-right" data-page="2" style="display:none">
+          <img src="Photos/Nature/eclipse.jpeg" alt="Countryside">
+        </div>
+        
+        <!-- Third page (5 images) - hidden initially -->
+        <div class="gallery-item portrait" data-page="3" style="display:none">
+          <img src="Photos/Nature/2024-02-01_08-25-08_430.jpeg" alt="Autumn forest">
+        </div>
+        <div class="gallery-item landscape-top-left" data-page="3" style="display:none">
+          <img src="Photos/Nature/waterfall.jpeg" alt="Beach shoreline">
+        </div>
+        <div class="gallery-item landscape-top-right" data-page="3" style="display:none">
+          <img src="Photos/Nature/sunset.jpeg" alt="Valley view">
+        </div>
+        <div class="gallery-item landscape-bottom-left" data-page="3" style="display:none">
+          <img src="Photos/Nature/beachsunrise.jpeg" alt="River stream">
+        </div>
+        <div class="gallery-item landscape-bottom-right" data-page="3" style="display:none">
+          <img src="Photos/Nature/waterfall2.jpeg" alt="Misty morning">
+        </div>
+        
+        <!-- Fourth page (5 images) - hidden initially -->
+        <div class="gallery-item portrait" data-page="4" style="display:none">
+          <img src="Photos/Nature/loganpuppy.jpg" alt="Volcanic landscape">
+        </div>
+        <div class="gallery-item landscape-top-left" data-page="4" style="display:none">
+          <img src="Photos/Nature/doggie.jpg" alt="Meadow flowers">
+        </div>
+        <div class="gallery-item landscape-top-right" data-page="4" style="display:none">
+          <img src="Photos/landscapes18.jpg" alt="Cliff view">
+        </div>
+        <div class="gallery-item landscape-bottom-left" data-page="4" style="display:none">
+          <img src="Photos/landscapes19.jpg" alt="Island aerial">
+        </div>
+        <div class="gallery-item landscape-bottom-right" data-page="4" style="display:none">
+          <img src="Photos/landscapes20.jpg" alt="Night sky">
+        </div>
+      </div>
+      
+      <div class="gallery-nav" data-gallery="landscapes">
+        <button class="nav-arrow prev" aria-label="Previous page">
+          <svg viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+        </button>
+        <div class="gallery-page-indicator">
+          <span class="current-page">1</span> / <span class="total-pages">4</span>
+        </div>
+        <button class="nav-arrow next" aria-label="Next page">
+          <svg viewBox="0 0 24 24">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Portraits Gallery Section -->
+    <section class="gallery-section" id="portraits">
+      <h2>Portraits</h2>
+      <div class="gallery-grid" id="portraits-grid">
+        <!-- First page (5 images) -->
+        <div class="gallery-item portrait" data-page="1">
+          <img src="Photos/Portraits/kim1.jpg" alt="Professional headshot">
+        </div>
+        <div class="gallery-item landscape-top-left" data-page="1">
+          <img src="Photos/Portraits/kim2.jpg" alt="Natural light portrait">
+        </div>
+        <div class="gallery-item landscape-top-right" data-page="1">
+          <img src="Photos/Portraits/matthew1.jpg" alt="Artistic portrait">
+        </div>
+        <div class="gallery-item landscape-bottom-left" data-page="1">
+          <img src="Photos/Portraits/matthew2.jpg" alt="Senior portrait">
+        </div>
+        <div class="gallery-item landscape-bottom-right" data-page="1">
+          <img src="Photos/Portraits/kim3.jpg" alt="Child portrait">
+        </div>
+        
+        <!-- Second page (5 images) - hidden initially -->
+        <div class="gallery-item portrait" data-page="2" style="display:none">
+          <img src="Photos/Portraits/racedriver.jpg" alt="Black and white portrait">
+        </div>
+        <div class="gallery-item landscape-top-left" data-page="2" style="display:none">
+          <img src="Photos/Portraits/1I9A5810.jpeg" alt="Environmental portrait">
+        </div>
+        <div class="gallery-item landscape-top-right" data-page="2" style="display:none">
+          <img src="Photos/Portraits/me.jpg" alt="Studio lighting">
+        </div>
+        <div class="gallery-item landscape-bottom-left" data-page="2" style="display:none">
+          <img src="Photos/Portraits/cam3.jpg" alt="Fashion portrait">
+        </div>
+        <div class="gallery-item landscape-bottom-right" data-page="2" style="display:none">
+          <img src="Photos/Portraits/cam2.jpg" alt="Candid moment">
+        </div>
+        
+        <!-- Third page (5 images) - hidden initially -->
+        <div class="gallery-item portrait" data-page="3" style="display:none">
+          <img src="Photos/portraits11.jpg" alt="Family portrait">
+        </div>
+        <div class="gallery-item landscape-top-left" data-page="3" style="display:none">
+          <img src="Photos/portraits12.jpg" alt="Dramatic lighting">
+        </div>
+        <div class="gallery-item landscape-top-right" data-page="3" style="display:none">
+          <img src="Photos/portraits13.jpg" alt="Lifestyle portrait">
+        </div>
+        <div class="gallery-item landscape-bottom-left" data-page="3" style="display:none">
+          <img src="Photos/portraits14.jpg" alt="Maternity portrait">
+        </div>
+        <div class="gallery-item landscape-bottom-right" data-page="3" style="display:none">
+          <img src="Photos/portraits15.jpg" alt="Sports portrait">
+        </div>
+      </div>
+      
+      <div class="gallery-nav" data-gallery="portraits">
+        <button class="nav-arrow prev" aria-label="Previous page">
+          <svg viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+        </button>
+        <div class="gallery-page-indicator">
+          <span class="current-page">1</span> / <span class="total-pages">3</span>
+        </div>
+        <button class="nav-arrow next" aria-label="Next page">
+          <svg viewBox="0 0 24 24">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+  </main>
+
   <!-- site footer copied from index.html -->
   <footer>
     <p>&copy; 2025 Stones Photos</p>
   </footer>
+  
   <script src="script.js"></script>
   <script>
     // Mobile menu toggle
     document.querySelector('.header-menu-btn').onclick = function() {
       document.querySelector('.header-nav').classList.toggle('show');
     };
+    
     // Close mobile menu on link click
     document.querySelectorAll('.header-nav a').forEach(link => {
       link.onclick = () => {
@@ -183,37 +605,66 @@
         }
       };
     });
-    // Simple carousel logic for all carousels
-    document.querySelectorAll('.carousel-container').forEach(container => {
-        const track = container.querySelector('.carousel-track');
-        const images = Array.from(track.querySelectorAll('.carousel-image'));
-        let current = 0;
-
-        function updateCarousel() {
-            images.forEach((img, idx) => {
-                img.classList.toggle('active', idx === current);
-            });
-            // Scroll to center the active image
-            track.scrollLeft = images[current].offsetLeft - (track.offsetWidth - images[current].offsetWidth) / 2;
-        }
-
-        container.querySelector('.carousel-arrow.left').onclick = () => {
-            current = (current - 1 + images.length) % images.length;
-            updateCarousel();
-        };
-        container.querySelector('.carousel-arrow.right').onclick = () => {
-            current = (current + 1) % images.length;
-            updateCarousel();
-        };
-        // Optional: allow click on image to make it active
-        images.forEach((img, idx) => {
-            img.onclick = () => {
-                current = idx;
-                updateCarousel();
-            };
+    
+    // Gallery page navigation
+    document.querySelectorAll('.gallery-nav').forEach(nav => {
+      const galleryId = nav.dataset.gallery;
+      const grid = document.getElementById(`${galleryId}-grid`);
+      const pageIndicator = nav.querySelector('.current-page');
+      let currentPage = 1;
+      
+      // Show/hide gallery items based on page
+      function showPage(page) {
+        grid.querySelectorAll('.gallery-item').forEach(item => {
+          if (parseInt(item.dataset.page) === page) {
+            item.style.display = '';
+            // Trigger animation after a small delay
+            setTimeout(() => {
+              item.classList.add('visible');
+            }, 50);
+          } else {
+            item.classList.remove('visible');
+            item.style.display = 'none';
+          }
         });
-        updateCarousel();
+        pageIndicator.textContent = page;
+      }
+      
+      // Next page button
+      nav.querySelector('.next').addEventListener('click', () => {
+        const totalPages = parseInt(nav.querySelector('.total-pages').textContent);
+        currentPage = currentPage < totalPages ? currentPage + 1 : 1;
+        showPage(currentPage);
+      });
+      
+      // Previous page button
+      nav.querySelector('.prev').addEventListener('click', () => {
+        const totalPages = parseInt(nav.querySelector('.total-pages').textContent);
+        currentPage = currentPage > 1 ? currentPage - 1 : totalPages;
+        showPage(currentPage);
+      });
+      
+      // Initialize first page with animation
+      showPage(1);
     });
-    </script>
+    
+    // Scroll animation - show sections when scrolled into view
+    function checkScroll() {
+      const sections = document.querySelectorAll('.gallery-section');
+      
+      sections.forEach(section => {
+        const sectionTop = section.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        
+        if (sectionTop < windowHeight * 0.8) {
+          section.classList.add('visible');
+        }
+      });
+    }
+    
+    // Check scroll position on load and scroll
+    window.addEventListener('load', checkScroll);
+    window.addEventListener('scroll', checkScroll);
+  </script>
 </body>
 </html>
