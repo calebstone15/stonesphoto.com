@@ -6,10 +6,7 @@
     <title>Galleries - Caleb Stone Photography</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="Websitelogo.ico">
-    <!-- Preload critical fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap" rel="stylesheet">
     <style>
       body, h1, h2, p, .about-photo, footer {
         font-family: 'Old Standard TT', serif !important;
@@ -21,8 +18,6 @@
         opacity: 0;
         transform: translateY(40px);
         transition: opacity 0.8s ease, transform 0.8s ease;
-        content-visibility: auto; /* Optimize rendering of off-screen content */
-        contain-intrinsic-size: 700px; /* Prevent layout shifts */
       }
       
       .gallery-section.visible {
@@ -93,15 +88,15 @@
       
       /* Grid pattern - standardized aspect ratios */
       .gallery-item.portrait {
-        grid-column: 5 / span 4;
-        grid-row: 1 / span 6;
-        aspect-ratio: 2/3;
+        grid-column: 5 / span 4; /* Center position */
+        grid-row: 1 / span 6;    /* Taller height - 2:3 ratio */
+        aspect-ratio: 2/3;       /* Portrait orientation */
       }
       
       .gallery-item.landscape-top-left {
         grid-column: 1 / span 4;
         grid-row: 1 / span 3;
-        aspect-ratio: 3/2;
+        aspect-ratio: 3/2;       /* Landscape orientation */
       }
       
       .gallery-item.landscape-top-right {
@@ -196,15 +191,6 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        will-change: transform; /* Optimize animation performance */
-        transform: translateZ(0); /* Force GPU acceleration */
-      }
-      
-      /* Create a lightweight placeholder version for hidden images */
-      .image-placeholder {
-        filter: blur(10px);
-        transform: scale(1.05);
-        transition: filter 0.5s ease;
       }
       
       /* Responsive adjustments */
@@ -285,8 +271,6 @@
         }
       }
     </style>
-    <!-- Preload critical images -->
-    <link rel="preload" as="image" href="Photos/Couples/proposal1.jpeg?width=400" imagesrcset="Photos/Couples/proposal1.jpeg?width=800 800w">
 </head>
 <body>
 
@@ -313,97 +297,92 @@
         <!-- First page (5 images) -->
         <div class="gallery-item portrait loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Couples/proposal1.jpeg?width=20" 
-               data-src="Photos/Couples/proposal1.jpeg"
-               data-srcset="Photos/Couples/proposal1.jpeg 1200w, 
-                      Photos/Couples/proposal1.jpeg?width=800&quality=85 800w, 
-                      Photos/Couples/proposal1.jpeg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Couples/proposal1.webp" 
+               srcset="Photos/Couples/proposal1.webp 1200w, 
+                      Photos/Couples/proposal1.webp?width=800 800w, 
+                      Photos/Couples/proposal1.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Couple embracing at sunset" 
-               loading="eager"
+               loading="lazy"
                width="800" height="1200">
         </div>
         <div class="gallery-item landscape-top-left loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Couples/gandp.jpg?width=20" 
-               data-src="Photos/Couples/gandp.jpg"
-               data-srcset="Photos/Couples/gandp.jpg 1200w, 
-                      Photos/Couples/gandp.jpg?width=800&quality=85 800w, 
-                      Photos/Couples/gandp.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Couples/gandp.webp" 
+               srcset="Photos/Couples/gandp.webp 1200w, 
+                      Photos/Couples/gandp.webp?width=800 800w, 
+                      Photos/Couples/gandp.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Couple walking on beach" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         <div class="gallery-item landscape-top-right loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Couples/gp2.jpg?width=20" 
-               data-src="Photos/Couples/gp2.jpg"
-               data-srcset="Photos/Couples/gp2.jpg 1200w, 
-                      Photos/Couples/gp2.jpg?width=800&quality=85 800w, 
-                      Photos/Couples/gp2.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Couples/gp2.webp" 
+               srcset="Photos/Couples/gp2.webp 1200w, 
+                      Photos/Couples/gp2.webp?width=800 800w, 
+                      Photos/Couples/gp2.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Engagement portrait" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         <div class="gallery-item landscape-bottom-left loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Couples/gp1.jpg?width=20" 
-               data-src="Photos/Couples/gp1.jpg"
-               data-srcset="Photos/Couples/gp1.jpg 1200w, 
-                      Photos/Couples/gp1.jpg?width=800&quality=85 800w, 
-                      Photos/Couples/gp1.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Couples/gp1.webp" 
+               srcset="Photos/Couples/gp1.webp 1200w, 
+                      Photos/Couples/gp1.webp?width=800 800w, 
+                      Photos/Couples/gp1.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Couple laughing" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         <div class="gallery-item landscape-bottom-right loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Couples/gp3.jpg?width=20" 
-               data-src="Photos/Couples/gp3.jpg"
-               data-srcset="Photos/Couples/gp3.jpg 1200w, 
-                      Photos/Couples/gp3.jpg?width=800&quality=85 800w, 
-                      Photos/Couples/gp3.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Couples/gp3.webp" 
+               srcset="Photos/Couples/gp3.webp 1200w, 
+                      Photos/Couples/gp3.webp?width=800 800w, 
+                      Photos/Couples/gp3.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Silhouette of couple" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         
         <!-- Second page (5 images) - hidden initially -->
         <div class="gallery-item portrait" data-page="2" style="display:none">
-          <img src="Photos/Couples/mt3.jpg" alt="Couple in autumn forest">
+          <img src="Photos/Couples/mt3.webp" alt="Couple in autumn forest">
         </div>
         <div class="gallery-item landscape-top-left" data-page="2" style="display:none">
-          <img src="Photos/Couples/mt2.jpg" alt="Couple dancing">
+          <img src="Photos/Couples/mt2.webp" alt="Couple dancing">
         </div>
         <div class="gallery-item landscape-top-right" data-page="2" style="display:none">
-          <img src="Photos/Couples/mt1.jpg" alt="Wedding couple">
+          <img src="Photos/Couples/mt1.webp" alt="Wedding couple">
         </div>
         <div class="gallery-item landscape-bottom-left" data-page="2" style="display:none">
-          <img src="Photos/Couples/mt4.jpg" alt="Couple holding hands">
+          <img src="Photos/Couples/mt4.webp" alt="Couple holding hands">
         </div>
         <div class="gallery-item landscape-bottom-right" data-page="2" style="display:none">
-          <img src="Photos/Couples/mt5.jpg" alt="Couple under stars">
+          <img src="Photos/Couples/mt5.webp" alt="Couple under stars">
         </div>
         
         <!-- Third page (5 images) - hidden initially -->
         <div class="gallery-item portrait" data-page="3" style="display:none">
-          <img src="Photos/Couples/candh.jpg" alt="Romantic dinner">
+          <img src="Photos/Couples/candh.webp" alt="Romantic dinner">
         </div>
         <div class="gallery-item landscape-top-left" data-page="3" style="display:none">
-          <img src="Photos/Couples/c1.jpg" alt="Anniversary shoot">
+          <img src="Photos/Couples/c1.webp" alt="Anniversary shoot">
         </div>
         <div class="gallery-item landscape-top-right" data-page="3" style="display:none">
-          <img src="Photos/Couples/c2.jpg" alt="Couple hugging">
+          <img src="Photos/Couples/c2.webp" alt="Couple hugging">
         </div>
         <div class="gallery-item landscape-bottom-left" data-page="3" style="display:none">
-          <img src="Photos/Couples/c3.jpg" alt="Winter couple portrait">
+          <img src="Photos/Couples/c3.webp" alt="Winter couple portrait">
         </div>
         <div class="gallery-item landscape-bottom-right" data-page="3" style="display:none">
-          <img src="Photos/Couples/2025-05-03_18-28-20_260.jpeg" alt="Couple kissing">
+          <img src="Photos/Couples/2025-05-03_18-28-20_260.webp" alt="Couple kissing">
         </div>
       </div>
       
@@ -431,114 +410,109 @@
         <!-- First page (5 images) -->
         <div class="gallery-item portrait loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Vehicles/f18x2.jpg?width=20" 
-               data-src="Photos/Vehicles/f18x2.jpg"
-               data-srcset="Photos/Vehicles/f18x2.jpg 1200w, 
-                      Photos/Vehicles/f18x2.jpg?width=800&quality=85 800w, 
-                      Photos/Vehicles/f18x2.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Vehicles/f18x2.webp" 
+               srcset="Photos/Vehicles/f18x2.webp 1200w, 
+                      Photos/Vehicles/f18x2.webp?width=800 800w, 
+                      Photos/Vehicles/f18x2.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Sports car on track" 
-               loading="eager"
+               loading="lazy"
                width="800" height="1200">
         </div>
         <div class="gallery-item landscape-top-left loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Vehicles/_NIK0543.JPG?width=20" 
-               data-src="Photos/Vehicles/_NIK0543.JPG"
-               data-srcset="Photos/Vehicles/_NIK0543.JPG 1200w, 
-                      Photos/Vehicles/_NIK0543.JPG?width=800&quality=85 800w, 
-                      Photos/Vehicles/_NIK0543.JPG?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Vehicles/_NIK0543.webp" 
+               srcset="Photos/Vehicles/_NIK0543.webp 1200w, 
+                      Photos/Vehicles/_NIK0543.webp?width=800 800w, 
+                      Photos/Vehicles/_NIK0543.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Classic car" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         <div class="gallery-item landscape-top-right loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Vehicles/f34.jpg?width=20" 
-               data-src="Photos/Vehicles/f34.jpg"
-               data-srcset="Photos/Vehicles/f34.jpg 1200w, 
-                      Photos/Vehicles/f34.jpg?width=800&quality=85 800w, 
-                      Photos/Vehicles/f34.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Vehicles/f34.webp" 
+               srcset="Photos/Vehicles/f34.webp 1200w, 
+                      Photos/Vehicles/f34.webp?width=800 800w, 
+                      Photos/Vehicles/f34.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Motorcycle" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         <div class="gallery-item landscape-bottom-left loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Vehicles/2023-02-18_12-03-23_000.jpeg?width=20" 
-               data-src="Photos/Vehicles/2023-02-18_12-03-23_000.jpeg"
-               data-srcset="Photos/Vehicles/2023-02-18_12-03-23_000.jpeg 1200w, 
-                      Photos/Vehicles/2023-02-18_12-03-23_000.jpeg?width=800&quality=85 800w, 
-                      Photos/Vehicles/2023-02-18_12-03-23_000.jpeg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Vehicles/2023-02-18_12-03-23_000.webp" 
+               srcset="Photos/Vehicles/2023-02-18_12-03-23_000.webp 1200w, 
+                      Photos/Vehicles/2023-02-18_12-03-23_000.webp?width=800 800w, 
+                      Photos/Vehicles/2023-02-18_12-03-23_000.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Off-road vehicle" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         <div class="gallery-item landscape-bottom-right loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Vehicles/_NIK0560.JPG?width=20" 
-               data-src="Photos/Vehicles/_NIK0560.JPG"
-               data-srcset="Photos/Vehicles/_NIK0560.JPG 1200w, 
-                      Photos/Vehicles/_NIK0560.JPG?width=800&quality=85 800w, 
-                      Photos/Vehicles/_NIK0560.JPG?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Vehicles/_NIK0560.webp" 
+               srcset="Photos/Vehicles/_NIK0560.webp 1200w, 
+                      Photos/Vehicles/_NIK0560.webp?width=800 800w, 
+                      Photos/Vehicles/_NIK0560.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Supercar detail" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         
         <!-- Second page (5 images) - hidden initially -->
         <div class="gallery-item portrait" data-page="2" style="display:none">
-          <img src="Photos/Vehicles/29A5626F-2BE1-4BBB-AC4A-5FC74D49F659.jpg" alt="Luxury sedan">
+          <img src="Photos/Vehicles/29A5626F-2BE1-4BBB-AC4A-5FC74D49F659.webp" alt="Luxury sedan">
         </div>
         <div class="gallery-item landscape-top-left" data-page="2" style="display:none">
-          <img src="Photos/Vehicles/2023-02-11_02-18-22_090.jpeg" alt="Race car">
+          <img src="Photos/Vehicles/2023-02-11_02-18-22_090.webp" alt="Race car">
         </div>
         <div class="gallery-item landscape-top-right" data-page="2" style="display:none">
-          <img src="Photos/Vehicles/tesla.jpeg" alt="Vintage motorcycle">
+          <img src="Photos/Vehicles/tesla.webp" alt="Vintage motorcycle">
         </div>
         <div class="gallery-item landscape-bottom-left" data-page="2" style="display:none">
-          <img src="Photos/Vehicles/rolex24car2.jpg" alt="Car interior">
+          <img src="Photos/Vehicles/rolex24car2.webp" alt="Car interior">
         </div>
         <div class="gallery-item landscape-bottom-right" data-page="2" style="display:none">
-          <img src="Photos/Vehicles/rolex24car1.jpg" alt="Engine detail">
+          <img src="Photos/Vehicles/rolex24car1.webp" alt="Engine detail">
         </div>
         
         <!-- Third page (5 images) - hidden initially -->
         <div class="gallery-item portrait" data-page="3" style="display:none">
-          <img src="Photos/Vehicles/IMG_7095.JPG" alt="4x4 truck">
+          <img src="Photos/Vehicles/IMG_7095.webp" alt="4x4 truck">
         </div>
         <div class="gallery-item landscape-top-left" data-page="3" style="display:none">
-          <img src="Photos/Vehicles/rocket1.jpeg" alt="Car show">
+          <img src="Photos/Vehicles/rocket1.webp" alt="Car show">
         </div>
         <div class="gallery-item landscape-top-right" data-page="3" style="display:none">
-          <img src="Photos/Vehicles/rocket2.jpg" alt="Sports bike">
+          <img src="Photos/Vehicles/rocket2.webp" alt="Sports bike">
         </div>
         <div class="gallery-item landscape-bottom-left" data-page="3" style="display:none">
-          <img src="Photos/Vehicles/tritonrocket.jpg" alt="Headlight detail">
+          <img src="Photos/Vehicles/tritonrocket.webp" alt="Headlight detail">
         </div>
         <div class="gallery-item landscape-bottom-right" data-page="3" style="display:none">
-          <img src="Photos/Vehicles/rocket3.jpg" alt="Custom paint job">
+          <img src="Photos/Vehicles/rocket3.webp" alt="Custom paint job">
         </div>
         
         <!-- Fourth page (5 images) - hidden initially -->
         <div class="gallery-item portrait" data-page="4" style="display:none">
-          <img src="Photos/Vehicles/car1.jpeg" alt="Supercar">
+          <img src="Photos/Vehicles/car1.webp" alt="Supercar">
         </div>
         <div class="gallery-item landscape-top-left" data-page="4" style="display:none">
-          <img src="Photos/vehicles17.jpg" alt="Vintage convertible">
+          <img src="Photos/vehicles17.webp" alt="Vintage convertible">
         </div>
         <div class="gallery-item landscape-top-right" data-page="4" style="display:none">
-          <img src="Photos/vehicles18.jpg" alt="Rally car">
+          <img src="Photos/vehicles18.webp" alt="Rally car">
         </div>
         <div class="gallery-item landscape-bottom-left" data-page="4" style="display:none">
-          <img src="Photos/vehicles19.jpg" alt="Car wheel">
+          <img src="Photos/vehicles19.webp" alt="Car wheel">
         </div>
         <div class="gallery-item landscape-bottom-right" data-page="4" style="display:none">
-          <img src="Photos/vehicles20.jpg" alt="Dashboard">
+          <img src="Photos/vehicles20.webp" alt="Dashboard">
         </div>
       </div>
       
@@ -566,62 +540,57 @@
         <!-- First page (5 images) -->
         <div class="gallery-item portrait loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Nature/2024-02-01_08-25-08_430.jpeg?width=20" 
-               data-src="Photos/Nature/2024-02-01_08-25-08_430.jpeg"
-               data-srcset="Photos/Nature/2024-02-01_08-25-08_430.jpeg 1200w, 
-                      Photos/Nature/2024-02-01_08-25-08_430.jpeg?width=800&quality=85 800w, 
-                      Photos/Nature/2024-02-01_08-25-08_430.jpeg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Nature/2024-02-01_08-25-08_430.webp" 
+               srcset="Photos/Nature/2024-02-01_08-25-08_430.webp 1200w, 
+                      Photos/Nature/2024-02-01_08-25-08_430.webp?width=800 800w, 
+                      Photos/Nature/2024-02-01_08-25-08_430.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Mountain vista" 
-               loading="eager"
+               loading="lazy"
                width="800" height="1200">
         </div>
         <div class="gallery-item landscape-top-left loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Nature/bird1.jpg?width=20" 
-               data-src="Photos/Nature/bird1.jpg"
-               data-srcset="Photos/Nature/bird1.jpg 1200w, 
-                      Photos/Nature/bird1.jpg?width=800&quality=85 800w, 
-                      Photos/Nature/bird1.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Nature/bird1.webp" 
+               srcset="Photos/Nature/bird1.webp 1200w, 
+                      Photos/Nature/bird1.webp?width=800 800w, 
+                      Photos/Nature/bird1.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Ocean sunset" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         <div class="gallery-item landscape-top-right loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Nature/lizard.jpg?width=20" 
-               data-src="Photos/Nature/lizard.jpg"
-               data-srcset="Photos/Nature/lizard.jpg 1200w, 
-                      Photos/Nature/lizard.jpg?width=800&quality=85 800w, 
-                      Photos/Nature/lizard.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Nature/lizard.webp" 
+               srcset="Photos/Nature/lizard.webp 1200w, 
+                      Photos/Nature/lizard.webp?width=800 800w, 
+                      Photos/Nature/lizard.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Desert panorama" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         <div class="gallery-item landscape-bottom-left loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Nature/gator.jpg?width=20" 
-               data-src="Photos/Nature/gator.jpg"
-               data-srcset="Photos/Nature/gator.jpg 1200w, 
-                      Photos/Nature/gator.jpg?width=800&quality=85 800w, 
-                      Photos/Nature/gator.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Nature/gator.webp" 
+               srcset="Photos/Nature/gator.webp 1200w, 
+                      Photos/Nature/gator.webp?width=800 800w, 
+                      Photos/Nature/gator.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Forest trail" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         <div class="gallery-item landscape-bottom-right loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Nature/DSC_7359.jpg?width=20" 
-               data-src="Photos/Nature/DSC_7359.jpg"
-               data-srcset="Photos/Nature/DSC_7359.jpg 1200w, 
-                      Photos/Nature/DSC_7359.jpg?width=800&quality=85 800w, 
-                      Photos/Nature/DSC_7359.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Nature/DSC_7359.webp" 
+               srcset="Photos/Nature/DSC_7359.webp 1200w, 
+                      Photos/Nature/DSC_7359.webp?width=800 800w, 
+                      Photos/Nature/DSC_7359.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Waterfall" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         
@@ -630,50 +599,50 @@
           <img src="Photos/Nature/starstreaks.png" alt="Canyon view">
         </div>
         <div class="gallery-item landscape-top-left" data-page="2" style="display:none">
-          <img src="Photos/Nature/moon.jpeg" alt="Rolling hills">
+          <img src="Photos/Nature/moon.webp" alt="Rolling hills">
         </div>
         <div class="gallery-item landscape-top-right" data-page="2" style="display:none">
-          <img src="Photos/Nature/nature1.jpeg" alt="Snowy peaks">
+          <img src="Photos/Nature/nature1.webp" alt="Snowy peaks">
         </div>
         <div class="gallery-item landscape-bottom-left" data-page="2" style="display:none">
           <img src="Photos/Nature/Monkey.png" alt="Lake reflection">
         </div>
         <div class="gallery-item landscape-bottom-right" data-page="2" style="display:none">
-          <img src="Photos/Nature/eclipse.jpeg" alt="Countryside">
+          <img src="Photos/Nature/eclipse.webp" alt="Countryside">
         </div>
         
         <!-- Third page (5 images) - hidden initially -->
         <div class="gallery-item portrait" data-page="3" style="display:none">
-          <img src="Photos/Nature/2024-02-01_08-25-08_430.jpeg" alt="Autumn forest">
+          <img src="Photos/Nature/2024-02-01_08-25-08_430.webp" alt="Autumn forest">
         </div>
         <div class="gallery-item landscape-top-left" data-page="3" style="display:none">
-          <img src="Photos/Nature/waterfall.jpeg" alt="Beach shoreline">
+          <img src="Photos/Nature/waterfall.webp" alt="Beach shoreline">
         </div>
         <div class="gallery-item landscape-top-right" data-page="3" style="display:none">
-          <img src="Photos/Nature/sunset.jpeg" alt="Valley view">
+          <img src="Photos/Nature/sunset.webp" alt="Valley view">
         </div>
         <div class="gallery-item landscape-bottom-left" data-page="3" style="display:none">
-          <img src="Photos/Nature/beachsunrise.jpeg" alt="River stream">
+          <img src="Photos/Nature/beachsunrise.webp" alt="River stream">
         </div>
         <div class="gallery-item landscape-bottom-right" data-page="3" style="display:none">
-          <img src="Photos/Nature/waterfall2.jpeg" alt="Misty morning">
+          <img src="Photos/Nature/waterfall2.webp" alt="Misty morning">
         </div>
         
         <!-- Fourth page (5 images) - hidden initially -->
         <div class="gallery-item portrait" data-page="4" style="display:none">
-          <img src="Photos/Nature/loganpuppy.jpg" alt="Volcanic landscape">
+          <img src="Photos/Nature/loganpuppy.webp" alt="Volcanic landscape">
         </div>
         <div class="gallery-item landscape-top-left" data-page="4" style="display:none">
-          <img src="Photos/Nature/doggie.jpg" alt="Meadow flowers">
+          <img src="Photos/Nature/doggie.webp" alt="Meadow flowers">
         </div>
         <div class="gallery-item landscape-top-right" data-page="4" style="display:none">
-          <img src="Photos/landscapes18.jpg" alt="Cliff view">
+          <img src="Photos/landscapes18.webp" alt="Cliff view">
         </div>
         <div class="gallery-item landscape-bottom-left" data-page="4" style="display:none">
-          <img src="Photos/landscapes19.jpg" alt="Island aerial">
+          <img src="Photos/landscapes19.webp" alt="Island aerial">
         </div>
         <div class="gallery-item landscape-bottom-right" data-page="4" style="display:none">
-          <img src="Photos/landscapes20.jpg" alt="Night sky">
+          <img src="Photos/landscapes20.webp" alt="Night sky">
         </div>
       </div>
       
@@ -701,97 +670,92 @@
         <!-- First page (5 images) -->
         <div class="gallery-item portrait loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Portraits/kim1.jpg?width=20" 
-               data-src="Photos/Portraits/kim1.jpg"
-               data-srcset="Photos/Portraits/kim1.jpg 1200w, 
-                      Photos/Portraits/kim1.jpg?width=800&quality=85 800w, 
-                      Photos/Portraits/kim1.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Portraits/kim1.webp" 
+               srcset="Photos/Portraits/kim1.webp 1200w, 
+                      Photos/Portraits/kim1.webp?width=800 800w, 
+                      Photos/Portraits/kim1.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Professional headshot" 
-               loading="eager"
+               loading="lazy"
                width="800" height="1200">
         </div>
         <div class="gallery-item landscape-top-left loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Portraits/kim2.jpg?width=20" 
-               data-src="Photos/Portraits/kim2.jpg"
-               data-srcset="Photos/Portraits/kim2.jpg 1200w, 
-                      Photos/Portraits/kim2.jpg?width=800&quality=85 800w, 
-                      Photos/Portraits/kim2.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Portraits/kim2.webp" 
+               srcset="Photos/Portraits/kim2.webp 1200w, 
+                      Photos/Portraits/kim2.webp?width=800 800w, 
+                      Photos/Portraits/kim2.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Natural light portrait" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         <div class="gallery-item landscape-top-right loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Portraits/matthew1.jpg?width=20" 
-               data-src="Photos/Portraits/matthew1.jpg"
-               data-srcset="Photos/Portraits/matthew1.jpg 1200w, 
-                      Photos/Portraits/matthew1.jpg?width=800&quality=85 800w, 
-                      Photos/Portraits/matthew1.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Portraits/matthew1.webp" 
+               srcset="Photos/Portraits/matthew1.webp 1200w, 
+                      Photos/Portraits/matthew1.webp?width=800 800w, 
+                      Photos/Portraits/matthew1.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Artistic portrait" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         <div class="gallery-item landscape-bottom-left loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Portraits/matthew2.jpg?width=20" 
-               data-src="Photos/Portraits/matthew2.jpg"
-               data-srcset="Photos/Portraits/matthew2.jpg 1200w, 
-                      Photos/Portraits/matthew2.jpg?width=800&quality=85 800w, 
-                      Photos/Portraits/matthew2.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Portraits/matthew2.webp" 
+               srcset="Photos/Portraits/matthew2.webp 1200w, 
+                      Photos/Portraits/matthew2.webp?width=800 800w, 
+                      Photos/Portraits/matthew2.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Senior portrait" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         <div class="gallery-item landscape-bottom-right loading" data-page="1">
           <img class="optimized-image" 
-               src="Photos/Portraits/kim3.jpg?width=20" 
-               data-src="Photos/Portraits/kim3.jpg"
-               data-srcset="Photos/Portraits/kim3.jpg 1200w, 
-                      Photos/Portraits/kim3.jpg?width=800&quality=85 800w, 
-                      Photos/Portraits/kim3.jpg?width=400&quality=80 400w"
-               data-sizes="(max-width: 768px) 100vw, 33vw"
+               src="Photos/Portraits/kim3.webp" 
+               srcset="Photos/Portraits/kim3.webp 1200w, 
+                      Photos/Portraits/kim3.webp?width=800 800w, 
+                      Photos/Portraits/kim3.webp?width=400 400w"
+               sizes="(max-width: 768px) 100vw, 33vw"
                alt="Child portrait" 
-               loading="eager"
+               loading="lazy"
                width="1200" height="800">
         </div>
         
         <!-- Second page (5 images) - hidden initially -->
         <div class="gallery-item portrait" data-page="2" style="display:none">
-          <img src="Photos/Portraits/racedriver.jpg" alt="Black and white portrait">
+          <img src="Photos/Portraits/racedriver.webp" alt="Black and white portrait">
         </div>
         <div class="gallery-item landscape-top-left" data-page="2" style="display:none">
-          <img src="Photos/Portraits/1I9A5810.jpeg" alt="Environmental portrait">
+          <img src="Photos/Portraits/1I9A5810.webp" alt="Environmental portrait">
         </div>
         <div class="gallery-item landscape-top-right" data-page="2" style="display:none">
-          <img src="Photos/Portraits/me.jpg" alt="Studio lighting">
+          <img src="Photos/Portraits/me.webp" alt="Studio lighting">
         </div>
         <div class="gallery-item landscape-bottom-left" data-page="2" style="display:none">
-          <img src="Photos/Portraits/cam3.jpg" alt="Fashion portrait">
+          <img src="Photos/Portraits/cam3.webp" alt="Fashion portrait">
         </div>
         <div class="gallery-item landscape-bottom-right" data-page="2" style="display:none">
-          <img src="Photos/Portraits/cam2.jpg" alt="Candid moment">
+          <img src="Photos/Portraits/cam2.webp" alt="Candid moment">
         </div>
         
         <!-- Third page (5 images) - hidden initially -->
         <div class="gallery-item portrait" data-page="3" style="display:none">
-          <img src="Photos/portraits11.jpg" alt="Family portrait">
+          <img src="Photos/portraits11.webp" alt="Family portrait">
         </div>
         <div class="gallery-item landscape-top-left" data-page="3" style="display:none">
-          <img src="Photos/portraits12.jpg" alt="Dramatic lighting">
+          <img src="Photos/portraits12.webp" alt="Dramatic lighting">
         </div>
         <div class="gallery-item landscape-top-right" data-page="3" style="display:none">
-          <img src="Photos/portraits13.jpg" alt="Lifestyle portrait">
+          <img src="Photos/portraits13.webp" alt="Lifestyle portrait">
         </div>
         <div class="gallery-item landscape-bottom-left" data-page="3" style="display:none">
-          <img src="Photos/portraits14.jpg" alt="Maternity portrait">
+          <img src="Photos/portraits14.webp" alt="Maternity portrait">
         </div>
         <div class="gallery-item landscape-bottom-right" data-page="3" style="display:none">
-          <img src="Photos/portraits15.jpg" alt="Sports portrait">
+          <img src="Photos/portraits15.webp" alt="Sports portrait">
         </div>
       </div>
       
@@ -818,14 +782,14 @@
     <p>&copy; 2025 Stones Photos</p>
   </footer>
   
-  <script src="script.js" defer></script>
+  <script src="script.js"></script>
   <script>
-    // Optimize mobile menu toggle - no changes needed
+    // Mobile menu toggle
     document.querySelector('.header-menu-btn').onclick = function() {
       document.querySelector('.header-nav').classList.toggle('show');
     };
     
-    // Close mobile menu on link click - no changes needed
+    // Close mobile menu on link click
     document.querySelectorAll('.header-nav a').forEach(link => {
       link.onclick = () => {
         if (window.innerWidth <= 700) {
@@ -834,148 +798,110 @@
       };
     });
     
-    // Enhanced image loading with Intersection Observer
-    document.addEventListener('DOMContentLoaded', function() {
-      // Create image observer
-      const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const img = entry.target;
-            // Set the real source and srcset
-            if (img.dataset.src) {
-              img.src = img.dataset.src;
-              if (img.dataset.srcset) img.srcset = img.dataset.srcset;
-              if (img.dataset.sizes) img.sizes = img.dataset.sizes;
-              
-              // Remove placeholder styling once loaded
-              img.onload = function() {
-                img.classList.remove('image-placeholder');
-                img.parentElement.classList.remove('loading');
-              };
-              
-              // Clean up data attributes
-              delete img.dataset.src;
-              delete img.dataset.srcset;
-              delete img.dataset.sizes;
-            }
-            observer.unobserve(img);
-          }
-        });
-      }, {
-        rootMargin: '200px 0px', // Start loading before images are in view
-        threshold: 0.01
-      });
+    // Gallery page navigation
+    document.querySelectorAll('.gallery-nav').forEach(nav => {
+      const galleryId = nav.dataset.gallery;
+      const grid = document.getElementById(`${galleryId}-grid`);
+      const pageIndicator = nav.querySelector('.current-page');
+      let currentPage = 1;
       
-      // Observe all images with data-src
-      document.querySelectorAll('img[data-src]').forEach(img => {
-        // Add placeholder styling
-        img.classList.add('image-placeholder');
-        imageObserver.observe(img);
-      });
-      
-      // Create section observer for better performance
-      const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      }, {
-        rootMargin: '0px',
-        threshold: 0.1
-      });
-      
-      // Observe all gallery sections
-      document.querySelectorAll('.gallery-section').forEach(section => {
-        sectionObserver.observe(section);
-      });
-      
-      // Optimized gallery navigation
-      document.querySelectorAll('.gallery-nav').forEach(nav => {
-        const galleryId = nav.dataset.gallery;
-        const grid = document.getElementById(`${galleryId}-grid`);
-        const pageIndicator = nav.querySelector('.current-page');
-        const totalPages = parseInt(nav.querySelector('.total-pages').textContent);
-        let currentPage = 1;
-        
-        // Preload next page images for smoother transitions
-        function preloadNextPageImages(nextPage) {
-          const nextPageItems = grid.querySelectorAll(`.gallery-item[data-page="${nextPage}"]`);
-          nextPageItems.forEach(item => {
-            const img = item.querySelector('img');
-            if (img && img.dataset.src) {
-              const preloadImg = new Image();
-              preloadImg.src = img.dataset.src.replace(/\?.*$/, '?width=100&quality=30');
-            }
-          });
-        }
-        
-        // Show/hide gallery items with optimized loading
-        function showPage(page) {
-          // Hide current items
-          grid.querySelectorAll(`.gallery-item[data-page="${currentPage}"]`).forEach(item => {
-            item.classList.remove('visible');
-            item.style.display = 'none';
-          });
-          
-          // Show new page items
-          grid.querySelectorAll(`.gallery-item[data-page="${page}"]`).forEach(item => {
+      // Show/hide gallery items based on page
+      function showPage(page) {
+        grid.querySelectorAll('.gallery-item').forEach(item => {
+          if (parseInt(item.dataset.page) === page) {
             item.style.display = '';
-            const img = item.querySelector('img');
             
             // Prioritize loading these images
-            if (img && img.dataset.src) {
-              img.src = img.dataset.src;
-              if (img.dataset.srcset) img.srcset = img.dataset.srcset;
-              if (img.dataset.sizes) img.sizes = img.dataset.sizes;
-              
-              // Clean up data attributes once loaded
-              img.onload = function() {
-                img.classList.remove('image-placeholder');
-                item.classList.remove('loading');
-                item.classList.add('visible');
-                
-                delete img.dataset.src;
-                delete img.dataset.srcset;
-                delete img.dataset.sizes;
-              };
-            } else {
-              // If already loaded, just show it
-              setTimeout(() => {
-                item.classList.add('visible');
-              }, 50);
+            const img = item.querySelector('img');
+            if (img && img.hasAttribute('loading')) {
+              img.removeAttribute('loading');
             }
-          });
-          
-          // Update page indicator
-          pageIndicator.textContent = page;
-          currentPage = page;
-          
-          // Preload next page
-          const nextPage = page < totalPages ? page + 1 : 1;
-          preloadNextPageImages(nextPage);
-        }
-        
-        // Next page button with optimized handling
-        nav.querySelector('.next').addEventListener('click', () => {
-          const nextPage = currentPage < totalPages ? currentPage + 1 : 1;
-          showPage(nextPage);
+            
+            // Trigger animation after a small delay
+            setTimeout(() => {
+              item.classList.add('visible');
+            }, 50);
+          } else {
+            item.classList.remove('visible');
+            item.style.display = 'none';
+          }
         });
-        
-        // Previous page button with optimized handling
-        nav.querySelector('.prev').addEventListener('click', () => {
-          const prevPage = currentPage > 1 ? currentPage - 1 : totalPages;
-          showPage(prevPage);
-        });
-        
-        // Initialize first page and preload second page
-        showPage(1);
-        preloadNextPageImages(2);
+        pageIndicator.textContent = page;
+      }
+      
+      // Next page button
+      nav.querySelector('.next').addEventListener('click', () => {
+        const totalPages = parseInt(nav.querySelector('.total-pages').textContent);
+        currentPage = currentPage < totalPages ? currentPage + 1 : 1;
+        showPage(currentPage);
       });
+      
+      // Previous page button
+      nav.querySelector('.prev').addEventListener('click', () => {
+        const totalPages = parseInt(nav.querySelector('.total-pages').textContent);
+        currentPage = currentPage > 1 ? currentPage - 1 : totalPages;
+        showPage(currentPage);
+      });
+      
+      // Initialize first page with animation
+      showPage(1);
     });
     
-    // Remove scroll event handlers and use IntersectionObserver
-    // for much better performance
+    // Add image optimization code
+    document.addEventListener('DOMContentLoaded', function() {
+      // Handle image loading and optimization
+      document.querySelectorAll('.optimized-image').forEach(img => {
+        // Remove loading class when image is loaded
+        img.onload = function() {
+          this.parentElement.classList.remove('loading');
+        };
+        
+        // If image fails to load, try a fallback approach
+        img.onerror = function() {
+          // If srcset loading fails, try direct loading with reduced quality
+          if (this.src.indexOf('?width=') === -1) {
+            this.src = this.src + '?quality=80&width=800';
+          }
+        };
+      });
+      
+      // Lazy load images for later pages
+      function lazyLoadGalleryImages() {
+        document.querySelectorAll('.gallery-item[data-page]:not([data-page="1"])').forEach(item => {
+          const img = item.querySelector('img');
+          if (img && !img.dataset.lazyLoaded) {
+            // Set src attribute only when nearing viewport
+            img.setAttribute('loading', 'lazy');
+            img.dataset.lazyLoaded = 'true';
+          }
+        });
+      }
+      
+      // Call lazy load on scroll and resize
+      window.addEventListener('scroll', lazyLoadGalleryImages);
+      window.addEventListener('resize', lazyLoadGalleryImages);
+      
+      // Initial call for images that might be visible
+      lazyLoadGalleryImages();
+    });
+    
+    // Scroll animation - show sections when scrolled into view
+    function checkScroll() {
+      const sections = document.querySelectorAll('.gallery-section');
+      
+      sections.forEach(section => {
+        const sectionTop = section.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+        
+        if (sectionTop < windowHeight * 0.8) {
+          section.classList.add('visible');
+        }
+      });
+    }
+    
+    // Check scroll position on load and scroll
+    window.addEventListener('load', checkScroll);
+    window.addEventListener('scroll', checkScroll);
   </script>
 </body>
 </html>
