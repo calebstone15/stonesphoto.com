@@ -253,56 +253,21 @@
       
       @media (max-width: 480px) {
         .gallery-grid {
-          grid-template-columns: 1fr;
-          gap: 0;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
         }
         
-        .gallery-item {
-          grid-column: 1 / span 1 !important;
-          grid-row: 1 / span 1 !important;
-          aspect-ratio: auto;
-          height: 70vh;
-          margin-bottom: 15px;
-          display: none;
+        .gallery-item.portrait {
+          grid-column: 1 / span 2;
+          grid-row: 1 / span 3;
         }
         
-        .gallery-item.mobile-visible {
-          display: block;
-        }
-        
-        .gallery-item img {
-          height: 100%;
-          object-position: center;
-        }
-        
-        .gallery-nav {
-          padding: 15px 0;
-          position: relative;
-          margin-top: 10px;
-        }
-        
-        .nav-arrow {
-          width: 60px;
-          height: 60px;
-        }
-        
-        .gallery-page-indicator {
-          font-size: 1.2rem;
-        }
-        
-        /* Mobile image counter */
-        .mobile-counter {
-          display: none;
-          text-align: center;
-          margin-bottom: 10px;
-          font-size: 0.9rem;
-          color: #666;
-        }
-        
-        @media (max-width: 480px) {
-          .mobile-counter {
-            display: block;
-          }
+        .gallery-item.landscape-top-left,
+        .gallery-item.landscape-top-right,
+        .gallery-item.landscape-bottom-left,
+        .gallery-item.landscape-bottom-right {
+          grid-column: 1 / span 2;
+          grid-row: span 1;
         }
       }
     </style>
@@ -839,184 +804,47 @@
       const grid = document.getElementById(`${galleryId}-grid`);
       const pageIndicator = nav.querySelector('.current-page');
       let currentPage = 1;
-      let mobileImageIndex = 0;
-      const isMobile = () => window.innerWidth <= 480;
-      
-      // Create mobile counter element if it doesn't exist
-      if (!nav.previousElementSibling.querySelector('.mobile-counter')) {
-        const mobileCounter = document.createElement('div');
-        mobileCounter.className = 'mobile-counter';
-        nav.parentNode.insertBefore(mobileCounter, nav);
-      }
-      
-      // Get all items for a page
-      function getPageItems(page) {
-        return Array.from(grid.querySelectorAll(`.gallery-item[data-page="${page}"]`));
-      }
-      
-      // Get total number of images across all pages
-      function getTotalImages() {
-        return grid.querySelectorAll('.gallery-item').length;
-      }
-      
-      // Update mobile counter
-      function updateMobileCounter() {
-        const mobileCounter = nav.parentNode.querySelector('.mobile-counter');
-        const allItems = Array.from(grid.querySelectorAll('.gallery-item'));
-        const visibleItem = allItems.find(item => item.classList.contains('mobile-visible'));
-        
-        if (visibleItem && mobileCounter) {
-          const currentIndex = allItems.indexOf(visibleItem) + 1;
-          mobileCounter.textContent = `Image ${currentIndex} of ${getTotalImages()}`;
-        }
-      }
-      
-      // Show specific image on mobile
-      function showMobileImage(pageItems, index) {
-        pageItems.forEach(item => {
-          item.classList.remove('mobile-visible');
-          item.style.display = 'none';
-        });
-        
-        if (pageItems[index]) {
-          pageItems[index].style.display = 'block';
-          
-          // Prioritize loading this image
-          const img = pageItems[index].querySelector('img');
-          if (img && img.hasAttribute('loading')) {
-            img.removeAttribute('loading');
-          }
-          
-          // Add visible class after a small delay for animation
-          setTimeout(() => {
-            pageItems[index].classList.add('visible', 'mobile-visible');
-            updateMobileCounter();
-          }, 50);
-        }
-      }
       
       // Show/hide gallery items based on page
       function showPage(page) {
-        const pageItems = getPageItems(page);
-        
-        if (isMobile()) {
-          // On mobile, show only one image at a time
-          mobileImageIndex = 0;
-          showMobileImage(pageItems, mobileImageIndex);
-        } else {
-          // Desktop view - show all items for the current page
-          grid.querySelectorAll('.gallery-item').forEach(item => {
-            if (parseInt(item.dataset.page) === page) {
-              item.style.display = '';
-              
-              // Prioritize loading these images
-              const img = item.querySelector('img');
-              if (img && img.hasAttribute('loading')) {
-                img.removeAttribute('loading');
-              }
-              
-              // Trigger animation after a small delay
-              setTimeout(() => {
-                item.classList.add('visible');
-              }, 50);
-            } else {
-              item.classList.remove('visible', 'mobile-visible');
-              item.style.display = 'none';
+        grid.querySelectorAll('.gallery-item').forEach(item => {
+          if (parseInt(item.dataset.page) === page) {
+            item.style.display = '';
+            
+            // Prioritize loading these images
+            const img = item.querySelector('img');
+            if (img && img.hasAttribute('loading')) {
+              img.removeAttribute('loading');
             }
-          });
-        }
-        
+            
+            // Trigger animation after a small delay
+            setTimeout(() => {
+              item.classList.add('visible');
+            }, 50);
+          } else {
+            item.classList.remove('visible');
+            item.style.display = 'none';
+          }
+        });
         pageIndicator.textContent = page;
       }
       
-      // Navigate to next image on mobile
-      function nextMobileImage() {
-        const pageItems = getPageItems(currentPage);
-        mobileImageIndex = (mobileImageIndex + 1) % pageItems.length;
-        showMobileImage(pageItems, mobileImageIndex);
-      }
-      
-      // Navigate to previous image on mobile
-      function prevMobileImage() {
-        const pageItems = getPageItems(currentPage);
-        mobileImageIndex = (mobileImageIndex - 1 + pageItems.length) % pageItems.length;
-        showMobileImage(pageItems, mobileImageIndex);
-      }
-      
-      // Next button click handler
+      // Next page button
       nav.querySelector('.next').addEventListener('click', () => {
-        if (isMobile()) {
-          // On mobile, first try to navigate between images on the current page
-          const pageItems = getPageItems(currentPage);
-          if (mobileImageIndex < pageItems.length - 1) {
-            nextMobileImage();
-          } else {
-            // If at the last image of the page, go to next page
-            const totalPages = parseInt(nav.querySelector('.total-pages').textContent);
-            currentPage = currentPage < totalPages ? currentPage + 1 : 1;
-            showPage(currentPage);
-          }
-        } else {
-          // On desktop, navigate between pages
-          const totalPages = parseInt(nav.querySelector('.total-pages').textContent);
-          currentPage = currentPage < totalPages ? currentPage + 1 : 1;
-          showPage(currentPage);
-        }
+        const totalPages = parseInt(nav.querySelector('.total-pages').textContent);
+        currentPage = currentPage < totalPages ? currentPage + 1 : 1;
+        showPage(currentPage);
       });
       
-      // Previous button click handler
+      // Previous page button
       nav.querySelector('.prev').addEventListener('click', () => {
-        if (isMobile()) {
-          // On mobile, first try to navigate between images on the current page
-          if (mobileImageIndex > 0) {
-            prevMobileImage();
-          } else {
-            // If at the first image of the page, go to previous page
-            const totalPages = parseInt(nav.querySelector('.total-pages').textContent);
-            currentPage = currentPage > 1 ? currentPage - 1 : totalPages;
-            showPage(currentPage);
-          }
-        } else {
-          // On desktop, navigate between pages
-          const totalPages = parseInt(nav.querySelector('.total-pages').textContent);
-          currentPage = currentPage > 1 ? currentPage - 1 : totalPages;
-          showPage(currentPage);
-        }
+        const totalPages = parseInt(nav.querySelector('.total-pages').textContent);
+        currentPage = currentPage > 1 ? currentPage - 1 : totalPages;
+        showPage(currentPage);
       });
-      
-      // Handle swipe gestures for mobile
-      let touchStartX = 0;
-      let touchEndX = 0;
-      
-      grid.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-      }, false);
-      
-      grid.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-      }, false);
-      
-      function handleSwipe() {
-        if (isMobile()) {
-          const swipeThreshold = 50;
-          if (touchEndX + swipeThreshold < touchStartX) {
-            // Swipe left - next image
-            nav.querySelector('.next').click();
-          } else if (touchEndX > touchStartX + swipeThreshold) {
-            // Swipe right - previous image
-            nav.querySelector('.prev').click();
-          }
-        }
-      }
       
       // Initialize first page with animation
       showPage(1);
-      
-      // Handle window resize - switch between desktop and mobile views
-      window.addEventListener('resize', () => {
-        showPage(currentPage);
-      });
     });
     
     // Add image optimization code
