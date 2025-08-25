@@ -63,6 +63,9 @@
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         opacity: 0;
         transform: translateY(30px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       
       .gallery-item.visible {
@@ -80,6 +83,12 @@
         height: 100%;
         object-fit: cover;
         transition: transform 0.5s ease;
+        display: block; /* Remove any inline spacing */
+        position: absolute; /* Ensure image fills the container completely */
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
       }
       
       .gallery-item:hover img {
@@ -179,6 +188,7 @@
         border-top-color: #23395d;
         border-radius: 50%;
         animation: loading-spinner 0.8s linear infinite;
+        z-index: 2; /* Ensure spinner appears above the image */
       }
       
       @keyframes loading-spinner {
@@ -191,6 +201,9 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
+        margin: 0; /* Remove any default margins */
+        padding: 0; /* Remove any default padding */
+        display: block; /* Remove any inline spacing */
       }
       
       /* Responsive adjustments */
@@ -497,23 +510,6 @@
         <div class="gallery-item landscape-bottom-right" data-page="3" style="display:none">
           <img src="Photos/Vehicles/rocket3.webp" alt="Custom paint job">
         </div>
-        
-        <!-- Fourth page (5 images) - hidden initially -->
-        <div class="gallery-item portrait" data-page="4" style="display:none">
-          <img src="Photos/Vehicles/car1.webp" alt="Supercar">
-        </div>
-        <div class="gallery-item landscape-top-left" data-page="4" style="display:none">
-          <img src="Photos/vehicles17.webp" alt="Vintage convertible">
-        </div>
-        <div class="gallery-item landscape-top-right" data-page="4" style="display:none">
-          <img src="Photos/vehicles18.webp" alt="Rally car">
-        </div>
-        <div class="gallery-item landscape-bottom-left" data-page="4" style="display:none">
-          <img src="Photos/vehicles19.webp" alt="Car wheel">
-        </div>
-        <div class="gallery-item landscape-bottom-right" data-page="4" style="display:none">
-          <img src="Photos/vehicles20.webp" alt="Dashboard">
-        </div>
       </div>
       
       <div class="gallery-nav" data-gallery="vehicles">
@@ -523,7 +519,7 @@
           </svg>
         </button>
         <div class="gallery-page-indicator">
-          <span class="current-page">1</span> / <span class="total-pages">4</span>
+          <span class="current-page">1</span> / <span class="total-pages">3</span>
         </div>
         <button class="nav-arrow next" aria-label="Next page">
           <svg viewBox="0 0 24 24">
@@ -653,7 +649,7 @@
           </svg>
         </button>
         <div class="gallery-page-indicator">
-          <span class="current-page">1</span> / <span class="total-pages">4</span>
+          <span class="current-page">1</span> / <span class="total-pages">3</span>
         </div>
         <button class="nav-arrow next" aria-label="Next page">
           <svg viewBox="0 0 24 24">
