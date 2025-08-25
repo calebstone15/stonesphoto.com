@@ -67,6 +67,14 @@
             transition: border-color 0.3s, box-shadow 0.3s;
         }
         
+        .form-group input::placeholder,
+        .form-group textarea::placeholder,
+        .form-group select::placeholder {
+            font-family: 'Old Standard TT', serif;
+            font-size: 1rem;
+            color: #999;
+        }
+        
         .form-group input:focus, 
         .form-group textarea:focus, 
         .form-group select:focus {
@@ -193,17 +201,17 @@
                     <label for="interest">What are you interested in?</label><br>
                     <select id="interest" name="interest" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
                         <option value="" disabled selected>Select an option</option>
-                        <option value="Couples/Engagement">Couples/Engagement</option>
-                        <option value="Vehicles">Vehicles</option>
-                        <option value="Landscapes">Landscapes</option>
+                        <option value="couples">Couples</option>
+                        <option value="Engagement">Engagment</option>
+                        <option value="Senior/Graduation">Senior/Graduation</option>
                         <option value="Portraits">Portraits</option>
-                        <option value="Nature">Nature</option>
-                        <option value="Other">Other</option>
+                        <option value="Wedding">Wedding</option>
+                        <option value="Other">Other (please specify below)</option>
                     </select>
                 </div>
                 <div style="margin-bottom: 20px;">
                     <label for="message">Your Message</label><br>
-                    <textarea id="message" name="message" placeholder="Please enter your message" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; min-height: 100px;"></textarea>
+                    <textarea id="message" name="message" placeholder="Feel free to ask me any questions before booking your photoshoot" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; min-height: 100px; font-family: 'Old Standard TT', serif; font-size: 1rem;"></textarea>
                 </div>
                 <button type="submit" style="padding: 12px 24px; background: #2193b0; color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s;">Send Message</button>
                 <p id="form-message" style="display: none; margin-top: 10px;"></p>
