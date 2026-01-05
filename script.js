@@ -1,64 +1,79 @@
 console.log("Stones Photos site loaded!");
 
+// Centralized EmailJS Configuration
+// Sentinel Note: Public Key is exposed by design in client-side code.
+// Ensure 'Origin Verification' is enabled in EmailJS dashboard to prevent misuse.
+window.EMAIL_CONFIG = {
+    PUBLIC_KEY: "x0pDGPnrMj7xD0fSb",
+    SERVICE_ID: "service_0hcl68q",
+    CONTACT_TEMPLATE_ID: "template_3codtcb",
+    BOOKING_TEMPLATE_ID: "template_31tqjn8"
+};
+
 // Robust, idempotent EmailJS init
 (function initEmailJS() {
-	if (!window.__EMAILJS_INITIALIZED__) {
-		if (window.emailjs && typeof window.emailjs.init === 'function') {
-			try {
-				// Use string signature for widest compatibility
-				emailjs.init("x0pDGPnrMj7xD0fSb");
-				window.__EMAILJS_INITIALIZED__ = true;
-				console.log("EmailJS initialized in script.js");
-			} catch (e) {
-				console.error("EmailJS init failed:", e);
-			}
-		} else {
-			console.error("EmailJS SDK not loaded before init.");
-		}
-	}
+    if (!window.__EMAILJS_INITIALIZED__) {
+        if (window.emailjs && typeof window.emailjs.init === 'function') {
+            try {
+                // Use string signature for widest compatibility
+                emailjs.init(window.EMAIL_CONFIG.PUBLIC_KEY);
+                window.__EMAILJS_INITIALIZED__ = true;
+                console.log("EmailJS initialized in script.js");
+            } catch (e) {
+                console.error("EmailJS init failed:", e);
+            }
+        } else {
+            console.error("EmailJS SDK not loaded before init.");
+        }
+    }
 })();
 
 function handleFormSubmit(event) {
-	event.preventDefault();
-	const form = event.target;
-	const formMessage = document.getElementById('form-message');
+    event.preventDefault();
+    const form = event.target;
+    const formMessage = document.getElementById('form-message');
 
-	// Disable button to prevent multiple submissions
-	const submitBtn = form.querySelector('button[type="submit"]');
-	submitBtn.disabled = true;
-	submitBtn.textContent = 'Sending...';
+    // Disable button to prevent multiple submissions
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
 
-	const formData = {
-		name: document.getElementById('name').value.trim(),
-		email: document.getElementById('email').value.trim(),
-		phone: document.getElementById('phone').value.trim(),
-		interest: document.getElementById('interest').value,
-		message: document.getElementById('message').value.trim()
-	};
+    const formData = {
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        interest: document.getElementById('interest').value,
+        message: document.getElementById('message').value.trim()
+    };
 
-	// Pass public key as 4th arg as a fallback in case init wasn't effective
-	emailjs.send("service_0hcl68q", "template_3codtcb", formData, "x0pDGPnrMj7xD0fSb")
-		.then(function() {
-			formMessage.style.display = 'block';
-			formMessage.style.color = '#2193b0';
-			formMessage.textContent = 'Message sent successfully! I’ll get back to you soon.';
-			form.reset();
-			submitBtn.disabled = false;
-			submitBtn.textContent = 'Send Message';
-		}, function(error) {
-			formMessage.style.display = 'block';
-			formMessage.style.color = '#d32f2f';
-			formMessage.textContent = 'Failed to send message. Please try again or contact me directly.';
-			submitBtn.disabled = false;
-			submitBtn.textContent = 'Send Message';
-			console.error('EmailJS error:', error);
-		});
+    // Pass public key as 4th arg as a fallback in case init wasn't effective
+    emailjs.send(
+        window.EMAIL_CONFIG.SERVICE_ID,
+        window.EMAIL_CONFIG.CONTACT_TEMPLATE_ID,
+        formData,
+        window.EMAIL_CONFIG.PUBLIC_KEY
+    )
+    .then(function() {
+        formMessage.style.display = 'block';
+        formMessage.style.color = '#2193b0';
+        formMessage.textContent = 'Message sent successfully! I’ll get back to you soon.';
+        form.reset();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+    }, function(error) {
+        formMessage.style.display = 'block';
+        formMessage.style.color = '#d32f2f';
+        formMessage.textContent = 'Failed to send message. Please try again or contact me directly.';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+        console.error('EmailJS error:', error);
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-	const form = document.getElementById('contact-form');
+    const form = document.getElementById('contact-form');
 
-	if (form) {
-		form.addEventListener('submit', handleFormSubmit);
-	}
+    if (form) {
+        form.addEventListener('submit', handleFormSubmit);
+    }
 });

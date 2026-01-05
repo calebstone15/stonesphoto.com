@@ -448,7 +448,12 @@
                     console.log("Sending email with parameters:", templateParams);
 
                     // Send the email using EmailJS
-                    emailjs.send('service_0hcl68q', 'template_31tqjn8', templateParams, 'x0pDGPnrMj7xD0fSb')
+                    emailjs.send(
+                        window.EMAIL_CONFIG.SERVICE_ID,
+                        window.EMAIL_CONFIG.BOOKING_TEMPLATE_ID,
+                        templateParams,
+                        window.EMAIL_CONFIG.PUBLIC_KEY
+                    )
                         .then(function (response) {
                             console.log('SUCCESS!', response.status, response.text);
                             alert('Thank you for your booking request! I will contact you within 24-48 hours to confirm your booking.');
