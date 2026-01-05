@@ -233,7 +233,7 @@
                     <button type="submit"
                         style="padding: 12px 24px; background: #2193b0; color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s;">Send
                         Message</button>
-                    <p id="form-message" style="display: none; margin-top: 10px;"></p>
+                    <p id="form-message" role="alert" aria-live="polite" style="display: none; margin-top: 10px;"></p>
                 </form>
             </div>
 
@@ -270,21 +270,6 @@
         <p>&copy; 2025 Stones Photos</p>
     </footer>
 
-    <script>
-        // Mobile menu toggle
-        document.querySelector('.header-menu-btn').onclick = function () {
-            document.querySelector('.header-nav').classList.toggle('show');
-        };
-
-        // Close mobile menu on link click
-        document.querySelectorAll('.header-nav a').forEach(link => {
-            link.onclick = () => {
-                if (window.innerWidth <= 700) {
-                    document.querySelector('.header-nav').classList.remove('show');
-                }
-            };
-        });
-    </script>
 </body>
 
 </html>

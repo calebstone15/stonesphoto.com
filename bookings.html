@@ -332,20 +332,6 @@
         <p>&copy; 2025 Stones Photos</p>
     </footer>
     <script>
-        // Mobile menu toggle
-        document.querySelector('.header-menu-btn').onclick = function () {
-            document.querySelector('.header-nav').classList.toggle('show');
-        };
-
-        // Close mobile menu on link click
-        document.querySelectorAll('.header-nav a').forEach(link => {
-            link.onclick = () => {
-                if (window.innerWidth <= 700) {
-                    document.querySelector('.header-nav').classList.remove('show');
-                }
-            };
-        });
-
         // Form validation
         const bookingForm = document.getElementById('booking-form');
 
