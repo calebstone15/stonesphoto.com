@@ -18,8 +18,55 @@ console.log("Stones Photos site loaded!");
 	}
 })();
 
+function showError(input, errorId) {
+	const errorDiv = document.getElementById(errorId);
+	if (errorDiv) errorDiv.style.display = 'block';
+	input.setAttribute('aria-invalid', 'true');
+	input.style.borderColor = '#e74c3c';
+}
+
+function clearError(input, errorId) {
+	const errorDiv = document.getElementById(errorId);
+	if (errorDiv) errorDiv.style.display = 'none';
+	input.setAttribute('aria-invalid', 'false');
+	input.style.borderColor = '';
+}
+
+function validateForm() {
+	let isValid = true;
+	let firstInvalid = null;
+
+	const validators = [
+		{ id: 'name', errorId: 'nameError', validate: val => val.trim() !== '' },
+		{ id: 'email', errorId: 'emailError', validate: val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim()) },
+		{ id: 'phone', errorId: 'phoneError', validate: val => !val.trim() || val.replace(/\D/g, '').length >= 7 },
+		{ id: 'interest', errorId: 'interestError', validate: val => val !== '' },
+		{ id: 'message', errorId: 'messageError', validate: val => val.trim() !== '' }
+	];
+
+	validators.forEach(({ id, errorId, validate }) => {
+		const input = document.getElementById(id);
+		const valid = validate(input.value);
+		if (!valid) {
+			showError(input, errorId);
+			isValid = false;
+			if (!firstInvalid) firstInvalid = input;
+		} else {
+			clearError(input, errorId);
+		}
+	});
+
+	if (firstInvalid) firstInvalid.focus();
+	return isValid;
+}
+
 function handleFormSubmit(event) {
 	event.preventDefault();
+
+	if (!validateForm()) {
+		return;
+	}
+
 	const form = event.target;
 	const formMessage = document.getElementById('form-message');
 
@@ -60,5 +107,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	if (form) {
 		form.addEventListener('submit', handleFormSubmit);
+
+		// Real-time error clearing
+		const inputs = [
+			{ id: 'name', errorId: 'nameError' },
+			{ id: 'email', errorId: 'emailError' },
+			{ id: 'phone', errorId: 'phoneError' },
+			{ id: 'interest', errorId: 'interestError' },
+			{ id: 'message', errorId: 'messageError' }
+		];
+
+		inputs.forEach(item => {
+			const input = document.getElementById(item.id);
+			if (input) {
+				input.addEventListener('input', () => clearError(input, item.errorId));
+				// For select element
+				input.addEventListener('change', () => clearError(input, item.errorId));
+			}
+		});
 	}
 });
