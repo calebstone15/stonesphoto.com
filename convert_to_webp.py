@@ -15,6 +15,8 @@ Usage:
 import os
 import sys
 from pathlib import Path
+import tkinter as tk
+from tkinter import filedialog, messagebox
 
 try:
     from PIL import Image
@@ -22,9 +24,6 @@ except ImportError:
     print("Error: Pillow library is required.")
     print("Install it with: pip install Pillow")
     sys.exit(1)
-
-import tkinter as tk
-from tkinter import filedialog, messagebox
 
 
 def convert_image_to_webp(input_path, output_path, quality=85, method=6):
@@ -38,7 +37,8 @@ def convert_image_to_webp(input_path, output_path, quality=85, method=6):
         method (int): Compression method (0-6).
 
     Returns:
-        dict: A dictionary containing conversion details (original_size, webp_size, reduction).
+        dict: A dictionary containing conversion details.
+              (original_size, webp_size, reduction)
     """
     with Image.open(input_path) as img:
         # Convert to RGB if necessary (for images with transparency)
@@ -132,7 +132,7 @@ def select_and_convert_to_webp():
         error_msg = f"Error converting image: {str(e)}"
         print(error_msg)
         messagebox.showerror("Conversion Error", error_msg)
-    except Exception as e: # pylint: disable=broad-exception-caught
+    except Exception as e:  # pylint: disable=broad-exception-caught
         error_msg = f"Unexpected error: {str(e)}"
         print(error_msg)
         messagebox.showerror("Error", error_msg)

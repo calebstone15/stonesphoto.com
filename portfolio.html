@@ -102,20 +102,6 @@
     </footer>
 
     <script src="script.js"></script>
-    <script>
-        // Mobile menu toggle
-        document.querySelector('.header-menu-btn').onclick = function () {
-            document.querySelector('.header-nav').classList.toggle('show');
-        };
-        // Optional: close menu when clicking a link (on mobile)
-        document.querySelectorAll('.header-nav a').forEach(link => {
-            link.onclick = () => {
-                if (window.innerWidth <= 1350) {
-                    document.querySelector('.header-nav').classList.remove('show');
-                }
-            };
-        });
-    </script>
 </body>
 
 </html>
