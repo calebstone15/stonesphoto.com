@@ -204,29 +204,29 @@
         <div class="bookings-wrapper">
             <div class="booking-form">
                 <h2>Request a Booking</h2>
-                <form id="booking-form">
+                <form id="booking-form" novalidate>
                     <div class="form-group">
                         <label for="name">Your Name</label>
-                        <input type="text" id="name" name="name" placeholder="Please enter your full name" required>
-                        <div id="nameError" class="form-error">Please enter your name</div>
+                        <input type="text" id="name" name="name" placeholder="Please enter your full name" required aria-describedby="nameError">
+                        <div id="nameError" class="form-error" role="alert">Please enter your name</div>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email Address</label>
                         <input type="email" id="email" name="email" placeholder="Your email address for confirmation"
-                            required>
-                        <div id="emailError" class="form-error">Please enter a valid email address</div>
+                            required aria-describedby="emailError">
+                        <div id="emailError" class="form-error" role="alert">Please enter a valid email address</div>
                     </div>
 
                     <div class="form-group">
                         <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" placeholder="Your phone number" required>
-                        <div id="phoneError" class="form-error">Please enter a valid phone number</div>
+                        <input type="tel" id="phone" name="phone" placeholder="Your phone number" required aria-describedby="phoneError">
+                        <div id="phoneError" class="form-error" role="alert">Please enter a valid phone number</div>
                     </div>
 
                     <div class="form-group">
                         <label for="shoot-type">Type of Photoshoot</label>
-                        <select id="shoot-type" name="shoot-type" required>
+                        <select id="shoot-type" name="shoot-type" required aria-describedby="shootTypeError">
                             <option value="" disabled selected>Select an option</option>
                             <option value="Couples">Couples</option>
                             <option value="Engagement">Engagement</option>
@@ -235,13 +235,13 @@
                             <option value="Wedding">Wedding</option>
                             <option value="Other">Other (please specify in notes)</option>
                         </select>
-                        <div id="shootTypeError" class="form-error">Please select a type of photoshoot</div>
+                        <div id="shootTypeError" class="form-error" role="alert">Please select a type of photoshoot</div>
                     </div>
 
                     <div class="form-group">
                         <label for="preferred-date">Preferred Date</label>
-                        <input type="date" id="preferred-date" name="preferred-date" required>
-                        <div id="preferredDateError" class="form-error">Please select a preferred date</div>
+                        <input type="date" id="preferred-date" name="preferred-date" required aria-describedby="preferredDateError">
+                        <div id="preferredDateError" class="form-error" role="alert">Please select a preferred date</div>
                     </div>
 
                     <div class="form-group">
@@ -252,8 +252,8 @@
                     <div class="form-group">
                         <label for="location">Location</label>
                         <input type="text" id="location" name="location"
-                            placeholder="Where would you like the photoshoot to take place?" required>
-                        <div id="locationError" class="form-error">Please enter a location</div>
+                            placeholder="Where would you like the photoshoot to take place?" required aria-describedby="locationError">
+                        <div id="locationError" class="form-error" role="alert">Please enter a location</div>
                     </div>
 
                     <div class="form-group">
@@ -264,6 +264,7 @@
                     </div>
 
                     <button type="submit" class="submit-btn">Submit Booking Request</button>
+                    <div id="submission-feedback" role="alert" aria-live="polite" style="display: none; margin-top: 15px; padding: 10px; border-radius: 8px;"></div>
                 </form>
             </div>
 
@@ -350,78 +351,86 @@
         const bookingForm = document.getElementById('booking-form');
 
         if (bookingForm) {
+            const toggleError = (input, errorId, isError) => {
+                const errorElement = document.getElementById(errorId);
+                input.style.borderColor = isError ? '#e74c3c' : '#ddd';
+                input.setAttribute('aria-invalid', isError ? 'true' : 'false');
+                if (errorElement) {
+                    errorElement.style.display = isError ? 'block' : 'none';
+                }
+            };
+
+            const showFeedback = (message, isSuccess) => {
+                const feedback = document.getElementById('submission-feedback');
+                feedback.style.display = 'block';
+                feedback.style.backgroundColor = isSuccess ? '#e8f5e9' : '#ffebee';
+                feedback.style.color = isSuccess ? '#2e7d32' : '#c62828';
+                feedback.textContent = message;
+                feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            };
+
             bookingForm.addEventListener('submit', function (e) {
                 e.preventDefault();
                 console.log("Form submitted, running validation");
 
                 let isValid = true;
+                const feedback = document.getElementById('submission-feedback');
+                feedback.style.display = 'none';
 
                 // Name validation
                 const name = document.getElementById('name');
                 if (name.value.trim() === '') {
-                    document.getElementById('nameError').style.display = 'block';
-                    name.style.borderColor = '#e74c3c';
+                    toggleError(name, 'nameError', true);
                     isValid = false;
                 } else {
-                    document.getElementById('nameError').style.display = 'none';
-                    name.style.borderColor = '#ddd';
+                    toggleError(name, 'nameError', false);
                 }
 
                 // Email validation
                 const email = document.getElementById('email');
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email.value)) {
-                    document.getElementById('emailError').style.display = 'block';
-                    email.style.borderColor = '#e74c3c';
+                    toggleError(email, 'emailError', true);
                     isValid = false;
                 } else {
-                    document.getElementById('emailError').style.display = 'none';
-                    email.style.borderColor = '#ddd';
+                    toggleError(email, 'emailError', false);
                 }
 
                 // Phone validation
                 const phone = document.getElementById('phone');
                 const phoneRegex = /^[\d\s\-\(\)]+$/;
                 if (!phoneRegex.test(phone.value)) {
-                    document.getElementById('phoneError').style.display = 'block';
-                    phone.style.borderColor = '#e74c3c';
+                    toggleError(phone, 'phoneError', true);
                     isValid = false;
                 } else {
-                    document.getElementById('phoneError').style.display = 'none';
-                    phone.style.borderColor = '#ddd';
+                    toggleError(phone, 'phoneError', false);
                 }
 
                 // Shoot type validation
                 const shootType = document.getElementById('shoot-type');
                 if (shootType.value === '') {
-                    document.getElementById('shootTypeError').style.display = 'block';
-                    shootType.style.borderColor = '#e74c3c';
+                    toggleError(shootType, 'shootTypeError', true);
                     isValid = false;
                 } else {
-                    document.getElementById('shootTypeError').style.display = 'none';
-                    shootType.style.borderColor = '#ddd';
+                    toggleError(shootType, 'shootTypeError', false);
                 }
 
                 // Date validation
                 const preferredDate = document.getElementById('preferred-date');
                 if (preferredDate.value === '') {
-                    document.getElementById('preferredDateError').style.display = 'block';
-                    preferredDate.style.borderColor = '#e74c3c';
+                    toggleError(preferredDate, 'preferredDateError', true);
                     isValid = false;
                 } else {
-                    document.getElementById('preferredDateError').style.display = 'none';
-                    preferredDate.style.borderColor = '#ddd';
+                    toggleError(preferredDate, 'preferredDateError', false);
                 }
 
                 // Location validation
                 const location = document.getElementById('location');
                 if (location.value.trim() === '') {
-                    document.getElementById('locationError').style.display = 'block';
-                    location.style.borderColor = '#e74c3c';
+                    toggleError(location, 'locationError', true);
                     isValid = false;
                 } else {
-                    document.getElementById('locationError').style.display = 'none';
-                    location.style.borderColor = '#ddd';
+                    toggleError(location, 'locationError', false);
                 }
 
                 // If all validations pass
@@ -451,11 +460,11 @@
                     emailjs.send('service_0hcl68q', 'template_31tqjn8', templateParams, 'x0pDGPnrMj7xD0fSb')
                         .then(function (response) {
                             console.log('SUCCESS!', response.status, response.text);
-                            alert('Thank you for your booking request! I will contact you within 24-48 hours to confirm your booking.');
+                            showFeedback('Thank you for your booking request! I will contact you within 24-48 hours to confirm your booking.', true);
                             bookingForm.reset();
                         }, function (error) {
                             console.log('FAILED...', error);
-                            alert('There was an error sending your booking request. Please try again or contact me directly. Error: ' + (error?.text || 'Unknown error'));
+                            showFeedback('There was an error sending your booking request. Please try again or contact me directly.', false);
                         })
                         .finally(function () {
                             // Reset button state
@@ -470,11 +479,9 @@
             inputs.forEach(input => {
                 input.addEventListener('input', function () {
                     const errorId = this.id + 'Error';
-                    const errorElement = document.getElementById(errorId);
-                    if (errorElement) {
-                        errorElement.style.display = 'none';
-                        this.style.borderColor = '#ddd';
-                    }
+                    // Use helper to clear error
+                    // Note: 'this' refers to the input element
+                    toggleError(this, errorId, false);
                 });
             });
         }
