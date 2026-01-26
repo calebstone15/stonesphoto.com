@@ -1,12 +1,19 @@
 console.log("Stones Photos site loaded!");
 
+const EMAIL_CONFIG = {
+	SERVICE_ID: "service_0hcl68q",
+	PUBLIC_KEY: "x0pDGPnrMj7xD0fSb",
+	TEMPLATE_ID: "template_3codtcb",
+	BOOKING_TEMPLATE_ID: "template_31tqjn8"
+};
+
 // Robust, idempotent EmailJS init
 (function initEmailJS() {
 	if (!window.__EMAILJS_INITIALIZED__) {
 		if (window.emailjs && typeof window.emailjs.init === 'function') {
 			try {
 				// Use string signature for widest compatibility
-				emailjs.init("x0pDGPnrMj7xD0fSb");
+				emailjs.init(EMAIL_CONFIG.PUBLIC_KEY);
 				window.__EMAILJS_INITIALIZED__ = true;
 				console.log("EmailJS initialized in script.js");
 			} catch (e) {
@@ -37,7 +44,7 @@ function handleFormSubmit(event) {
 	};
 
 	// Pass public key as 4th arg as a fallback in case init wasn't effective
-	emailjs.send("service_0hcl68q", "template_3codtcb", formData, "x0pDGPnrMj7xD0fSb")
+	emailjs.send(EMAIL_CONFIG.SERVICE_ID, EMAIL_CONFIG.TEMPLATE_ID, formData, EMAIL_CONFIG.PUBLIC_KEY)
 		.then(function() {
 			formMessage.style.display = 'block';
 			formMessage.style.color = '#2193b0';
