@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "lint": "eslint script.js && stylelint styles.css && htmlhint *.html",
+    "lint:fix": "eslint script.js --fix && stylelint styles.css --fix"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.2",
+    "htmlhint": "^1.8.0",
+    "stylelint": "^17.0.0",
+    "stylelint-config-standard": "^40.0.0"
+  },
+  "type": "module"
+}
