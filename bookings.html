@@ -99,6 +99,15 @@
             display: none;
         }
 
+        .form-message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: none;
+            text-align: center;
+            font-weight: 600;
+        }
+
         .submit-btn {
             display: block;
             width: 100%;
@@ -204,7 +213,7 @@
         <div class="bookings-wrapper">
             <div class="booking-form">
                 <h2>Request a Booking</h2>
-                <form id="booking-form">
+                <form id="booking-form" novalidate>
                     <div class="form-group">
                         <label for="name">Your Name</label>
                         <input type="text" id="name" name="name" placeholder="Please enter your full name" required>
@@ -263,6 +272,7 @@
                             style="font-family: 'Old Standard TT', serif;"></textarea>
                     </div>
 
+                    <div id="booking-form-message" class="form-message" role="alert" aria-live="polite"></div>
                     <button type="submit" class="submit-btn">Submit Booking Request</button>
                 </form>
             </div>
@@ -355,73 +365,74 @@
                 console.log("Form submitted, running validation");
 
                 let isValid = true;
+                const formMessage = document.getElementById('booking-form-message');
+                formMessage.style.display = 'none'; // Hide previous messages
+
+                // Helper to set error state
+                function setError(input, errorId) {
+                    document.getElementById(errorId).style.display = 'block';
+                    input.style.borderColor = '#e74c3c';
+                    input.setAttribute('aria-invalid', 'true');
+                    input.setAttribute('aria-describedby', errorId);
+                    isValid = false;
+                }
+
+                // Helper to clear error state
+                function clearError(input, errorId) {
+                    document.getElementById(errorId).style.display = 'none';
+                    input.style.borderColor = '#ddd';
+                    input.removeAttribute('aria-invalid');
+                    input.removeAttribute('aria-describedby');
+                }
 
                 // Name validation
                 const name = document.getElementById('name');
                 if (name.value.trim() === '') {
-                    document.getElementById('nameError').style.display = 'block';
-                    name.style.borderColor = '#e74c3c';
-                    isValid = false;
+                    setError(name, 'nameError');
                 } else {
-                    document.getElementById('nameError').style.display = 'none';
-                    name.style.borderColor = '#ddd';
+                    clearError(name, 'nameError');
                 }
 
                 // Email validation
                 const email = document.getElementById('email');
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email.value)) {
-                    document.getElementById('emailError').style.display = 'block';
-                    email.style.borderColor = '#e74c3c';
-                    isValid = false;
+                    setError(email, 'emailError');
                 } else {
-                    document.getElementById('emailError').style.display = 'none';
-                    email.style.borderColor = '#ddd';
+                    clearError(email, 'emailError');
                 }
 
                 // Phone validation
                 const phone = document.getElementById('phone');
                 const phoneRegex = /^[\d\s\-\(\)]+$/;
                 if (!phoneRegex.test(phone.value)) {
-                    document.getElementById('phoneError').style.display = 'block';
-                    phone.style.borderColor = '#e74c3c';
-                    isValid = false;
+                    setError(phone, 'phoneError');
                 } else {
-                    document.getElementById('phoneError').style.display = 'none';
-                    phone.style.borderColor = '#ddd';
+                    clearError(phone, 'phoneError');
                 }
 
                 // Shoot type validation
                 const shootType = document.getElementById('shoot-type');
                 if (shootType.value === '') {
-                    document.getElementById('shootTypeError').style.display = 'block';
-                    shootType.style.borderColor = '#e74c3c';
-                    isValid = false;
+                    setError(shootType, 'shootTypeError');
                 } else {
-                    document.getElementById('shootTypeError').style.display = 'none';
-                    shootType.style.borderColor = '#ddd';
+                    clearError(shootType, 'shootTypeError');
                 }
 
                 // Date validation
                 const preferredDate = document.getElementById('preferred-date');
                 if (preferredDate.value === '') {
-                    document.getElementById('preferredDateError').style.display = 'block';
-                    preferredDate.style.borderColor = '#e74c3c';
-                    isValid = false;
+                    setError(preferredDate, 'preferredDateError');
                 } else {
-                    document.getElementById('preferredDateError').style.display = 'none';
-                    preferredDate.style.borderColor = '#ddd';
+                    clearError(preferredDate, 'preferredDateError');
                 }
 
                 // Location validation
                 const location = document.getElementById('location');
                 if (location.value.trim() === '') {
-                    document.getElementById('locationError').style.display = 'block';
-                    location.style.borderColor = '#e74c3c';
-                    isValid = false;
+                    setError(location, 'locationError');
                 } else {
-                    document.getElementById('locationError').style.display = 'none';
-                    location.style.borderColor = '#ddd';
+                    clearError(location, 'locationError');
                 }
 
                 // If all validations pass
@@ -451,17 +462,35 @@
                     emailjs.send('service_0hcl68q', 'template_31tqjn8', templateParams, 'x0pDGPnrMj7xD0fSb')
                         .then(function (response) {
                             console.log('SUCCESS!', response.status, response.text);
-                            alert('Thank you for your booking request! I will contact you within 24-48 hours to confirm your booking.');
+
+                            formMessage.style.display = 'block';
+                            formMessage.style.backgroundColor = '#d4edda';
+                            formMessage.style.color = '#155724';
+                            formMessage.style.border = '1px solid #c3e6cb';
+                            formMessage.textContent = 'Thank you for your booking request! I will contact you within 24-48 hours to confirm your booking.';
+
                             bookingForm.reset();
                         }, function (error) {
                             console.log('FAILED...', error);
-                            alert('There was an error sending your booking request. Please try again or contact me directly. Error: ' + (error?.text || 'Unknown error'));
+
+                            formMessage.style.display = 'block';
+                            formMessage.style.backgroundColor = '#f8d7da';
+                            formMessage.style.color = '#721c24';
+                            formMessage.style.border = '1px solid #f5c6cb';
+                            formMessage.textContent = 'There was an error sending your booking request. Please try again or contact me directly.';
                         })
                         .finally(function () {
                             // Reset button state
                             submitBtn.textContent = originalBtnText;
                             submitBtn.disabled = false;
                         });
+                } else {
+                    // Validation failed
+                    formMessage.style.display = 'block';
+                    formMessage.style.backgroundColor = '#f8d7da';
+                    formMessage.style.color = '#721c24';
+                    formMessage.style.border = '1px solid #f5c6cb';
+                    formMessage.textContent = 'Please correct the errors in the form before submitting.';
                 }
             });
 
@@ -474,6 +503,9 @@
                     if (errorElement) {
                         errorElement.style.display = 'none';
                         this.style.borderColor = '#ddd';
+                        // Remove ARIA attributes
+                        this.removeAttribute('aria-invalid');
+                        this.removeAttribute('aria-describedby');
                     }
                 });
             });
