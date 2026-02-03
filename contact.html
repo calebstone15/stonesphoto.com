@@ -7,8 +7,6 @@
     <title>Contact - Caleb Stone Photography</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="Websitelogo.ico">
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script src="script.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body,
@@ -190,7 +188,7 @@
         <div class="contact-wrapper">
             <div class="contact-form">
                 <h2>Send a Message</h2>
-                <form id="contact-form">
+                <form id="contact-form" novalidate>
                     <div style="margin-bottom: 20px;">
                         <label for="name">Your Name</label><br>
                         <input type="text" id="name" name="name" placeholder="Please enter your name" required
@@ -254,7 +252,7 @@
                     </li>
                     <li>
                         <span class="icon">📸</span>
-                        <span><a href="https://instagram.com/cstonesphotos" target="_blank">@cstonesphotos</a></span>
+                        <span><a href="https://instagram.com/cstonesphotos" target="_blank" rel="noopener noreferrer">@cstonesphotos</a></span>
                     </li>
                     <li>
                         <span class="icon">📍</span>
@@ -270,21 +268,8 @@
         <p>&copy; 2025 Stones Photos</p>
     </footer>
 
-    <script>
-        // Mobile menu toggle
-        document.querySelector('.header-menu-btn').onclick = function () {
-            document.querySelector('.header-nav').classList.toggle('show');
-        };
-
-        // Close mobile menu on link click
-        document.querySelectorAll('.header-nav a').forEach(link => {
-            link.onclick = () => {
-                if (window.innerWidth <= 700) {
-                    document.querySelector('.header-nav').classList.remove('show');
-                }
-            };
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
