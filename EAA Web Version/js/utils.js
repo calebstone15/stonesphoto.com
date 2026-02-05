@@ -159,29 +159,53 @@ const Utils = {
      * @returns {number[]} Array of seconds
      */
     parseTimeColumn(timeData) {
-        // First try parsing as numbers
-        const numeric = timeData.map(v => this.parseNumber(v));
-        if (!numeric.every(isNaN)) {
-            return numeric;
-        }
+        const len = timeData.length;
+        const numeric = new Array(len);
+        const dates = new Array(len);
+        let anyNumber = false;
+        let anyValidDate = false;
+        let minTs = Infinity;
 
-        // Try parsing as dates
-        const dates = timeData.map(v => {
+        for (let i = 0; i < len; i++) {
+            const v = timeData[i];
+            const n = this.parseNumber(v);
+            numeric[i] = n;
+
+            if (!isNaN(n)) {
+                anyNumber = true;
+                // Optimization: switch to numeric-only parsing for the rest
+                for (let j = i + 1; j < len; j++) {
+                    numeric[j] = this.parseNumber(timeData[j]);
+                }
+                return numeric;
+            }
+
+            // Fallback to date parsing
             const d = new Date(v);
-            return isNaN(d.getTime()) ? null : d;
-        });
-
-        if (dates.some(d => d !== null)) {
-            const validDates = dates.filter(d => d !== null);
-            const minTime = Math.min(...validDates.map(d => d.getTime()));
-
-            return dates.map(d => {
-                if (d === null) return NaN;
-                return (d.getTime() - minTime) / 1000;
-            });
+            if (!isNaN(d.getTime())) {
+                dates[i] = d;
+                anyValidDate = true;
+                const ts = d.getTime();
+                if (ts < minTs) minTs = ts;
+            } else {
+                dates[i] = null;
+            }
         }
 
-        return timeData.map(() => NaN);
+        if (anyValidDate) {
+            const result = new Array(len);
+            for (let i = 0; i < len; i++) {
+                const d = dates[i];
+                if (d === null) {
+                    result[i] = NaN;
+                } else {
+                    result[i] = (d.getTime() - minTs) / 1000;
+                }
+            }
+            return result;
+        }
+
+        return numeric;
     },
 
     /**
