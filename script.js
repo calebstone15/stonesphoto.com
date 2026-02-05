@@ -143,4 +143,23 @@ document.addEventListener('DOMContentLoaded', function() {
 			return isValid;
 		}
 	}
+
+	// Mobile menu toggle
+	const menuBtn = document.querySelector('.header-menu-btn');
+	const nav = document.querySelector('.header-nav');
+
+	if (menuBtn && nav) {
+		menuBtn.onclick = function() {
+			nav.classList.toggle('show');
+		};
+
+		// Close menu when clicking a link (on mobile)
+		document.querySelectorAll('.header-nav a').forEach(link => {
+			link.onclick = () => {
+				if (window.innerWidth <= 700) {
+					nav.classList.remove('show');
+				}
+			};
+		});
+	}
 });
