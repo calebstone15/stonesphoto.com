@@ -20,17 +20,45 @@ const Utils = {
      */
     smooth(data, windowSize) {
         if (windowSize <= 1) return [...data];
+        if (data.length === 0) return [];
 
         const result = [];
         const halfWindow = Math.floor(windowSize / 2);
+        const len = data.length;
 
-        for (let i = 0; i < data.length; i++) {
-            let sum = 0;
-            let count = 0;
+        // Initialize sum and count for the first window centered at i=0
+        // Window range: [0, min(len-1, halfWindow)]
+        let sum = 0;
+        let count = 0;
 
-            for (let j = Math.max(0, i - halfWindow); j <= Math.min(data.length - 1, i + halfWindow); j++) {
-                if (!isNaN(data[j])) {
-                    sum += data[j];
+        for (let j = 0; j <= Math.min(len - 1, halfWindow); j++) {
+            const val = data[j];
+            if (!isNaN(val)) {
+                sum += val;
+                count++;
+            }
+        }
+
+        result.push(count > 0 ? sum / count : data[0]);
+
+        // Sliding window
+        for (let i = 1; i < len; i++) {
+            // Remove element leaving the window
+            const removeIdx = i - halfWindow - 1;
+            if (removeIdx >= 0) {
+                const removeVal = data[removeIdx];
+                if (!isNaN(removeVal)) {
+                    sum -= removeVal;
+                    count--;
+                }
+            }
+
+            // Add element entering the window
+            const addIdx = i + halfWindow;
+            if (addIdx < len) {
+                const addVal = data[addIdx];
+                if (!isNaN(addVal)) {
+                    sum += addVal;
                     count++;
                 }
             }
