@@ -371,11 +371,21 @@ function getFilteredData() {
 
     ctx.dataMask = mask;
 
-    // Apply mask and downsample
-    const filtered = ctx.df.filter((_, i) => mask[i]);
-    const downsampled = Utils.downsample(filtered, downsample);
+    // Apply mask and downsample combined
+    const result = [];
+    const len = ctx.df.length;
+    let passedCount = 0;
 
-    return downsampled;
+    for (let i = 0; i < len; i++) {
+        if (mask[i]) {
+            if (passedCount % downsample === 0) {
+                result.push(ctx.df[i]);
+            }
+            passedCount++;
+        }
+    }
+
+    return result;
 }
 
 function toggleCustomSplice() {
