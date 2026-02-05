@@ -216,9 +216,11 @@ const Utils = {
      */
     downsample(arr, factor) {
         if (factor <= 1) return [...arr];
-        const result = [];
-        for (let i = 0; i < arr.length; i += factor) {
-            result.push(arr[i]);
+        const len = arr.length;
+        const newLen = Math.ceil(len / factor);
+        const result = new Array(newLen);
+        for (let i = 0, j = 0; i < len; i += factor, j++) {
+            result[j] = arr[i];
         }
         return result;
     },
@@ -255,8 +257,9 @@ const Utils = {
      */
     expandMask(mask, extraPercent) {
         const expanded = [...mask];
-        const startIdx = mask.findIndex(v => v);
-        let endIdx = mask.length - 1 - [...mask].reverse().findIndex(v => v);
+        // Optimization: Use indexOf and lastIndexOf to avoid array copy and reversal
+        const startIdx = mask.indexOf(true);
+        const endIdx = mask.lastIndexOf(true);
 
         if (startIdx === -1) return expanded;
 
