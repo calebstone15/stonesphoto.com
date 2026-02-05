@@ -22,6 +22,7 @@ class AnalyzerContext {
         this.dataMask = null;
         this.metrics = {};
         this.lastTargetThrust = null;
+        this.numericCache = {};
     }
 
     reset() {
@@ -37,6 +38,17 @@ class AnalyzerContext {
         this.dataMask = null;
         this.metrics = {};
         this.lastTargetThrust = null;
+        this.numericCache = {};
+    }
+
+    getNumericColumn(colName) {
+        if (!this.df || !colName) return [];
+        if (this.numericCache && this.numericCache[colName]) return this.numericCache[colName];
+
+        if (!this.numericCache) this.numericCache = {};
+        const colData = this.df.map(row => Utils.parseNumber(row[colName]));
+        this.numericCache[colName] = colData;
+        return colData;
     }
 }
 
@@ -358,24 +370,39 @@ function updateExtraDataSlider() {
     document.getElementById('extraDataValue').textContent = actualPercent.toFixed(1) + '%';
 }
 
-// Override getFilteredData to use the exponential extra data value
-function getFilteredData() {
-    const downsample = parseInt(document.getElementById('downsampleSlider').value) || 1;
+function updateDataMask() {
     const extraPercent = currentExtraDataPercent || 0;
-
-    let mask = ctx.initialMask ? [...ctx.initialMask] : new Array(ctx.df.length).fill(true);
+    let mask = ctx.initialMask ? ctx.initialMask.slice() : new Array(ctx.df.length).fill(true);
 
     if (extraPercent > 0) {
         mask = Utils.expandMask(mask, extraPercent);
     }
 
     ctx.dataMask = mask;
+    return mask;
+}
+
+// Override getFilteredData to use the exponential extra data value
+function getFilteredData() {
+    const downsample = parseInt(document.getElementById('downsampleSlider').value) || 1;
+
+    updateDataMask();
+    const mask = ctx.dataMask;
 
     // Apply mask and downsample
     const filtered = ctx.df.filter((_, i) => mask[i]);
     const downsampled = Utils.downsample(filtered, downsample);
 
     return downsampled;
+}
+
+function getFilteredNumericColumn(colName) {
+    const downsample = parseInt(document.getElementById('downsampleSlider').value) || 1;
+    const mask = ctx.dataMask || updateDataMask();
+
+    const fullCol = ctx.getNumericColumn(colName);
+    const filtered = fullCol.filter((_, i) => mask[i]);
+    return Utils.downsample(filtered, downsample);
 }
 
 function toggleCustomSplice() {
@@ -717,12 +744,17 @@ function savePlot() {
 function plotThrust() {
     if (!checkDataLoaded()) return;
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const thrust = data.map(row => {
+    updateDataMask();
+
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const thrustColsData = ctx.thrustCols.map(col => getFilteredNumericColumn(col));
+
+    if (thrustColsData.length === 0) return;
+
+    const thrust = thrustColsData[0].map((_, i) => {
         let sum = 0;
-        for (const col of ctx.thrustCols) {
-            const val = Utils.parseNumber(row[col]);
+        for (const colData of thrustColsData) {
+            const val = colData[i];
             if (!isNaN(val)) sum += val;
         }
         return sum;
