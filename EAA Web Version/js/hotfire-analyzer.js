@@ -160,6 +160,7 @@ function showColumnSelectionModal() {
 
     // Thrust checkboxes
     thrustContainer.innerHTML = '';
+    const fragment = document.createDocumentFragment();
     ctx.columns.forEach(col => {
         const div = document.createElement('div');
         div.className = 'checkbox-wrapper';
@@ -168,8 +169,9 @@ function showColumnSelectionModal() {
              ${ctx.thrustCols.includes(col) ? 'checked' : ''}>
       <label>${col}</label>
     `;
-        thrustContainer.appendChild(div);
+        fragment.appendChild(div);
     });
+    thrustContainer.appendChild(fragment);
 
     ModalManager.open('columnSelectionModal');
 }
