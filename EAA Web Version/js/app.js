@@ -14,10 +14,17 @@ class ToastManager {
     show(message, type = 'info', duration = 3000) {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        toast.innerHTML = `
-      <span>${this.getIcon(type)}</span>
-      <span>${message}</span>
-    `;
+
+        // Security: Create elements individually to prevent XSS via message content
+        const iconSpan = document.createElement('span');
+        iconSpan.textContent = this.getIcon(type);
+
+        const messageSpan = document.createElement('span');
+        messageSpan.textContent = message;
+
+        toast.appendChild(iconSpan);
+        toast.appendChild(messageSpan);
+
         this.container.appendChild(toast);
 
         setTimeout(() => {
@@ -74,15 +81,17 @@ class PromptDialog {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.className = 'modal-overlay active';
+
+            // Security: Use textContent for dynamic strings to prevent XSS
             overlay.innerHTML = `
         <div class="modal" style="width: 400px;">
           <div class="modal-header">
-            <h3 class="modal-title">${title}</h3>
+            <h3 class="modal-title"></h3>
             <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
           </div>
           <div class="modal-body">
-            <p style="margin-bottom: var(--spacing-md);">${message}</p>
-            <input type="number" step="any" class="form-input" id="promptInput" value="${defaultValue}" autofocus>
+            <p class="modal-message" style="margin-bottom: var(--spacing-md);"></p>
+            <input type="number" step="any" class="form-input" id="promptInput" autofocus>
           </div>
           <div class="modal-footer">
             <button class="btn btn-secondary" id="promptCancel">Cancel</button>
@@ -91,9 +100,14 @@ class PromptDialog {
         </div>
       `;
 
+            // Set content safely
+            overlay.querySelector('.modal-title').textContent = title;
+            overlay.querySelector('.modal-message').textContent = message;
+
             document.body.appendChild(overlay);
 
             const input = overlay.querySelector('#promptInput');
+            if (defaultValue !== '') input.value = defaultValue;
             input.focus();
             input.select();
 
