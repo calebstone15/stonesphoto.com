@@ -60,18 +60,6 @@
     </footer>
 
     <script src="../script.js"></script>
-    <script>
-        document.querySelector('.header-menu-btn').onclick = function () {
-            document.querySelector('.header-nav').classList.toggle('show');
-        };
-        document.querySelectorAll('.header-nav a').forEach(link => {
-            link.onclick = () => {
-                if (window.innerWidth <= 700) {
-                    document.querySelector('.header-nav').classList.remove('show');
-                }
-            };
-        });
-    </script>
 </body>
 
 </html>

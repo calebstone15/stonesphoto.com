@@ -149,15 +149,28 @@ document.addEventListener('DOMContentLoaded', function() {
 	const nav = document.querySelector('.header-nav');
 
 	if (menuBtn && nav) {
+		// Accessibility: Add ARIA attributes
+		if (!menuBtn.hasAttribute('aria-expanded')) {
+			menuBtn.setAttribute('aria-expanded', 'false');
+		}
+		if (!menuBtn.hasAttribute('aria-controls')) {
+			menuBtn.setAttribute('aria-controls', 'mobile-nav');
+		}
+		if (!nav.id) {
+			nav.id = 'mobile-nav';
+		}
+
 		menuBtn.onclick = function() {
-			nav.classList.toggle('show');
+			const isExpanded = nav.classList.toggle('show');
+			menuBtn.setAttribute('aria-expanded', isExpanded);
 		};
 
 		// Close menu when clicking a link (on mobile)
 		document.querySelectorAll('.header-nav a').forEach(link => {
 			link.onclick = () => {
-				if (window.innerWidth <= 700) {
+				if (window.innerWidth <= 900) {
 					nav.classList.remove('show');
+					menuBtn.setAttribute('aria-expanded', 'false');
 				}
 			};
 		});
