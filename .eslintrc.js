@@ -5,13 +5,21 @@ module.exports = {
   },
   "extends": "eslint:recommended",
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2020
   },
   "rules": {
     "no-console": "off",
-    "no-unused-vars": "warn"
+    "no-unused-vars": "warn",
+    "no-undef": "off"
   },
   "globals": {
-    "emailjs": "readonly"
+    "emailjs": "readonly",
+    "toast": "readonly",
+    "Utils": "readonly",
+    "Chart": "readonly",
+    "Papa": "readonly",
+    "ModalManager": "readonly",
+    "PromptDialog": "readonly",
+    "EmailConfig": "readonly"
   }
 };

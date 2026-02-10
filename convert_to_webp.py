@@ -38,7 +38,8 @@ def convert_image_to_webp(input_path, output_path, quality=85, method=6):
         method (int): Compression method (0-6).
 
     Returns:
-        dict: A dictionary containing conversion details (original_size, webp_size, reduction).
+        dict: A dictionary containing conversion details (original_size,
+              webp_size, reduction).
     """
     with Image.open(input_path) as img:
         # Convert to RGB if necessary (for images with transparency)
@@ -138,7 +139,7 @@ def select_and_convert_to_webp():
         error_msg = f"Error converting image: {str(e)}"
         print(error_msg)
         messagebox.showerror("Conversion Error", error_msg)
-    except Exception as e: # pylint: disable=broad-exception-caught
+    except Exception as e:  # pylint: disable=broad-exception-caught
         error_msg = f"Unexpected error: {str(e)}"
         print(error_msg)
         messagebox.showerror("Error", error_msg)
