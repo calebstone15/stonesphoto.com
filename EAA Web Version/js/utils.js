@@ -101,16 +101,20 @@ const Utils = {
      * @returns {{slope: number, intercept: number}} Regression result
      */
     linearRegression(x, y) {
-        const n = x.length;
+        let n = 0;
         let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+        const len = x.length;
 
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < len; i++) {
             if (isNaN(x[i]) || isNaN(y[i])) continue;
             sumX += x[i];
             sumY += y[i];
             sumXY += x[i] * y[i];
             sumX2 += x[i] * x[i];
+            n++;
         }
+
+        if (n === 0) return { slope: NaN, intercept: NaN };
 
         const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
         const intercept = (sumY - slope * sumX) / n;
@@ -173,11 +177,6 @@ const Utils = {
 
             if (!isNaN(n)) {
                 anyNumber = true;
-                // Optimization: switch to numeric-only parsing for the rest
-                for (let j = i + 1; j < len; j++) {
-                    numeric[j] = this.parseNumber(timeData[j]);
-                }
-                return numeric;
             }
 
             // Fallback to date parsing
