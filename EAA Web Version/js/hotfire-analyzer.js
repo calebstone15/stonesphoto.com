@@ -176,11 +176,20 @@ function showColumnSelectionModal() {
     ctx.columns.forEach(col => {
         const div = document.createElement('div');
         div.className = 'checkbox-wrapper';
-        div.innerHTML = `
-      <input type="checkbox" class="checkbox-input thrust-checkbox" value="${col}" 
-             ${ctx.thrustCols.includes(col) ? 'checked' : ''}>
-      <label>${col}</label>
-    `;
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.className = 'checkbox-input thrust-checkbox';
+        input.value = col;
+        if (ctx.thrustCols.includes(col)) {
+            input.checked = true;
+        }
+
+        const label = document.createElement('label');
+        label.textContent = col;
+
+        div.appendChild(input);
+        div.appendChild(label);
         fragment.appendChild(div);
     });
     thrustContainer.appendChild(fragment);
@@ -1066,10 +1075,18 @@ function openCustomPlot() {
         const div = document.createElement('div');
         div.className = 'checkbox-wrapper';
         const unit = Utils.extractUnit(col) || 'unknown';
-        div.innerHTML = `
-      <input type="checkbox" class="checkbox-input custom-col-checkbox" value="${col}" data-unit="${unit}">
-      <label>${col}</label>
-    `;
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.className = 'checkbox-input custom-col-checkbox';
+        input.value = col;
+        input.dataset.unit = unit;
+
+        const label = document.createElement('label');
+        label.textContent = col;
+
+        div.appendChild(input);
+        div.appendChild(label);
         container.appendChild(div);
     });
 
@@ -1138,10 +1155,18 @@ function updateConstantLinesList() {
         const div = document.createElement('div');
         div.className = 'constant-line-item';
         const unitStr = line.unit ? ` (${line.unit})` : '';
-        div.innerHTML = `
-      <span>${line.label}: ${line.value}${unitStr}</span>
-      <button type="button" class="btn btn-small btn-secondary" onclick="removeConstantLine(${i})">✕</button>
-    `;
+
+        const span = document.createElement('span');
+        span.textContent = `${line.label}: ${line.value}${unitStr}`;
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'btn btn-small btn-secondary';
+        button.textContent = '✕';
+        button.onclick = () => removeConstantLine(i);
+
+        div.appendChild(span);
+        div.appendChild(button);
         container.appendChild(div);
     });
 }
