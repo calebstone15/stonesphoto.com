@@ -176,11 +176,18 @@ function showColumnSelectionModal() {
     ctx.columns.forEach(col => {
         const div = document.createElement('div');
         div.className = 'checkbox-wrapper';
-        div.innerHTML = `
-      <input type="checkbox" class="checkbox-input thrust-checkbox" value="${col}" 
-             ${ctx.thrustCols.includes(col) ? 'checked' : ''}>
-      <label>${col}</label>
-    `;
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'checkbox-input thrust-checkbox';
+        checkbox.value = col;
+        if (ctx.thrustCols.includes(col)) checkbox.checked = true;
+
+        const label = document.createElement('label');
+        label.textContent = col;
+
+        div.appendChild(checkbox);
+        div.appendChild(label);
         fragment.appendChild(div);
     });
     thrustContainer.appendChild(fragment);
@@ -249,7 +256,7 @@ function computeMetrics(targetThrust) {
             return;
         }
 
-        mask = time.map((t, i) => t >= tStart && t <= tEnd);
+        mask = time.map(t => t >= tStart && t <= tEnd);
     } else {
         // Thrust-based masking
         const lower = 0.5 * targetThrust;
@@ -302,10 +309,17 @@ function displayMetrics() {
     for (const [key, value] of Object.entries(ctx.metrics)) {
         const card = document.createElement('div');
         card.className = 'metric-card';
-        card.innerHTML = `
-      <div class="metric-label">${key}</div>
-      <div class="metric-value">${value}</div>
-    `;
+
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'metric-label';
+        labelDiv.textContent = key;
+
+        const valueDiv = document.createElement('div');
+        valueDiv.className = 'metric-value';
+        valueDiv.textContent = value;
+
+        card.appendChild(labelDiv);
+        card.appendChild(valueDiv);
         container.appendChild(card);
     }
 }
@@ -454,7 +468,7 @@ function closePlotModal() {
 // PLOTTING FUNCTIONS - FIXED
 // ============================================
 
-async function createPlot(title, xData, yData, xLabel, yLabel, color, config = {}) {
+async function createPlot(title, xData, yData, xLabel, yLabel, color) {
     if (!ctx.df) {
         toast.warning('Please load a CSV file first');
         return;
@@ -588,13 +602,13 @@ async function createPlot(title, xData, yData, xLabel, yLabel, color, config = {
 }
 
 // FIXED: Click handler with proper coordinate detection
-function handleChartClick(event, elements) {
+function handleChartClick(event) {
     if (!currentChart || !currentPlotData) return;
 
     // Get click position relative to chart area
     const rect = currentChart.canvas.getBoundingClientRect();
     const x = event.native.clientX - rect.left;
-    const y = event.native.clientY - rect.top;
+    // const y = event.native.clientY - rect.top; // Unused
 
     // Convert pixel to data value
     const xValue = currentChart.scales.x.getValueForPixel(x);
@@ -1066,10 +1080,18 @@ function openCustomPlot() {
         const div = document.createElement('div');
         div.className = 'checkbox-wrapper';
         const unit = Utils.extractUnit(col) || 'unknown';
-        div.innerHTML = `
-      <input type="checkbox" class="checkbox-input custom-col-checkbox" value="${col}" data-unit="${unit}">
-      <label>${col}</label>
-    `;
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'checkbox-input custom-col-checkbox';
+        checkbox.value = col;
+        checkbox.dataset.unit = unit;
+
+        const label = document.createElement('label');
+        label.textContent = col;
+
+        div.appendChild(checkbox);
+        div.appendChild(label);
         container.appendChild(div);
     });
 
@@ -1084,10 +1106,20 @@ function openCustomPlot() {
         if (col.condition) {
             const div = document.createElement('div');
             div.className = 'checkbox-wrapper';
-            div.innerHTML = `
-        <input type="checkbox" class="checkbox-input custom-col-checkbox" value="${col.name}" data-generated="true" data-unit="${col.unit}">
-        <label style="color: var(--accent-primary);">${col.name} (Generated)</label>
-      `;
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'checkbox-input custom-col-checkbox';
+            checkbox.value = col.name;
+            checkbox.dataset.generated = 'true';
+            checkbox.dataset.unit = col.unit;
+
+            const label = document.createElement('label');
+            label.textContent = `${col.name} (Generated)`;
+            label.style.color = 'var(--accent-primary)';
+
+            div.appendChild(checkbox);
+            div.appendChild(label);
             container.appendChild(div);
         }
     });
@@ -1138,10 +1170,18 @@ function updateConstantLinesList() {
         const div = document.createElement('div');
         div.className = 'constant-line-item';
         const unitStr = line.unit ? ` (${line.unit})` : '';
-        div.innerHTML = `
-      <span>${line.label}: ${line.value}${unitStr}</span>
-      <button type="button" class="btn btn-small btn-secondary" onclick="removeConstantLine(${i})">✕</button>
-    `;
+
+        const span = document.createElement('span');
+        span.textContent = `${line.label}: ${line.value}${unitStr}`;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn btn-small btn-secondary';
+        btn.textContent = '✕';
+        btn.onclick = () => removeConstantLine(i);
+
+        div.appendChild(span);
+        div.appendChild(btn);
         container.appendChild(div);
     });
 }
@@ -1187,7 +1227,7 @@ function generateCustomPlot() {
     customPlotRawDatasets = []; // Reset raw data storage for smoothing
     let colorIndex = 0;
 
-    selectedCols.forEach((col, i) => {
+    selectedCols.forEach(col => {
         let yData;
 
         if (col.generated) {
