@@ -289,7 +289,7 @@ function createTimeSelectionChart() {
     });
 }
 
-function handleTimeSelectionClick(event, elements) {
+function handleTimeSelectionClick(event) {
     if (!timeSelectionChart) return;
 
     const canvasPosition = Chart.helpers.getRelativePosition(event, timeSelectionChart);
