@@ -603,16 +603,43 @@ function handleChartClick(event, elements) {
     const xData = currentPlotData.xData;
     const yData = currentPlotData.yData;
 
+    // OPTIMIZATION: Use binary search (O(log N)) instead of linear scan (O(N))
+    // This assumes xData (time) is sorted, which is true for time-series data.
     let closestIdx = 0;
-    let minDist = Infinity;
 
-    for (let i = 0; i < xData.length; i++) {
-        const dist = Math.abs(xData[i] - xValue);
-        if (dist < minDist) {
-            minDist = dist;
-            closestIdx = i;
+    if (typeof Utils !== 'undefined' && typeof Utils.searchSorted === 'function') {
+        closestIdx = Utils.searchSorted(xData, xValue);
+
+        // If searchSorted returns length, target is greater than all elements.
+        // Clamp to the last element initially.
+        if (closestIdx >= xData.length) {
+            closestIdx = xData.length - 1;
+        }
+
+        // Check if the previous point is closer
+        if (closestIdx > 0) {
+            const distCurrent = Math.abs(xData[closestIdx] - xValue);
+            const distPrev = Math.abs(xData[closestIdx - 1] - xValue);
+
+            // Prefer earlier index if equidistant (matches linear scan behavior)
+            if (distPrev <= distCurrent) {
+                closestIdx = closestIdx - 1;
+            }
+        }
+    } else {
+        // Fallback: Linear scan (O(N)) if Utils.searchSorted is not available
+        let minDist = Infinity;
+        for (let i = 0; i < xData.length; i++) {
+            const dist = Math.abs(xData[i] - xValue);
+            if (dist < minDist) {
+                minDist = dist;
+                closestIdx = i;
+            }
         }
     }
+
+    // If data is empty, ensure index is safe
+    if (closestIdx < 0) closestIdx = 0;
 
     const pointX = xData[closestIdx];
     const pointY = yData[closestIdx];
