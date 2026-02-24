@@ -3,6 +3,8 @@
  * Handles navigation, shared utilities, and global state
  */
 
+/* global window, document, console */
+
 // Toast notification system
 class ToastManager {
     constructor() {
@@ -20,9 +22,9 @@ class ToastManager {
     `;
         this.container.appendChild(toast);
 
-        setTimeout(() => {
+        window.setTimeout(() => {
             toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
+            window.setTimeout(() => toast.remove(), 300);
         }, duration);
     }
 
@@ -78,7 +80,7 @@ class PromptDialog {
         <div class="modal" style="width: 400px;">
           <div class="modal-header">
             <h3 class="modal-title">${title}</h3>
-            <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
+            <button class="modal-close" id="promptClose">×</button>
           </div>
           <div class="modal-body">
             <p style="margin-bottom: var(--spacing-md);">${message}</p>
@@ -101,6 +103,11 @@ class PromptDialog {
                 overlay.remove();
                 resolve(value);
             };
+
+            const closeBtn = overlay.querySelector('#promptClose');
+            if (closeBtn) {
+                closeBtn.onclick = () => cleanup(null);
+            }
 
             overlay.querySelector('#promptConfirm').onclick = () => {
                 const value = parseFloat(input.value);

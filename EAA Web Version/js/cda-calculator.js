@@ -3,6 +3,8 @@
  * Complete port of the Python cda_calculator.py
  */
 
+/* global window, document, console, Papa, Chart, Utils, ModalManager, toast */
+
 // ============================================
 // STATE MANAGEMENT
 // ============================================
@@ -34,9 +36,9 @@ const PSI_TO_PA = 6894.76;
 // CSV LOADING
 // ============================================
 
-function cdaLoadCSV(input) {
+window.cdaLoadCSV = function(input) {
     const file = input.files[0];
-    if (!file) return;
+    if (!file) { return; }
 
     document.getElementById('cdaFileLabel').textContent = 'Loading...';
 
@@ -67,14 +69,14 @@ function cdaLoadCSV(input) {
             document.getElementById('cdaFileLabel').textContent = 'Load failed';
         }
     });
-}
+};
 
 function populateColumnDropdowns() {
     const selects = ['cdaTimeSelect', 'cdaPressureSelect', 'cdaWeightSelect', 'pLowColumnSelect'];
 
     selects.forEach(selectId => {
         const select = document.getElementById(selectId);
-        if (!select) return;
+        if (!select) { return; }
 
         select.innerHTML = '<option value="">-- Select --</option>';
         cdaState.columns.forEach(col => {
@@ -114,7 +116,7 @@ function autoDetectColumns() {
     }
 }
 
-function cdaUpdateColumn(type) {
+window.cdaUpdateColumn = function(type) {
     if (type === 'time') {
         cdaState.timeCol = document.getElementById('cdaTimeSelect').value;
     } else if (type === 'pressure') {
@@ -122,13 +124,13 @@ function cdaUpdateColumn(type) {
     } else if (type === 'weight') {
         cdaState.weightCol = document.getElementById('cdaWeightSelect').value;
     }
-}
+};
 
 // ============================================
 // TIME SELECTION PLOT
 // ============================================
 
-function openTimeSelectionPlot() {
+window.openTimeSelectionPlot = function() {
     if (!cdaState.df) {
         toast.warning('Please load a CSV file first');
         return;
@@ -159,10 +161,10 @@ function openTimeSelectionPlot() {
     ModalManager.open('timeSelectionModal');
 
     // Create chart after modal is visible
-    setTimeout(() => {
+    window.setTimeout(() => {
         createTimeSelectionChart();
     }, 100);
-}
+};
 
 function parseNumericData() {
     // Parse time column
@@ -196,7 +198,7 @@ function createTimeSelectionChart() {
         const step = Math.ceil(time.length / maxPoints);
         time = Utils.downsample(time, step);
         pressure = Utils.downsample(pressure, step);
-        if (weight) weight = Utils.downsample(weight, step);
+        if (weight) { weight = Utils.downsample(weight, step); }
     }
 
     // Build datasets
@@ -289,8 +291,9 @@ function createTimeSelectionChart() {
     });
 }
 
-function handleTimeSelectionClick(event, elements) {
-    if (!timeSelectionChart) return;
+// eslint-disable-next-line no-unused-vars
+function handleTimeSelectionClick(event, _elements) {
+    if (!timeSelectionChart) { return; }
 
     const canvasPosition = Chart.helpers.getRelativePosition(event, timeSelectionChart);
     const xValue = timeSelectionChart.scales.x.getValueForPixel(canvasPosition.x);
@@ -352,7 +355,7 @@ function handleTimeSelectionClick(event, elements) {
     timeSelectionChart.update();
 }
 
-function resetTimeSelection() {
+window.resetTimeSelection = function() {
     cdaState.startTime = null;
     cdaState.endTime = null;
     clickCount = 0;
@@ -365,9 +368,9 @@ function resetTimeSelection() {
         timeSelectionChart.options.plugins.annotation.annotations = {};
         timeSelectionChart.update();
     }
-}
+};
 
-function confirmTimeSelection() {
+window.confirmTimeSelection = function() {
     if (cdaState.startTime === null || cdaState.endTime === null) {
         toast.warning('Please select both start and end times');
         return;
@@ -384,7 +387,7 @@ function confirmTimeSelection() {
 
     closeTimeSelectionModal();
     toast.success('Time range selected');
-}
+};
 
 function closeTimeSelectionModal() {
     ModalManager.close('timeSelectionModal');
@@ -450,7 +453,7 @@ function calculateMdot() {
 // PRESSURE HELPERS
 // ============================================
 
-function useAvgPressure(which) {
+window.useAvgPressure = function(which) {
     if (cdaState.startTime === null || cdaState.endTime === null) {
         toast.warning('Please select start and end times first');
         return;
@@ -477,13 +480,13 @@ function useAvgPressure(which) {
     }
 
     toast.success(`Average pressure: ${avgPressure.toFixed(2)} PSI`);
-}
+};
 
-function setAmbientPressure() {
+window.setAmbientPressure = function() {
     document.getElementById('pLowInput').value = '14.7';
-}
+};
 
-function selectPLowFromCSV() {
+window.selectPLowFromCSV = function() {
     if (!cdaState.df) {
         toast.warning('Please load a CSV file first');
         return;
@@ -495,9 +498,9 @@ function selectPLowFromCSV() {
     }
 
     ModalManager.open('pLowColumnModal');
-}
+};
 
-function applyPLowColumn() {
+window.applyPLowColumn = function() {
     const col = document.getElementById('pLowColumnSelect').value;
     if (!col) {
         toast.warning('Please select a column');
@@ -521,13 +524,13 @@ function applyPLowColumn() {
 
     ModalManager.close('pLowColumnModal');
     toast.success(`P_low set to ${avgPLow.toFixed(2)} PSI`);
-}
+};
 
 // ============================================
 // CDA CALCULATION
 // ============================================
 
-function calculateCdA() {
+window.calculateCdA = function() {
     // Get inputs
     const pHighPSI = parseFloat(document.getElementById('pHighInput').value);
     const pLowPSI = parseFloat(document.getElementById('pLowInput').value);
@@ -577,35 +580,35 @@ function calculateCdA() {
     document.getElementById('cdaResultUnit').textContent = `m² (${cdaMm2.toFixed(2)} mm²)`;
 
     toast.success(`CdA calculated: ${cda.toExponential(4)} m²`);
-}
+};
 
 // ============================================
 // SET PRESSURE CALCULATOR
 // ============================================
 
-function copyCalculatedCdA() {
+window.copyCalculatedCdA = function() {
     if (cdaState.calculatedCdA !== null) {
         document.getElementById('setpointCdaInput').value = cdaState.calculatedCdA.toFixed(10);
         toast.success('CdA copied');
     } else {
         toast.warning('Please calculate CdA first');
     }
-}
+};
 
-function copyCalculatedMdot() {
+window.copyCalculatedMdot = function() {
     if (cdaState.calculatedMdot !== null) {
         document.getElementById('setpointMdotInput').value = cdaState.calculatedMdot.toFixed(4);
         toast.success('ṁ copied');
     } else {
         toast.warning('Please select a time range with weight data first');
     }
-}
+};
 
-function setDensityPreset(value) {
+window.setDensityPreset = function(value) {
     document.getElementById('setpointDensityInput').value = value;
-}
+};
 
-function calculateSetPressure() {
+window.calculateSetPressure = function() {
     // Get inputs
     const cda = parseFloat(document.getElementById('setpointCdaInput').value);
     const mdot = parseFloat(document.getElementById('setpointMdotInput').value);
@@ -648,7 +651,7 @@ function calculateSetPressure() {
     document.getElementById('setpointResultPa').textContent = `(${pSetPa.toFixed(0)} Pa)`;
 
     toast.success(`Required set pressure: ${pSetPSI.toFixed(1)} PSI`);
-}
+};
 
 // ============================================
 // INITIALIZATION
