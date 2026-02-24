@@ -1,4 +1,5 @@
-const EmailConfig = {
+/* global window */
+window.EmailConfig = {
     PUBLIC_KEY: "x0pDGPnrMj7xD0fSb",
     SERVICE_ID: "service_0hcl68q",
     CONTACT_TEMPLATE_ID: "template_3codtcb",

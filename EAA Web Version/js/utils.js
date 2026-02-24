@@ -3,6 +3,8 @@
  * Shared utilities for data processing and calculations
  */
 
+/* global window, document */
+
 // Unit conversion constants
 const Utils = {
     // Conversion constants
@@ -19,8 +21,12 @@ const Utils = {
      * @returns {number[]} Smoothed array
      */
     smooth(data, windowSize) {
-        if (windowSize <= 1) return [...data];
-        if (data.length === 0) return [];
+        if (windowSize <= 1) {
+            return [...data];
+        }
+        if (data.length === 0) {
+            return [];
+        }
 
         const result = [];
         const halfWindow = Math.floor(windowSize / 2);
@@ -76,7 +82,9 @@ const Utils = {
      */
     mean(arr) {
         const validValues = arr.filter(v => !isNaN(v) && v !== null);
-        if (validValues.length === 0) return 0;
+        if (validValues.length === 0) {
+            return 0;
+        }
         return validValues.reduce((a, b) => a + b, 0) / validValues.length;
     },
 
@@ -105,7 +113,9 @@ const Utils = {
         let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
 
         for (let i = 0; i < n; i++) {
-            if (isNaN(x[i]) || isNaN(y[i])) continue;
+            if (isNaN(x[i]) || isNaN(y[i])) {
+                continue;
+            }
             sumX += x[i];
             sumY += y[i];
             sumXY += x[i] * y[i];
@@ -146,8 +156,12 @@ const Utils = {
      * @returns {number} Parsed number or NaN
      */
     parseNumber(value) {
-        if (typeof value === 'number') return value;
-        if (!value || value === '') return NaN;
+        if (typeof value === 'number') {
+            return value;
+        }
+        if (!value || value === '') {
+            return NaN;
+        }
 
         const cleaned = String(value).trim().replace(/,/g, '');
         return parseFloat(cleaned);
@@ -162,7 +176,6 @@ const Utils = {
         const len = timeData.length;
         const numeric = new Array(len);
         const dates = new Array(len);
-        let anyNumber = false;
         let anyValidDate = false;
         let minTs = Infinity;
 
@@ -172,7 +185,6 @@ const Utils = {
             numeric[i] = n;
 
             if (!isNaN(n)) {
-                anyNumber = true;
                 // Optimization: switch to numeric-only parsing for the rest
                 for (let j = i + 1; j < len; j++) {
                     numeric[j] = this.parseNumber(timeData[j]);
@@ -186,7 +198,9 @@ const Utils = {
                 dates[i] = d;
                 anyValidDate = true;
                 const ts = d.getTime();
-                if (ts < minTs) minTs = ts;
+                if (ts < minTs) {
+                    minTs = ts;
+                }
             } else {
                 dates[i] = null;
             }
@@ -215,7 +229,9 @@ const Utils = {
      * @returns {number[]} Downsampled array
      */
     downsample(arr, factor) {
-        if (factor <= 1) return [...arr];
+        if (factor <= 1) {
+            return [...arr];
+        }
         const len = arr.length;
         const newLen = Math.ceil(len / factor);
         const result = new Array(newLen);
@@ -261,7 +277,9 @@ const Utils = {
         const startIdx = mask.indexOf(true);
         const endIdx = mask.lastIndexOf(true);
 
-        if (startIdx === -1) return expanded;
+        if (startIdx === -1) {
+            return expanded;
+        }
 
         const extraPoints = Math.max(1, Math.floor(mask.length * extraPercent / 100));
         const newStart = Math.max(0, startIdx - extraPoints);
@@ -281,7 +299,9 @@ const Utils = {
      * @returns {string} Formatted string
      */
     formatNumber(value, decimals = 3) {
-        if (isNaN(value) || value === null) return '--';
+        if (isNaN(value) || value === null) {
+            return '--';
+        }
         return value.toFixed(decimals);
     },
 

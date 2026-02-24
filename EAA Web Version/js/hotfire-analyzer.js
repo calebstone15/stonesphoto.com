@@ -4,6 +4,8 @@
  * Fixed: click selection, PNG download, test data, custom plot smoothing, multi-axis, constant lines
  */
 
+/* global window, document, console, Papa, Chart, Utils, ModalManager, PromptDialog, toast */
+
 // ============================================
 // ANALYZER CONTEXT - State Management
 // ============================================
@@ -42,10 +44,10 @@ class AnalyzerContext {
     }
 
     getNumericColumn(colName) {
-        if (!this.df || !colName) return [];
-        if (this.numericCache && this.numericCache[colName]) return this.numericCache[colName];
+        if (!this.df || !colName) { return []; }
+        if (this.numericCache && this.numericCache[colName]) { return this.numericCache[colName]; }
 
-        if (!this.numericCache) this.numericCache = {};
+        if (!this.numericCache) { this.numericCache = {}; }
         const colData = this.df.map(row => Utils.parseNumber(row[colName]));
         this.numericCache[colName] = colData;
         return colData;
@@ -68,9 +70,9 @@ let customPlotRawDatasets = [];
 // CSV LOADING & PARSING
 // ============================================
 
-function loadCSV(input) {
+window.loadCSV = function(input) {
     const file = input.files[0];
-    if (!file) return;
+    if (!file) { return; }
 
     document.getElementById('fileNameDisplay').textContent = 'Loading...';
 
@@ -106,7 +108,7 @@ function loadCSV(input) {
             document.getElementById('fileNameDisplay').textContent = 'Load failed';
         }
     });
-}
+};
 
 function inferColumns() {
     ctx.timeCol = null;
@@ -165,10 +167,10 @@ function showColumnSelectionModal() {
     });
 
     // Set inferred values
-    if (ctx.timeCol) timeSelect.value = ctx.timeCol;
-    if (ctx.chamberCol) chamberSelect.value = ctx.chamberCol;
-    if (ctx.fuelCol) fuelSelect.value = ctx.fuelCol;
-    if (ctx.oxidizerCol) oxidizerSelect.value = ctx.oxidizerCol;
+    if (ctx.timeCol) { timeSelect.value = ctx.timeCol; }
+    if (ctx.chamberCol) { chamberSelect.value = ctx.chamberCol; }
+    if (ctx.fuelCol) { fuelSelect.value = ctx.fuelCol; }
+    if (ctx.oxidizerCol) { oxidizerSelect.value = ctx.oxidizerCol; }
 
     // Thrust checkboxes
     thrustContainer.innerHTML = '';
@@ -176,11 +178,20 @@ function showColumnSelectionModal() {
     ctx.columns.forEach(col => {
         const div = document.createElement('div');
         div.className = 'checkbox-wrapper';
-        div.innerHTML = `
-      <input type="checkbox" class="checkbox-input thrust-checkbox" value="${col}" 
-             ${ctx.thrustCols.includes(col) ? 'checked' : ''}>
-      <label>${col}</label>
-    `;
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.className = 'checkbox-input thrust-checkbox';
+        input.value = col;
+        if (ctx.thrustCols.includes(col)) {
+            input.checked = true;
+        }
+
+        const label = document.createElement('label');
+        label.textContent = col;
+
+        div.appendChild(input);
+        div.appendChild(label);
         fragment.appendChild(div);
     });
     thrustContainer.appendChild(fragment);
@@ -188,7 +199,7 @@ function showColumnSelectionModal() {
     ModalManager.open('columnSelectionModal');
 }
 
-function confirmColumnSelection() {
+window.confirmColumnSelection = function() {
     ctx.timeCol = document.getElementById('timeColumnSelect').value;
     ctx.chamberCol = document.getElementById('chamberColumnSelect').value;
     ctx.fuelCol = document.getElementById('fuelColumnSelect').value;
@@ -206,7 +217,7 @@ function confirmColumnSelection() {
 
     ModalManager.close('columnSelectionModal');
     promptForTargetThrust();
-}
+};
 
 async function promptForTargetThrust() {
     const targetThrust = await PromptDialog.show(
@@ -215,7 +226,7 @@ async function promptForTargetThrust() {
         ''
     );
 
-    if (targetThrust === null) return;
+    if (targetThrust === null) { return; }
 
     ctx.lastTargetThrust = targetThrust;
     computeMetrics(targetThrust);
@@ -249,7 +260,7 @@ function computeMetrics(targetThrust) {
             return;
         }
 
-        mask = time.map((t, i) => t >= tStart && t <= tEnd);
+        mask = time.map(t => t >= tStart && t <= tEnd);
     } else {
         // Thrust-based masking
         const lower = 0.5 * targetThrust;
@@ -315,17 +326,17 @@ function displayMetrics() {
 // ============================================
 
 function getColumnData(colName) {
-    if (!ctx.df || !colName) return [];
+    if (!ctx.df || !colName) { return []; }
     return ctx.df.map(row => Utils.parseNumber(row[colName]));
 }
 
 function getTotalThrust() {
-    if (ctx.thrustCols.length === 0) return [];
+    if (ctx.thrustCols.length === 0) { return []; }
     return ctx.df.map(row => {
         let sum = 0;
         for (const col of ctx.thrustCols) {
             const val = Utils.parseNumber(row[col]);
-            if (!isNaN(val)) sum += val;
+            if (!isNaN(val)) { sum += val; }
         }
         return sum;
     });
@@ -335,19 +346,19 @@ function getTotalThrust() {
 // SLIDER HANDLERS
 // ============================================
 
-function updateSliderDisplay(type) {
+window.updateSliderDisplay = function(type) {
     if (type === 'downsample') {
         const value = document.getElementById('downsampleSlider').value;
         document.getElementById('downsampleValue').textContent = value;
     }
-}
+};
 
 // Global variable to store the actual extra data percentage
 let currentExtraDataPercent = 0;
 
 // Exponential slider for extra data percentage
 // Slider goes 0-100, but the actual value scales exponentially from 0% to 30%
-function updateExtraDataSlider() {
+window.updateExtraDataSlider = function() {
     const sliderValue = parseInt(document.getElementById('extraDataSlider').value);
 
     // Exponential mapping: 0-100 slider -> 0-30% actual value
@@ -370,7 +381,7 @@ function updateExtraDataSlider() {
 
     currentExtraDataPercent = actualPercent;
     document.getElementById('extraDataValue').textContent = actualPercent.toFixed(1) + '%';
-}
+};
 
 function updateDataMask() {
     const extraPercent = currentExtraDataPercent || 0;
@@ -417,29 +428,29 @@ function getFilteredNumericColumn(colName) {
     return Utils.downsample(filtered, downsample);
 }
 
-function toggleCustomSplice() {
+window.toggleCustomSplice = function() {
     const checked = document.getElementById('customSpliceCheckbox').checked;
     const inputs = document.getElementById('spliceInputs');
     inputs.style.display = checked ? 'flex' : 'none';
-}
+};
 
-function applySplice() {
+window.applySplice = function() {
     if (ctx.lastTargetThrust !== null) {
         computeMetrics(ctx.lastTargetThrust);
         displayMetrics();
         toast.success('Custom splice applied');
     }
-}
+};
 
 // ============================================
 // MODAL HANDLERS
 // ============================================
 
-function showInstructions() {
+window.showInstructions = function() {
     ModalManager.open('instructionsModal');
-}
+};
 
-function closePlotModal() {
+window.closePlotModal = function() {
     ModalManager.close('plotModal');
     if (currentChart) {
         currentChart.destroy();
@@ -448,72 +459,14 @@ function closePlotModal() {
     currentPlotData = null;
     selectedPoints = [];
     customPlotRawDatasets = [];
-}
+};
 
 // ============================================
 // PLOTTING FUNCTIONS - FIXED
 // ============================================
 
-async function createPlot(title, xData, yData, xLabel, yLabel, color, config = {}) {
-    if (!ctx.df) {
-        toast.warning('Please load a CSV file first');
-        return;
-    }
-
-    // Filter out NaN values for cleaner plotting
-    const validIndices = [];
-    for (let i = 0; i < xData.length; i++) {
-        if (!isNaN(xData[i]) && !isNaN(yData[i])) {
-            validIndices.push(i);
-        }
-    }
-
-    const cleanX = validIndices.map(i => xData[i]);
-    const cleanY = validIndices.map(i => yData[i]);
-
-    // Store current plot data with numeric x values
-    currentPlotData = {
-        title,
-        xData: cleanX,
-        yData: [...cleanY],
-        xLabel,
-        yLabel,
-        color,
-        rawYData: [...cleanY],
-        isCustomPlot: false
-    };
-
-    selectedPoints = [];
-
-    // Update modal title
-    document.getElementById('plotModalTitle').textContent = title;
-
-    // Reset smoothing slider
-    document.getElementById('smoothingSlider').value = 1;
-    document.getElementById('smoothingValue').textContent = '1';
-
-    // Reset avg display
-    document.getElementById('avgDisplay').innerHTML = '<span style="color: var(--text-muted);">Click two points on the chart to calculate average</span>';
-
-    // Open modal
-    ModalManager.open('plotModal');
-
-    // Wait for modal to be visible before creating chart
-    await new Promise(r => setTimeout(r, 50));
-
-    // Destroy existing chart
-    if (currentChart) {
-        currentChart.destroy();
-    }
-
-    // Create the chart with xy data format for proper click handling
-    const canvas = document.getElementById('plotCanvas');
-    const ctx2d = canvas.getContext('2d');
-
-    // Prepare data as {x, y} objects for scatter-like line chart
-    const xyData = cleanX.map((x, i) => ({ x: x, y: cleanY[i] }));
-
-    currentChart = new Chart(ctx2d, {
+function buildChartConfig(title, xyData, xLabel, yLabel, color) {
+    return {
         type: 'line',
         data: {
             datasets: [
@@ -584,17 +537,80 @@ async function createPlot(title, xData, yData, xLabel, yLabel, color, config = {
             },
             onClick: handleChartClick
         }
-    });
+    };
+}
+
+// eslint-disable-next-line no-unused-vars
+async function createPlot(title, xData, yData, xLabel, yLabel, color, config = {}) {
+    if (!ctx.df) {
+        toast.warning('Please load a CSV file first');
+        return;
+    }
+
+    // Filter out NaN values for cleaner plotting
+    const validIndices = [];
+    for (let i = 0; i < xData.length; i++) {
+        if (!isNaN(xData[i]) && !isNaN(yData[i])) {
+            validIndices.push(i);
+        }
+    }
+
+    const cleanX = validIndices.map(i => xData[i]);
+    const cleanY = validIndices.map(i => yData[i]);
+
+    // Store current plot data with numeric x values
+    currentPlotData = {
+        title,
+        xData: cleanX,
+        yData: [...cleanY],
+        xLabel,
+        yLabel,
+        color,
+        rawYData: [...cleanY],
+        isCustomPlot: false
+    };
+
+    selectedPoints = [];
+
+    // Update modal title
+    document.getElementById('plotModalTitle').textContent = title;
+
+    // Reset smoothing slider
+    document.getElementById('smoothingSlider').value = 1;
+    document.getElementById('smoothingValue').textContent = '1';
+
+    // Reset avg display
+    document.getElementById('avgDisplay').innerHTML = '<span style="color: var(--text-muted);">Click two points on the chart to calculate average</span>';
+
+    // Open modal
+    ModalManager.open('plotModal');
+
+    // Wait for modal to be visible before creating chart
+    await new Promise(r => window.setTimeout(r, 50));
+
+    // Destroy existing chart
+    if (currentChart) {
+        currentChart.destroy();
+    }
+
+    // Create the chart with xy data format for proper click handling
+    const canvas = document.getElementById('plotCanvas');
+    const ctx2d = canvas.getContext('2d');
+
+    // Prepare data as {x, y} objects for scatter-like line chart
+    const xyData = cleanX.map((x, i) => ({ x: x, y: cleanY[i] }));
+
+    currentChart = new Chart(ctx2d, buildChartConfig(title, xyData, xLabel, yLabel, color));
 }
 
 // FIXED: Click handler with proper coordinate detection
+// eslint-disable-next-line no-unused-vars
 function handleChartClick(event, elements) {
-    if (!currentChart || !currentPlotData) return;
+    if (!currentChart || !currentPlotData) { return; }
 
     // Get click position relative to chart area
     const rect = currentChart.canvas.getBoundingClientRect();
     const x = event.native.clientX - rect.left;
-    const y = event.native.clientY - rect.top;
 
     // Convert pixel to data value
     const xValue = currentChart.scales.x.getValueForPixel(x);
@@ -690,8 +706,8 @@ function handleChartClick(event, elements) {
     currentChart.update();
 }
 
-function updateSmoothing() {
-    if (!currentChart || !currentPlotData) return;
+window.updateSmoothing = function() {
+    if (!currentChart || !currentPlotData) { return; }
 
     const windowSize = parseInt(document.getElementById('smoothingSlider').value);
     document.getElementById('smoothingValue').textContent = windowSize;
@@ -719,11 +735,11 @@ function updateSmoothing() {
     }
 
     currentChart.update();
-}
+};
 
 // FIXED: PNG download with proper file extension - uses data URL for Safari compatibility
-function savePlot() {
-    if (!currentChart) return;
+window.savePlot = function() {
+    if (!currentChart) { return; }
 
     const canvas = document.getElementById('plotCanvas');
     const title = currentPlotData?.title || 'plot';
@@ -742,41 +758,41 @@ function savePlot() {
     link.click();
 
     // Clean up after a short delay
-    setTimeout(() => {
+    window.setTimeout(() => {
         document.body.removeChild(link);
     }, 100);
 
     toast.success(`Saved as ${filename}`);
-}
+};
 
 // ============================================
 // PLOT HANDLERS
 // ============================================
 
-function plotThrust() {
-    if (!checkDataLoaded()) return;
+window.plotThrust = function() {
+    if (!checkDataLoaded()) { return; }
 
     updateDataMask();
 
     const time = getFilteredNumericColumn(ctx.timeCol);
     const thrustColsData = ctx.thrustCols.map(col => getFilteredNumericColumn(col));
 
-    if (thrustColsData.length === 0) return;
+    if (thrustColsData.length === 0) { return; }
 
     const thrust = thrustColsData[0].map((_, i) => {
         let sum = 0;
         for (const colData of thrustColsData) {
             const val = colData[i];
-            if (!isNaN(val)) sum += val;
+            if (!isNaN(val)) { sum += val; }
         }
         return sum;
     });
 
     createPlot('Thrust vs Time', time, thrust, 'Time (s)', 'Thrust (lbf)', '#3b82f6');
-}
+};
 
-function plotChamberPressure() {
-    if (!checkDataLoaded()) return;
+window.plotChamberPressure = function() {
+    if (!checkDataLoaded()) { return; }
     if (!ctx.chamberCol) {
         toast.warning('Chamber pressure column not selected');
         return;
@@ -787,10 +803,10 @@ function plotChamberPressure() {
     const pressure = data.map(row => Utils.parseNumber(row[ctx.chamberCol]));
 
     createPlot('Chamber Pressure vs Time', time, pressure, 'Time (s)', 'Pressure (psi)', '#ef4444');
-}
+};
 
-function plotOFRatio() {
-    if (!checkDataLoaded()) return;
+window.plotOFRatio = function() {
+    if (!checkDataLoaded()) { return; }
     if (!ctx.fuelCol || !ctx.oxidizerCol) {
         toast.warning('Fuel and oxidizer columns not selected');
         return;
@@ -805,10 +821,10 @@ function plotOFRatio() {
     });
 
     createPlot('O/F Ratio vs Time', time, ofRatio, 'Time (s)', 'O/F Ratio', '#8b5cf6');
-}
+};
 
-function plotFuelWeight() {
-    if (!checkDataLoaded()) return;
+window.plotFuelWeight = function() {
+    if (!checkDataLoaded()) { return; }
     if (!ctx.fuelCol) {
         toast.warning('Fuel weight column not selected');
         return;
@@ -819,10 +835,10 @@ function plotFuelWeight() {
     const weight = data.map(row => Utils.parseNumber(row[ctx.fuelCol]));
 
     createPlot('Fuel Tank Weight', time, weight, 'Time (s)', 'Weight (lbs)', '#3b82f6');
-}
+};
 
-function plotOxidizerWeight() {
-    if (!checkDataLoaded()) return;
+window.plotOxidizerWeight = function() {
+    if (!checkDataLoaded()) { return; }
     if (!ctx.oxidizerCol) {
         toast.warning('Oxidizer weight column not selected');
         return;
@@ -833,16 +849,16 @@ function plotOxidizerWeight() {
     const weight = data.map(row => Utils.parseNumber(row[ctx.oxidizerCol]));
 
     createPlot('Oxidizer Tank Weight', time, weight, 'Time (s)', 'Weight (lbs)', '#f97316');
-}
+};
 
 async function plotISP() {
-    if (!checkDataLoaded()) return;
+    if (!checkDataLoaded()) { return; }
 
     const fuelMdot = await PromptDialog.show('Input', 'Enter the mass flow rate of fuel (mdot_fuel) in lbs/s:', '');
-    if (fuelMdot === null) return;
+    if (fuelMdot === null) { return; }
 
     const oxMdot = await PromptDialog.show('Input', 'Enter the mass flow rate of oxidizer (mdot_oxidizer) in lbs/s:', '');
-    if (oxMdot === null) return;
+    if (oxMdot === null) { return; }
 
     const mdotLbs = parseFloat(fuelMdot) + parseFloat(oxMdot);
     const mdot = mdotLbs / 32.174; // Convert to slugs/s
@@ -854,7 +870,7 @@ async function plotISP() {
         let sum = 0;
         for (const col of ctx.thrustCols) {
             const val = Utils.parseNumber(row[col]);
-            if (!isNaN(val)) sum += val;
+            if (!isNaN(val)) { sum += val; }
         }
         return sum;
     });
@@ -865,13 +881,13 @@ async function plotISP() {
 }
 
 async function plotExhaustVelocity() {
-    if (!checkDataLoaded()) return;
+    if (!checkDataLoaded()) { return; }
 
     const fuelMdot = await PromptDialog.show('Input', 'Enter the mass flow rate of fuel (mdot_fuel) in lbs/s:', '');
-    if (fuelMdot === null) return;
+    if (fuelMdot === null) { return; }
 
     const oxMdot = await PromptDialog.show('Input', 'Enter the mass flow rate of oxidizer (mdot_oxidizer) in lbs/s:', '');
-    if (oxMdot === null) return;
+    if (oxMdot === null) { return; }
 
     const mdotLbs = parseFloat(fuelMdot) + parseFloat(oxMdot);
     const mdot = mdotLbs / 32.174;
@@ -884,7 +900,7 @@ async function plotExhaustVelocity() {
         let sum = 0;
         for (const col of ctx.thrustCols) {
             const val = Utils.parseNumber(row[col]);
-            if (!isNaN(val)) sum += val;
+            if (!isNaN(val)) { sum += val; }
         }
         return sum;
     });
@@ -896,20 +912,20 @@ async function plotExhaustVelocity() {
 }
 
 async function plotCStar() {
-    if (!checkDataLoaded()) return;
+    if (!checkDataLoaded()) { return; }
     if (!ctx.chamberCol) {
         toast.warning('Chamber pressure column not selected');
         return;
     }
 
     const fuelMdot = await PromptDialog.show('Input', 'Enter the mass flow rate of fuel (mdot_fuel) in lbs/s:', '');
-    if (fuelMdot === null) return;
+    if (fuelMdot === null) { return; }
 
     const oxMdot = await PromptDialog.show('Input', 'Enter the mass flow rate of oxidizer (mdot_oxidizer) in lbs/s:', '');
-    if (oxMdot === null) return;
+    if (oxMdot === null) { return; }
 
     const throatArea = await PromptDialog.show('Input', 'Enter the throat area (in ft²):', '');
-    if (throatArea === null) return;
+    if (throatArea === null) { return; }
 
     const mdotLbs = parseFloat(fuelMdot) + parseFloat(oxMdot);
     const mdot = mdotLbs / 32.174;
@@ -926,7 +942,7 @@ async function plotCStar() {
 }
 
 // FIXED: Test data function - uses ALL data with downsampling to prevent crashes
-function testData() {
+window.testData = function() {
     if (!ctx.df || ctx.df.length === 0) {
         toast.warning('Please load a CSV file first');
         return;
@@ -943,7 +959,7 @@ function testData() {
         let sum = 0;
         for (const col of ctx.thrustCols) {
             const val = Utils.parseNumber(row[col]);
-            if (!isNaN(val)) sum += val;
+            if (!isNaN(val)) { sum += val; }
         }
         return sum;
     });
@@ -964,7 +980,7 @@ function testData() {
 
     // Add threshold lines after chart is created
     if (targetThrust && currentChart) {
-        setTimeout(() => {
+        window.setTimeout(() => {
             const lower = 0.5 * targetThrust;
             const upper = 1.5 * targetThrust;
 
@@ -1015,26 +1031,26 @@ function testData() {
             currentChart.update();
         }, 100);
     }
-}
+};
 
-async function generateAllPlots() {
-    if (!checkDataLoaded()) return;
+window.generateAllPlots = async function() {
+    if (!checkDataLoaded()) { return; }
 
     toast.info('Generating all plots... (prompts will appear for ISP, Ve, and C*)');
 
     const plotFunctions = [
-        plotThrust,
-        plotChamberPressure,
-        plotOFRatio,
-        plotFuelWeight,
-        plotOxidizerWeight
+        window.plotThrust,
+        window.plotChamberPressure,
+        window.plotOFRatio,
+        window.plotFuelWeight,
+        window.plotOxidizerWeight
     ];
 
     // Execute simple plots first
     for (const fn of plotFunctions) {
         try {
             fn();
-            await new Promise(r => setTimeout(r, 500));
+            await new Promise(r => window.setTimeout(r, 500));
         } catch (e) {
             console.log('Skipped plot:', e);
         }
@@ -1044,14 +1060,14 @@ async function generateAllPlots() {
     await plotISP();
     await plotExhaustVelocity();
     await plotCStar();
-}
+};
 
 // ============================================
 // CUSTOM PLOT - FIXED with multiple Y-axes and constant lines
 // ============================================
 
-function openCustomPlot() {
-    if (!checkDataLoaded()) return;
+window.openCustomPlot = function() {
+    if (!checkDataLoaded()) { return; }
 
     // Reset constant lines
     customPlotConstantLines = [];
@@ -1066,10 +1082,18 @@ function openCustomPlot() {
         const div = document.createElement('div');
         div.className = 'checkbox-wrapper';
         const unit = Utils.extractUnit(col) || 'unknown';
-        div.innerHTML = `
-      <input type="checkbox" class="checkbox-input custom-col-checkbox" value="${col}" data-unit="${unit}">
-      <label>${col}</label>
-    `;
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.className = 'checkbox-input custom-col-checkbox';
+        input.value = col;
+        input.dataset.unit = unit;
+
+        const label = document.createElement('label');
+        label.textContent = col;
+
+        div.appendChild(input);
+        div.appendChild(label);
         container.appendChild(div);
     });
 
@@ -1084,18 +1108,28 @@ function openCustomPlot() {
         if (col.condition) {
             const div = document.createElement('div');
             div.className = 'checkbox-wrapper';
-            div.innerHTML = `
-        <input type="checkbox" class="checkbox-input custom-col-checkbox" value="${col.name}" data-generated="true" data-unit="${col.unit}">
-        <label style="color: var(--accent-primary);">${col.name} (Generated)</label>
-      `;
+
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.className = 'checkbox-input custom-col-checkbox';
+            input.value = col.name;
+            input.dataset.generated = 'true';
+            input.dataset.unit = col.unit;
+
+            const label = document.createElement('label');
+            label.textContent = `${col.name} (Generated)`;
+            label.style.color = 'var(--accent-primary)';
+
+            div.appendChild(input);
+            div.appendChild(label);
             container.appendChild(div);
         }
     });
 
     ModalManager.open('customPlotModal');
-}
+};
 
-function addConstantLine() {
+window.addConstantLine = function() {
     const valueInput = document.getElementById('constantLineValue');
     const labelInput = document.getElementById('constantLineLabel');
     const unitSelect = document.getElementById('constantLineUnit');
@@ -1117,16 +1151,16 @@ function addConstantLine() {
     labelInput.value = '';
 
     toast.success(`Added constant line: ${label}`);
-}
+};
 
-function removeConstantLine(index) {
+window.removeConstantLine = function(index) {
     customPlotConstantLines.splice(index, 1);
     updateConstantLinesList();
-}
+};
 
 function updateConstantLinesList() {
     const container = document.getElementById('constantLinesList');
-    if (!container) return;
+    if (!container) { return; }
 
     container.innerHTML = '';
     if (customPlotConstantLines.length === 0) {
@@ -1147,7 +1181,7 @@ function updateConstantLinesList() {
 }
 
 // FIXED: Custom plot with multiple Y-axes and smoothing support
-function generateCustomPlot() {
+window.generateCustomPlot = function() {
     const selectedCols = [];
     document.querySelectorAll('.custom-col-checkbox:checked').forEach(cb => {
         selectedCols.push({
@@ -1187,7 +1221,7 @@ function generateCustomPlot() {
     customPlotRawDatasets = []; // Reset raw data storage for smoothing
     let colorIndex = 0;
 
-    selectedCols.forEach((col, i) => {
+    selectedCols.forEach(col => {
         let yData;
 
         if (col.generated) {
@@ -1197,7 +1231,7 @@ function generateCustomPlot() {
                     let sum = 0;
                     for (const c of ctx.thrustCols) {
                         const val = Utils.parseNumber(row[c]);
-                        if (!isNaN(val)) sum += val;
+                        if (!isNaN(val)) { sum += val; }
                     }
                     return sum;
                 });
@@ -1350,7 +1384,7 @@ function generateCustomPlot() {
             onClick: handleChartClick
         }
     });
-}
+};
 
 // ============================================
 // VENTURI MASS FLOW RATE FUNCTIONS
@@ -1367,8 +1401,8 @@ const IN2_TO_M2 = 0.00064516;  // square inches to square meters
  * Open the venturi modal for fuel or oxidizer
  * @param {string} type - 'fuel' or 'ox'
  */
-function openVenturiModal(type) {
-    if (!checkDataLoaded()) return;
+window.openVenturiModal = function(type) {
+    if (!checkDataLoaded()) { return; }
 
     currentVenturiType = type;
     const title = type === 'fuel' ? 'Fuel Mass Flow Rate from Venturi' : 'Oxidizer Mass Flow Rate from Venturi';
@@ -1401,20 +1435,41 @@ function openVenturiModal(type) {
     });
 
     ModalManager.open('venturiModal');
-}
+};
 
 /**
  * Set the venturi density input value
  * @param {number} density - Density value in kg/m³
  */
-function setVenturiDensity(density) {
+window.setVenturiDensity = function(density) {
     document.getElementById('venturiRho').value = density;
+};
+
+function computeVenturiMdot({ a1_in2, a2_in2, cd, y, rho, p1_psi, p2_psi, time }) {
+    // Convert areas to m²
+    const a1 = a1_in2 * IN2_TO_M2;
+    const a2 = a2_in2 * IN2_TO_M2;
+
+    // Convert pressures to Pa
+    const p1_pa = p1_psi.map(p => p * PSI_TO_PA);
+    const p2_pa = p2_psi.map(p => p * PSI_TO_PA);
+
+    // Calculate beta ratio squared
+    const beta_sq = Math.pow(a2 / a1, 2);
+    const denominator = 1 - beta_sq;
+
+    // Venturi equation: ṁ = Cd * Y * A2 * sqrt(2 * rho * delta_p / (1 - beta²))
+    return time.map((t, i) => {
+        const delta_p = Math.max(0, p1_pa[i] - p2_pa[i]);  // Ensure non-negative
+        const value = cd * y * a2 * Math.sqrt(2 * rho * delta_p / denominator);
+        return isNaN(value) ? 0 : value;
+    });
 }
 
 /**
  * Calculate and plot venturi mass flow rate
  */
-function calculateVenturiMdot() {
+window.calculateVenturiMdot = function() {
     // Get inputs
     const p1Col = document.getElementById('venturiP1Select').value;
     const p2Col = document.getElementById('venturiP2Select').value;
@@ -1456,29 +1511,15 @@ function calculateVenturiMdot() {
         return;
     }
 
-    // Convert areas to m²
-    const a1 = a1_in2 * IN2_TO_M2;
-    const a2 = a2_in2 * IN2_TO_M2;
-
     // Get filtered data
     const data = getFilteredData();
     const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
     const p1_psi = data.map(row => Utils.parseNumber(row[p1Col]));
     const p2_psi = data.map(row => Utils.parseNumber(row[p2Col]));
 
-    // Convert pressures to Pa
-    const p1_pa = p1_psi.map(p => p * PSI_TO_PA);
-    const p2_pa = p2_psi.map(p => p * PSI_TO_PA);
-
-    // Calculate beta ratio squared
-    const beta_sq = Math.pow(a2 / a1, 2);
-    const denominator = 1 - beta_sq;
-
-    // Venturi equation: ṁ = Cd * Y * A2 * sqrt(2 * rho * delta_p / (1 - beta²))
-    const mdot = time.map((t, i) => {
-        const delta_p = Math.max(0, p1_pa[i] - p2_pa[i]);  // Ensure non-negative
-        const value = cd * y * a2 * Math.sqrt(2 * rho * delta_p / denominator);
-        return isNaN(value) ? 0 : value;
+    const mdot = computeVenturiMdot({
+        a1_in2, a2_in2, cd, y, rho,
+        p1_psi, p2_psi, time
     });
 
     // Close modal
@@ -1499,7 +1540,7 @@ function calculateVenturiMdot() {
         const maxMdot = Math.max(...validMdot);
         toast.success(`Avg: ${avgMdot.toFixed(4)} kg/s | Max: ${maxMdot.toFixed(4)} kg/s`);
     }
-}
+};
 
 // ============================================
 // UTILITY FUNCTIONS
