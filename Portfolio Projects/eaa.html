@@ -16,8 +16,8 @@
         <div class="header-left">
             <h1 class="header-title">Caleb Stone</h1>
         </div>
-        <button class="header-menu-btn" aria-label="Menu">Menu</button>
-        <nav class="header-nav">
+        <button class="header-menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">Menu</button>
+        <nav class="header-nav" id="mobile-menu">
             <a href="../index.html">Home</a>
             <a href="../about.html">About</a>
             <a href="../galleries.html">Galleries</a>
@@ -61,13 +61,22 @@
 
     <script src="../script.js"></script>
     <script>
-        document.querySelector('.header-menu-btn').onclick = function () {
-            document.querySelector('.header-nav').classList.toggle('show');
-        };
+        const menuBtn = document.querySelector('.header-menu-btn');
+        const nav = document.querySelector('.header-nav');
+        if (menuBtn && nav) {
+            menuBtn.onclick = function () {
+                nav.classList.toggle('show');
+                const isExpanded = nav.classList.contains('show');
+                menuBtn.setAttribute('aria-expanded', isExpanded);
+            };
+        }
         document.querySelectorAll('.header-nav a').forEach(link => {
             link.onclick = () => {
                 if (window.innerWidth <= 700) {
-                    document.querySelector('.header-nav').classList.remove('show');
+                    const nav = document.querySelector('.header-nav');
+                    const menuBtn = document.querySelector('.header-menu-btn');
+                    if (nav) nav.classList.remove('show');
+                    if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
                 }
             };
         });
