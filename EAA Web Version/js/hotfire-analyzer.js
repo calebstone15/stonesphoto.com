@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /**
  * ERPL Hotfire Data Analysis App - JavaScript Implementation
  * Complete port of the Python Tkinter application
@@ -513,7 +514,12 @@ async function createPlot(title, xData, yData, xLabel, yLabel, color, config = {
     // Prepare data as {x, y} objects for scatter-like line chart
     const xyData = cleanX.map((x, i) => ({ x: x, y: cleanY[i] }));
 
-    currentChart = new Chart(ctx2d, {
+    const chartConfig = buildChartConfig(title, xyData, xLabel, yLabel, color);
+    currentChart = new Chart(ctx2d, chartConfig);
+}
+
+function buildChartConfig(title, xyData, xLabel, yLabel, color) {
+    return {
         type: 'line',
         data: {
             datasets: [
@@ -584,7 +590,7 @@ async function createPlot(title, xData, yData, xLabel, yLabel, color, config = {
             },
             onClick: handleChartClick
         }
-    });
+    };
 }
 
 // FIXED: Click handler with proper coordinate detection
@@ -1470,16 +1476,7 @@ function calculateVenturiMdot() {
     const p1_pa = p1_psi.map(p => p * PSI_TO_PA);
     const p2_pa = p2_psi.map(p => p * PSI_TO_PA);
 
-    // Calculate beta ratio squared
-    const beta_sq = Math.pow(a2 / a1, 2);
-    const denominator = 1 - beta_sq;
-
-    // Venturi equation: ṁ = Cd * Y * A2 * sqrt(2 * rho * delta_p / (1 - beta²))
-    const mdot = time.map((t, i) => {
-        const delta_p = Math.max(0, p1_pa[i] - p2_pa[i]);  // Ensure non-negative
-        const value = cd * y * a2 * Math.sqrt(2 * rho * delta_p / denominator);
-        return isNaN(value) ? 0 : value;
-    });
+    const mdot = computeVenturiMdot(p1_pa, p2_pa, a1, a2, cd, y, rho);
 
     // Close modal
     ModalManager.close('venturiModal');
@@ -1499,6 +1496,19 @@ function calculateVenturiMdot() {
         const maxMdot = Math.max(...validMdot);
         toast.success(`Avg: ${avgMdot.toFixed(4)} kg/s | Max: ${maxMdot.toFixed(4)} kg/s`);
     }
+}
+
+function computeVenturiMdot(p1_pa, p2_pa, a1, a2, cd, y, rho) {
+    // Calculate beta ratio squared
+    const beta_sq = Math.pow(a2 / a1, 2);
+    const denominator = 1 - beta_sq;
+
+    // Venturi equation: ṁ = Cd * Y * A2 * sqrt(2 * rho * delta_p / (1 - beta²))
+    return p1_pa.map((_, i) => {
+        const delta_p = Math.max(0, p1_pa[i] - p2_pa[i]);  // Ensure non-negative
+        const value = cd * y * a2 * Math.sqrt(2 * rho * delta_p / denominator);
+        return isNaN(value) ? 0 : value;
+    });
 }
 
 // ============================================

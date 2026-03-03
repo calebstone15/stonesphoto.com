@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const EmailConfig = {
     PUBLIC_KEY: "x0pDGPnrMj7xD0fSb",
     SERVICE_ID: "service_0hcl68q",
