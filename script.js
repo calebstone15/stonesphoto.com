@@ -100,6 +100,30 @@ function handleFormSubmit(event) {
 		});
 }
 
+function validateField(input) {
+	const errorId = input.getAttribute('aria-describedby');
+	if (!errorId) return;
+
+	const errorEl = document.getElementById(errorId);
+	let isValid = input.checkValidity();
+
+	// Custom validation for required fields that might be empty
+	if (input.hasAttribute('required') && !input.value.trim()) {
+		isValid = false;
+	}
+
+	if (!isValid) {
+		errorEl.style.display = 'block';
+		input.setAttribute('aria-invalid', 'true');
+		input.style.borderColor = '#e74c3c';
+	} else {
+		errorEl.style.display = 'none';
+		input.setAttribute('aria-invalid', 'false');
+		input.style.borderColor = ''; // Restore original color
+	}
+	return isValid;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
 	const form = document.getElementById('contact-form');
 
@@ -119,29 +143,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		});
 
-		function validateField(input) {
-			const errorId = input.getAttribute('aria-describedby');
-			if (!errorId) return;
-
-			const errorEl = document.getElementById(errorId);
-			let isValid = input.checkValidity();
-
-			// Custom validation for required fields that might be empty
-			if (input.hasAttribute('required') && !input.value.trim()) {
-				isValid = false;
-			}
-
-			if (!isValid) {
-				errorEl.style.display = 'block';
-				input.setAttribute('aria-invalid', 'true');
-				input.style.borderColor = '#e74c3c';
-			} else {
-				errorEl.style.display = 'none';
-				input.setAttribute('aria-invalid', 'false');
-				input.style.borderColor = ''; // Restore original color
-			}
-			return isValid;
-		}
 	}
 
 	// Mobile menu toggle
