@@ -155,7 +155,11 @@ function showColumnSelectionModal() {
 
     // Clear and populate
     [timeSelect, chamberSelect, fuelSelect, oxidizerSelect].forEach(select => {
-        select.innerHTML = '<option value="">-- Select --</option>';
+        select.replaceChildren();
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = '-- Select --';
+        select.appendChild(defaultOption);
         ctx.columns.forEach(col => {
             const option = document.createElement('option');
             option.value = col;
@@ -171,16 +175,25 @@ function showColumnSelectionModal() {
     if (ctx.oxidizerCol) oxidizerSelect.value = ctx.oxidizerCol;
 
     // Thrust checkboxes
-    thrustContainer.innerHTML = '';
+    thrustContainer.replaceChildren();
     const fragment = document.createDocumentFragment();
     ctx.columns.forEach(col => {
         const div = document.createElement('div');
         div.className = 'checkbox-wrapper';
-        div.innerHTML = `
-      <input type="checkbox" class="checkbox-input thrust-checkbox" value="${col}" 
-             ${ctx.thrustCols.includes(col) ? 'checked' : ''}>
-      <label>${col}</label>
-    `;
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.className = 'checkbox-input thrust-checkbox';
+        input.value = col;
+        if (ctx.thrustCols.includes(col)) {
+            input.checked = true;
+        }
+
+        const label = document.createElement('label');
+        label.textContent = col;
+
+        div.appendChild(input);
+        div.appendChild(label);
+
         fragment.appendChild(div);
     });
     thrustContainer.appendChild(fragment);
@@ -297,15 +310,23 @@ function displayMetrics() {
     }
 
     section.style.display = 'block';
-    container.innerHTML = '';
+    container.replaceChildren();
 
     for (const [key, value] of Object.entries(ctx.metrics)) {
         const card = document.createElement('div');
         card.className = 'metric-card';
-        card.innerHTML = `
-      <div class="metric-label">${key}</div>
-      <div class="metric-value">${value}</div>
-    `;
+
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'metric-label';
+        labelDiv.textContent = key;
+
+        const valueDiv = document.createElement('div');
+        valueDiv.className = 'metric-value';
+        valueDiv.textContent = value;
+
+        card.appendChild(labelDiv);
+        card.appendChild(valueDiv);
+
         container.appendChild(card);
     }
 }
@@ -493,7 +514,10 @@ async function createPlot(title, xData, yData, xLabel, yLabel, color, config = {
     document.getElementById('smoothingValue').textContent = '1';
 
     // Reset avg display
-    document.getElementById('avgDisplay').innerHTML = '<span style="color: var(--text-muted);">Click two points on the chart to calculate average</span>';
+    const avgDisplaySpan = document.createElement('span');
+    avgDisplaySpan.style.color = 'var(--text-muted)';
+    avgDisplaySpan.textContent = 'Click two points on the chart to calculate average';
+    document.getElementById('avgDisplay').replaceChildren(avgDisplaySpan);
 
     // Open modal
     ModalManager.open('plotModal');
@@ -659,10 +683,16 @@ function handleChartClick(event, elements) {
         const unitMatch = currentPlotData.yLabel.match(/\(([^)]+)\)/);
         const unit = unitMatch ? unitMatch[1] : '';
 
-        document.getElementById('avgDisplay').innerHTML = `
-      <span class="chart-avg-value">Average: ${avg.toFixed(3)} ${unit}</span>
-      <span style="margin-left: 20px; color: var(--text-muted);">Range: ${selectedPoints[0].x.toFixed(2)}s - ${selectedPoints[1].x.toFixed(2)}s</span>
-    `;
+        const avgDisplaySpan = document.createElement('span');
+        avgDisplaySpan.className = 'chart-avg-value';
+        avgDisplaySpan.textContent = `Average: ${avg.toFixed(3)} ${unit}`;
+
+        const rangeSpan = document.createElement('span');
+        rangeSpan.style.marginLeft = '20px';
+        rangeSpan.style.color = 'var(--text-muted)';
+        rangeSpan.textContent = `Range: ${selectedPoints[0].x.toFixed(2)}s - ${selectedPoints[1].x.toFixed(2)}s`;
+
+        document.getElementById('avgDisplay').replaceChildren(avgDisplaySpan, rangeSpan);
 
         // Add horizontal average line between the two selection points
         const minX = Math.min(selectedPoints[0].x, selectedPoints[1].x);
@@ -1059,17 +1089,26 @@ function openCustomPlot() {
 
     // Populate column checkboxes
     const container = document.getElementById('customPlotColumnsContainer');
-    container.innerHTML = '';
+    container.replaceChildren();
 
     // Add data columns with unit detection
     ctx.columns.forEach(col => {
         const div = document.createElement('div');
         div.className = 'checkbox-wrapper';
         const unit = Utils.extractUnit(col) || 'unknown';
-        div.innerHTML = `
-      <input type="checkbox" class="checkbox-input custom-col-checkbox" value="${col}" data-unit="${unit}">
-      <label>${col}</label>
-    `;
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.className = 'checkbox-input custom-col-checkbox';
+        input.value = col;
+        input.dataset.unit = unit;
+
+        const label = document.createElement('label');
+        label.textContent = col;
+
+        div.appendChild(input);
+        div.appendChild(label);
+
         container.appendChild(div);
     });
 
@@ -1084,10 +1123,20 @@ function openCustomPlot() {
         if (col.condition) {
             const div = document.createElement('div');
             div.className = 'checkbox-wrapper';
-            div.innerHTML = `
-        <input type="checkbox" class="checkbox-input custom-col-checkbox" value="${col.name}" data-generated="true" data-unit="${col.unit}">
-        <label style="color: var(--accent-primary);">${col.name} (Generated)</label>
-      `;
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.className = 'checkbox-input custom-col-checkbox';
+            input.value = col.name;
+            input.dataset.generated = 'true';
+            input.dataset.unit = col.unit;
+
+            const label = document.createElement('label');
+            label.style.color = 'var(--accent-primary)';
+            label.textContent = `${col.name} (Generated)`;
+
+            div.appendChild(input);
+            div.appendChild(label);
+
             container.appendChild(div);
         }
     });
@@ -1128,26 +1177,45 @@ function updateConstantLinesList() {
     const container = document.getElementById('constantLinesList');
     if (!container) return;
 
-    container.innerHTML = '';
+    container.replaceChildren();
     if (customPlotConstantLines.length === 0) {
-        container.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem;">No constant lines added</span>';
+        const span = document.createElement('span');
+        span.style.color = 'var(--text-muted)';
+        span.style.fontSize = '0.85rem';
+        span.textContent = 'No constant lines added';
+        container.appendChild(span);
         return;
     }
 
     customPlotConstantLines.forEach((line, i) => {
         const div = document.createElement('div');
         div.className = 'constant-line-item';
+
+        const span = document.createElement('span');
         const unitStr = line.unit ? ` (${line.unit})` : '';
-        div.innerHTML = `
-      <span>${line.label}: ${line.value}${unitStr}</span>
-      <button type="button" class="btn btn-small btn-secondary" onclick="removeConstantLine(${i})">✕</button>
-    `;
+        span.textContent = `${line.label}: `;
+
+        const strong = document.createElement('strong');
+        strong.textContent = line.value;
+        span.appendChild(strong);
+
+        const unitText = document.createTextNode(unitStr);
+        span.appendChild(unitText);
+
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-small btn-secondary';
+        btn.textContent = '✕';
+        btn.onclick = () => removeConstantLine(i);
+
+        div.appendChild(span);
+        div.appendChild(btn);
+
         container.appendChild(div);
     });
 }
 
 // FIXED: Custom plot with multiple Y-axes and smoothing support
-function generateCustomPlot() {
+function _getCustomPlotSelectedColumns() {
     const selectedCols = [];
     document.querySelectorAll('.custom-col-checkbox:checked').forEach(cb => {
         selectedCols.push({
@@ -1156,20 +1224,10 @@ function generateCustomPlot() {
             unit: cb.dataset.unit || 'unknown'
         });
     });
+    return selectedCols;
+}
 
-    if (selectedCols.length === 0) {
-        toast.warning('Please select at least one column');
-        return;
-    }
-
-    const title = document.getElementById('customPlotTitle').value || 'Custom Plot';
-    ModalManager.close('customPlotModal');
-
-    // Get data
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-
-    // Group columns by unit for multiple Y-axes
+function _groupColumnsByUnit(selectedCols) {
     const unitGroups = {};
     selectedCols.forEach(col => {
         const unit = col.unit;
@@ -1178,20 +1236,19 @@ function generateCustomPlot() {
         }
         unitGroups[unit].push(col);
     });
+    return unitGroups;
+}
 
-    const units = Object.keys(unitGroups);
+function _createCustomPlotDatasets(selectedCols, time, data, units) {
     const colors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4'];
-
-    // Create datasets
     const datasets = [];
     customPlotRawDatasets = []; // Reset raw data storage for smoothing
     let colorIndex = 0;
 
-    selectedCols.forEach((col, i) => {
+    selectedCols.forEach((col) => {
         let yData;
 
         if (col.generated) {
-            // Handle generated columns
             if (col.name === 'Total Thrust (lbf)') {
                 yData = data.map(row => {
                     let sum = 0;
@@ -1214,13 +1271,10 @@ function generateCustomPlot() {
             yData = data.map(row => Utils.parseNumber(row[col.name]));
         }
 
-        // Store raw data for smoothing
         customPlotRawDatasets.push([...yData]);
-
         const color = colors[colorIndex % colors.length];
         colorIndex++;
 
-        // Determine which y-axis to use
         const unitIndex = units.indexOf(col.unit);
         const yAxisID = unitIndex === 0 ? 'y' : `y${unitIndex}`;
 
@@ -1237,7 +1291,10 @@ function generateCustomPlot() {
         });
     });
 
-    // Build scales object with multiple Y-axes
+    return datasets;
+}
+
+function _createCustomPlotScales(units) {
     const scales = {
         x: {
             type: 'linear',
@@ -1251,7 +1308,6 @@ function generateCustomPlot() {
         }
     };
 
-    // Create Y-axes for each unit
     const axisColors = ['#b8b8d4', '#3b82f6', '#ef4444', '#10b981'];
     units.forEach((unit, i) => {
         const axisId = i === 0 ? 'y' : `y${i}`;
@@ -1271,35 +1327,10 @@ function generateCustomPlot() {
         };
     });
 
-    // Store plot data
-    currentPlotData = {
-        title,
-        xData: time,
-        yData: customPlotRawDatasets[0] || [],
-        xLabel: 'Time (s)',
-        yLabel: 'Value',
-        color: '#3b82f6',
-        rawYData: customPlotRawDatasets[0] || [],
-        isCustomPlot: true
-    };
+    return scales;
+}
 
-    selectedPoints = [];
-
-    document.getElementById('plotModalTitle').textContent = title;
-    document.getElementById('smoothingSlider').value = 1;
-    document.getElementById('smoothingValue').textContent = '1';
-    document.getElementById('avgDisplay').innerHTML = '<span style="color: var(--text-muted);">Multi-series plot - smoothing applies to all series</span>';
-
-    ModalManager.open('plotModal');
-
-    if (currentChart) {
-        currentChart.destroy();
-    }
-
-    const canvas = document.getElementById('plotCanvas');
-    const ctx2d = canvas.getContext('2d');
-
-    // Build annotations for constant lines
+function _createCustomPlotAnnotations() {
     const annotations = {};
     customPlotConstantLines.forEach((line, i) => {
         annotations[`constLine${i}`] = {
@@ -1319,6 +1350,62 @@ function generateCustomPlot() {
             }
         };
     });
+    return annotations;
+}
+
+function generateCustomPlot() {
+    const selectedCols = _getCustomPlotSelectedColumns();
+
+    if (selectedCols.length === 0) {
+        toast.warning('Please select at least one column');
+        return;
+    }
+
+    const title = document.getElementById('customPlotTitle').value || 'Custom Plot';
+    ModalManager.close('customPlotModal');
+
+    // Get data
+    const data = getFilteredData();
+    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
+
+    const unitGroups = _groupColumnsByUnit(selectedCols);
+    const units = Object.keys(unitGroups);
+
+    const datasets = _createCustomPlotDatasets(selectedCols, time, data, units);
+    const scales = _createCustomPlotScales(units);
+
+    // Store plot data
+    currentPlotData = {
+        title,
+        xData: time,
+        yData: customPlotRawDatasets[0] || [],
+        xLabel: 'Time (s)',
+        yLabel: 'Value',
+        color: '#3b82f6',
+        rawYData: customPlotRawDatasets[0] || [],
+        isCustomPlot: true
+    };
+
+    selectedPoints = [];
+
+    document.getElementById('plotModalTitle').textContent = title;
+    document.getElementById('smoothingSlider').value = 1;
+    document.getElementById('smoothingValue').textContent = '1';
+    const avgDisplaySpan = document.createElement('span');
+    avgDisplaySpan.style.color = 'var(--text-muted)';
+    avgDisplaySpan.textContent = 'Multi-series plot - smoothing applies to all series';
+    document.getElementById('avgDisplay').replaceChildren(avgDisplaySpan);
+
+    ModalManager.open('plotModal');
+
+    if (currentChart) {
+        currentChart.destroy();
+    }
+
+    const canvas = document.getElementById('plotCanvas');
+    const ctx2d = canvas.getContext('2d');
+
+    const annotations = _createCustomPlotAnnotations();
 
     currentChart = new Chart(ctx2d, {
         type: 'line',
@@ -1385,8 +1472,17 @@ function openVenturiModal(type) {
     const p1Select = document.getElementById('venturiP1Select');
     const p2Select = document.getElementById('venturiP2Select');
 
-    p1Select.innerHTML = '<option value="">-- Select P1 --</option>';
-    p2Select.innerHTML = '<option value="">-- Select P2 --</option>';
+    p1Select.replaceChildren();
+    const defaultOptionP1 = document.createElement('option');
+    defaultOptionP1.value = '';
+    defaultOptionP1.textContent = '-- Select P1 --';
+    p1Select.appendChild(defaultOptionP1);
+
+    p2Select.replaceChildren();
+    const defaultOptionP2 = document.createElement('option');
+    defaultOptionP2.value = '';
+    defaultOptionP2.textContent = '-- Select P2 --';
+    p2Select.appendChild(defaultOptionP2);
 
     ctx.columns.forEach(col => {
         const option1 = document.createElement('option');
