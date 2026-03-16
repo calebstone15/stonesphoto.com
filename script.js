@@ -151,6 +151,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (menuBtn && nav) {
 		menuBtn.onclick = function() {
 			nav.classList.toggle('show');
+			const isExpanded = nav.classList.contains('show');
+			menuBtn.setAttribute('aria-expanded', isExpanded.toString());
 		};
 
 		// Close menu when clicking a link (on mobile)
@@ -158,6 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			link.onclick = () => {
 				if (window.innerWidth <= 700) {
 					nav.classList.remove('show');
+					menuBtn.setAttribute('aria-expanded', 'false');
 				}
 			};
 		});
