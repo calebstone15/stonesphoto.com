@@ -22,9 +22,9 @@ const Utils = {
         if (windowSize <= 1) return [...data];
         if (data.length === 0) return [];
 
-        const result = [];
-        const halfWindow = Math.floor(windowSize / 2);
         const len = data.length;
+        const result = new Array(len);
+        const halfWindow = Math.floor(windowSize / 2);
 
         // Initialize sum and count for the first window centered at i=0
         // Window range: [0, min(len-1, halfWindow)]
@@ -39,7 +39,7 @@ const Utils = {
             }
         }
 
-        result.push(count > 0 ? sum / count : data[0]);
+        result[0] = count > 0 ? sum / count : data[0];
 
         // Sliding window
         for (let i = 1; i < len; i++) {
@@ -63,7 +63,7 @@ const Utils = {
                 }
             }
 
-            result.push(count > 0 ? sum / count : data[i]);
+            result[i] = count > 0 ? sum / count : data[i];
         }
 
         return result;
