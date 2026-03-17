@@ -155,7 +155,12 @@ function showColumnSelectionModal() {
 
     // Clear and populate
     [timeSelect, chamberSelect, fuelSelect, oxidizerSelect].forEach(select => {
-        select.innerHTML = '<option value="">-- Select --</option>';
+        select.replaceChildren();
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = '-- Select --';
+        select.appendChild(defaultOption);
+
         ctx.columns.forEach(col => {
             const option = document.createElement('option');
             option.value = col;
@@ -171,16 +176,25 @@ function showColumnSelectionModal() {
     if (ctx.oxidizerCol) oxidizerSelect.value = ctx.oxidizerCol;
 
     // Thrust checkboxes
-    thrustContainer.innerHTML = '';
+    thrustContainer.replaceChildren();
     const fragment = document.createDocumentFragment();
     ctx.columns.forEach(col => {
         const div = document.createElement('div');
         div.className = 'checkbox-wrapper';
-        div.innerHTML = `
-      <input type="checkbox" class="checkbox-input thrust-checkbox" value="${col}" 
-             ${ctx.thrustCols.includes(col) ? 'checked' : ''}>
-      <label>${col}</label>
-    `;
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.className = 'checkbox-input thrust-checkbox';
+        input.value = col;
+        if (ctx.thrustCols.includes(col)) {
+            input.checked = true;
+        }
+
+        const label = document.createElement('label');
+        label.textContent = col;
+
+        div.appendChild(input);
+        div.appendChild(label);
         fragment.appendChild(div);
     });
     thrustContainer.appendChild(fragment);
@@ -297,15 +311,22 @@ function displayMetrics() {
     }
 
     section.style.display = 'block';
-    container.innerHTML = '';
+    container.replaceChildren();
 
     for (const [key, value] of Object.entries(ctx.metrics)) {
         const card = document.createElement('div');
         card.className = 'metric-card';
-        card.innerHTML = `
-      <div class="metric-label">${key}</div>
-      <div class="metric-value">${value}</div>
-    `;
+
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'metric-label';
+        labelDiv.textContent = key;
+
+        const valueDiv = document.createElement('div');
+        valueDiv.className = 'metric-value';
+        valueDiv.textContent = value;
+
+        card.appendChild(labelDiv);
+        card.appendChild(valueDiv);
         container.appendChild(card);
     }
 }
@@ -493,7 +514,12 @@ async function createPlot(title, xData, yData, xLabel, yLabel, color, config = {
     document.getElementById('smoothingValue').textContent = '1';
 
     // Reset avg display
-    document.getElementById('avgDisplay').innerHTML = '<span style="color: var(--text-muted);">Click two points on the chart to calculate average</span>';
+    const avgDisplay = document.getElementById('avgDisplay');
+    avgDisplay.replaceChildren();
+    const span = document.createElement('span');
+    span.style.color = 'var(--text-muted)';
+    span.textContent = 'Click two points on the chart to calculate average';
+    avgDisplay.appendChild(span);
 
     // Open modal
     ModalManager.open('plotModal');
@@ -659,10 +685,20 @@ function handleChartClick(event, elements) {
         const unitMatch = currentPlotData.yLabel.match(/\(([^)]+)\)/);
         const unit = unitMatch ? unitMatch[1] : '';
 
-        document.getElementById('avgDisplay').innerHTML = `
-      <span class="chart-avg-value">Average: ${avg.toFixed(3)} ${unit}</span>
-      <span style="margin-left: 20px; color: var(--text-muted);">Range: ${selectedPoints[0].x.toFixed(2)}s - ${selectedPoints[1].x.toFixed(2)}s</span>
-    `;
+        const avgDisplay = document.getElementById('avgDisplay');
+        avgDisplay.replaceChildren();
+
+        const avgSpan = document.createElement('span');
+        avgSpan.className = 'chart-avg-value';
+        avgSpan.textContent = `Average: ${avg.toFixed(3)} ${unit}`;
+
+        const rangeSpan = document.createElement('span');
+        rangeSpan.style.marginLeft = '20px';
+        rangeSpan.style.color = 'var(--text-muted)';
+        rangeSpan.textContent = `Range: ${selectedPoints[0].x.toFixed(2)}s - ${selectedPoints[1].x.toFixed(2)}s`;
+
+        avgDisplay.appendChild(avgSpan);
+        avgDisplay.appendChild(rangeSpan);
 
         // Add horizontal average line between the two selection points
         const minX = Math.min(selectedPoints[0].x, selectedPoints[1].x);
@@ -1059,17 +1095,25 @@ function openCustomPlot() {
 
     // Populate column checkboxes
     const container = document.getElementById('customPlotColumnsContainer');
-    container.innerHTML = '';
+    container.replaceChildren();
 
     // Add data columns with unit detection
     ctx.columns.forEach(col => {
         const div = document.createElement('div');
         div.className = 'checkbox-wrapper';
         const unit = Utils.extractUnit(col) || 'unknown';
-        div.innerHTML = `
-      <input type="checkbox" class="checkbox-input custom-col-checkbox" value="${col}" data-unit="${unit}">
-      <label>${col}</label>
-    `;
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.className = 'checkbox-input custom-col-checkbox';
+        input.value = col;
+        input.dataset.unit = unit;
+
+        const label = document.createElement('label');
+        label.textContent = col;
+
+        div.appendChild(input);
+        div.appendChild(label);
         container.appendChild(div);
     });
 
@@ -1084,10 +1128,20 @@ function openCustomPlot() {
         if (col.condition) {
             const div = document.createElement('div');
             div.className = 'checkbox-wrapper';
-            div.innerHTML = `
-        <input type="checkbox" class="checkbox-input custom-col-checkbox" value="${col.name}" data-generated="true" data-unit="${col.unit}">
-        <label style="color: var(--accent-primary);">${col.name} (Generated)</label>
-      `;
+
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.className = 'checkbox-input custom-col-checkbox';
+            input.value = col.name;
+            input.dataset.generated = 'true';
+            input.dataset.unit = col.unit;
+
+            const label = document.createElement('label');
+            label.style.color = 'var(--accent-primary)';
+            label.textContent = `${col.name} (Generated)`;
+
+            div.appendChild(input);
+            div.appendChild(label);
             container.appendChild(div);
         }
     });
@@ -1128,9 +1182,13 @@ function updateConstantLinesList() {
     const container = document.getElementById('constantLinesList');
     if (!container) return;
 
-    container.innerHTML = '';
+    container.replaceChildren();
     if (customPlotConstantLines.length === 0) {
-        container.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem;">No constant lines added</span>';
+        const span = document.createElement('span');
+        span.style.color = 'var(--text-muted)';
+        span.style.fontSize = '0.85rem';
+        span.textContent = 'No constant lines added';
+        container.appendChild(span);
         return;
     }
 
@@ -1138,10 +1196,18 @@ function updateConstantLinesList() {
         const div = document.createElement('div');
         div.className = 'constant-line-item';
         const unitStr = line.unit ? ` (${line.unit})` : '';
-        div.innerHTML = `
-      <span>${line.label}: ${line.value}${unitStr}</span>
-      <button type="button" class="btn btn-small btn-secondary" onclick="removeConstantLine(${i})">✕</button>
-    `;
+
+        const span = document.createElement('span');
+        span.textContent = `${line.label}: ${line.value}${unitStr}`;
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'btn btn-small btn-secondary';
+        button.onclick = () => removeConstantLine(i);
+        button.textContent = '✕';
+
+        div.appendChild(span);
+        div.appendChild(button);
         container.appendChild(div);
     });
 }
@@ -1288,7 +1354,13 @@ function generateCustomPlot() {
     document.getElementById('plotModalTitle').textContent = title;
     document.getElementById('smoothingSlider').value = 1;
     document.getElementById('smoothingValue').textContent = '1';
-    document.getElementById('avgDisplay').innerHTML = '<span style="color: var(--text-muted);">Multi-series plot - smoothing applies to all series</span>';
+
+    const avgDisplay = document.getElementById('avgDisplay');
+    avgDisplay.replaceChildren();
+    const span = document.createElement('span');
+    span.style.color = 'var(--text-muted)';
+    span.textContent = 'Multi-series plot - smoothing applies to all series';
+    avgDisplay.appendChild(span);
 
     ModalManager.open('plotModal');
 
@@ -1385,8 +1457,17 @@ function openVenturiModal(type) {
     const p1Select = document.getElementById('venturiP1Select');
     const p2Select = document.getElementById('venturiP2Select');
 
-    p1Select.innerHTML = '<option value="">-- Select P1 --</option>';
-    p2Select.innerHTML = '<option value="">-- Select P2 --</option>';
+    p1Select.replaceChildren();
+    const p1Default = document.createElement('option');
+    p1Default.value = "";
+    p1Default.textContent = '-- Select P1 --';
+    p1Select.appendChild(p1Default);
+
+    p2Select.replaceChildren();
+    const p2Default = document.createElement('option');
+    p2Default.value = "";
+    p2Default.textContent = '-- Select P2 --';
+    p2Select.appendChild(p2Default);
 
     ctx.columns.forEach(col => {
         const option1 = document.createElement('option');

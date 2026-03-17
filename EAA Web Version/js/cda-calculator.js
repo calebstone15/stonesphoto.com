@@ -76,7 +76,12 @@ function populateColumnDropdowns() {
         const select = document.getElementById(selectId);
         if (!select) return;
 
-        select.innerHTML = '<option value="">-- Select --</option>';
+        select.replaceChildren();
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = '-- Select --';
+        select.appendChild(defaultOption);
+
         cdaState.columns.forEach(col => {
             const option = document.createElement('option');
             option.value = col;

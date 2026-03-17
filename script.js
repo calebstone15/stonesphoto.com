@@ -118,30 +118,32 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			});
 		});
+	}
 
-		function validateField(input) {
-			const errorId = input.getAttribute('aria-describedby');
-			if (!errorId) return;
+	function validateField(input) {
+		const errorId = input.getAttribute('aria-describedby');
+		if (!errorId) return;
 
-			const errorEl = document.getElementById(errorId);
-			let isValid = input.checkValidity();
+		const errorEl = document.getElementById(errorId);
+		if (!errorEl) return;
 
-			// Custom validation for required fields that might be empty
-			if (input.hasAttribute('required') && !input.value.trim()) {
-				isValid = false;
-			}
+		let isValid = input.checkValidity();
 
-			if (!isValid) {
-				errorEl.style.display = 'block';
-				input.setAttribute('aria-invalid', 'true');
-				input.style.borderColor = '#e74c3c';
-			} else {
-				errorEl.style.display = 'none';
-				input.setAttribute('aria-invalid', 'false');
-				input.style.borderColor = ''; // Restore original color
-			}
-			return isValid;
+		// Custom validation for required fields that might be empty
+		if (input.hasAttribute('required') && !input.value.trim()) {
+			isValid = false;
 		}
+
+		if (!isValid) {
+			errorEl.style.display = 'block';
+			input.setAttribute('aria-invalid', 'true');
+			input.style.borderColor = '#e74c3c';
+		} else {
+			errorEl.style.display = 'none';
+			input.setAttribute('aria-invalid', 'false');
+			input.style.borderColor = ''; // Restore original color
+		}
+		return isValid;
 	}
 
 	// Mobile menu toggle
