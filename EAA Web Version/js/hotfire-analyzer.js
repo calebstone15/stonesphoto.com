@@ -321,14 +321,23 @@ function getColumnData(colName) {
 
 function getTotalThrust() {
     if (ctx.thrustCols.length === 0) return [];
-    return ctx.df.map(row => {
+
+    // Performance optimization: Use cached numeric columns instead of parsing row objects repeatedly
+    const len = ctx.df.length;
+    const result = new Array(len);
+    const columnsData = ctx.thrustCols.map(col => ctx.getNumericColumn(col));
+    const numCols = columnsData.length;
+
+    for (let i = 0; i < len; i++) {
         let sum = 0;
-        for (const col of ctx.thrustCols) {
-            const val = Utils.parseNumber(row[col]);
+        for (let j = 0; j < numCols; j++) {
+            const val = columnsData[j][i];
             if (!isNaN(val)) sum += val;
         }
-        return sum;
-    });
+        result[i] = sum;
+    }
+
+    return result;
 }
 
 // ============================================
