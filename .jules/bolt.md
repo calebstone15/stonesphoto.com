@@ -5,3 +5,7 @@
 ## 2025-05-18 - Array Search and Allocation Performance
 **Learning:** Using `[...arr].reverse().findIndex()` to find the last index is an anti-pattern. It creates a full copy of the array and reverses it, which is O(N) memory and time. Use `arr.lastIndexOf()` instead for primitive types or simple predicates.
 **Action:** Scan for usage of `.reverse()` on array copies used solely for finding indices. Replace with `lastIndexOf` or a reverse loop.
+
+## 2024-03-23 - Avoid Redundant String Parsing in Array Loops
+**Learning:** Iterating over an array of row objects and parsing strings into numbers on-the-fly inside nested loops is a major performance bottleneck, especially for operations like total thrust calculation. Leveraging the built-in numeric caching layer (`ctx.getNumericColumn`) retrieves pre-parsed arrays in O(1) cache access time.
+**Action:** Prioritize extracting pre-parsed arrays from the cache layer instead of manual `parseFloat` or `Utils.parseNumber` inside nested data-processing loops.
