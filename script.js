@@ -9,7 +9,7 @@ console.log("Stones Photos site loaded!");
 		if (window.emailjs && typeof window.emailjs.init === 'function') {
 			try {
 				// Use string signature for widest compatibility
-				emailjs.init(EmailConfig.PUBLIC_KEY);
+					emailjs.init(window.EmailConfig.PUBLIC_KEY);
 				window.__EMAILJS_INITIALIZED__ = true;
 				console.log("EmailJS initialized in script.js");
 			} catch (e) {
@@ -86,7 +86,7 @@ function handleFormSubmit(event) {
 
 	// 3. API Call
 	// Pass public key as 4th arg as a fallback in case init wasn't effective
-	emailjs.send(EmailConfig.SERVICE_ID, EmailConfig.CONTACT_TEMPLATE_ID, formData, EmailConfig.PUBLIC_KEY)
+		emailjs.send(window.EmailConfig.SERVICE_ID, window.EmailConfig.CONTACT_TEMPLATE_ID, formData, window.EmailConfig.PUBLIC_KEY)
 		.then(function() {
 			showMessage(formMessage, 'Message sent successfully! I’ll get back to you soon.', 'success');
 			form.reset();
@@ -118,30 +118,30 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			});
 		});
+	}
 
-		function validateField(input) {
-			const errorId = input.getAttribute('aria-describedby');
-			if (!errorId) return;
+	function validateField(input) {
+		const errorId = input.getAttribute('aria-describedby');
+		if (!errorId) return;
 
-			const errorEl = document.getElementById(errorId);
-			let isValid = input.checkValidity();
+		const errorEl = document.getElementById(errorId);
+		let isValid = input.checkValidity();
 
-			// Custom validation for required fields that might be empty
-			if (input.hasAttribute('required') && !input.value.trim()) {
-				isValid = false;
-			}
-
-			if (!isValid) {
-				errorEl.style.display = 'block';
-				input.setAttribute('aria-invalid', 'true');
-				input.style.borderColor = '#e74c3c';
-			} else {
-				errorEl.style.display = 'none';
-				input.setAttribute('aria-invalid', 'false');
-				input.style.borderColor = ''; // Restore original color
-			}
-			return isValid;
+		// Custom validation for required fields that might be empty
+		if (input.hasAttribute('required') && !input.value.trim()) {
+			isValid = false;
 		}
+
+		if (!isValid) {
+			errorEl.style.display = 'block';
+			input.setAttribute('aria-invalid', 'true');
+			input.style.borderColor = '#e74c3c';
+		} else {
+			errorEl.style.display = 'none';
+			input.setAttribute('aria-invalid', 'false');
+			input.style.borderColor = ''; // Restore original color
+		}
+		return isValid;
 	}
 
 	// Mobile menu toggle
