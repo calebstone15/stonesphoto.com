@@ -14,10 +14,12 @@ class ToastManager {
     show(message, type = 'info', duration = 3000) {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        toast.innerHTML = `
-      <span>${this.getIcon(type)}</span>
-      <span>${message}</span>
-    `;
+        const iconSpan = document.createElement('span');
+        iconSpan.innerHTML = this.getIcon(type); // getIcon returns simple text but might be meant as icon html, safe from user input
+        const msgSpan = document.createElement('span');
+        msgSpan.textContent = message; // Safely escape message
+        toast.appendChild(iconSpan);
+        toast.appendChild(msgSpan);
         this.container.appendChild(toast);
 
         setTimeout(() => {
@@ -74,22 +76,27 @@ class PromptDialog {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.className = 'modal-overlay active';
-            overlay.innerHTML = `
+            // Create safe modal template
+            const modalHtml = `
         <div class="modal" style="width: 400px;">
           <div class="modal-header">
-            <h3 class="modal-title">${title}</h3>
+            <h3 class="modal-title"></h3>
             <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
           </div>
           <div class="modal-body">
-            <p style="margin-bottom: var(--spacing-md);">${message}</p>
-            <input type="number" step="any" class="form-input" id="promptInput" value="${defaultValue}" autofocus>
+            <p style="margin-bottom: var(--spacing-md);"></p>
+            <input type="number" step="any" class="form-input" id="promptInput" autofocus>
           </div>
           <div class="modal-footer">
             <button class="btn btn-secondary" id="promptCancel">Cancel</button>
             <button class="btn btn-primary" id="promptConfirm">Confirm</button>
           </div>
-        </div>
-      `;
+        </div>`;
+            overlay.innerHTML = modalHtml;
+            // Safely inject user variables to prevent XSS
+            overlay.querySelector('.modal-title').textContent = title;
+            overlay.querySelector('.modal-body p').textContent = message;
+            overlay.querySelector('#promptInput').value = defaultValue;
 
             document.body.appendChild(overlay);
 
