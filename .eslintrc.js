@@ -1,17 +1,25 @@
 module.exports = {
   "env": {
     "browser": true,
-    "es6": true
+    "es6": true,
+    "node": true
   },
   "extends": "eslint:recommended",
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2020
   },
   "rules": {
     "no-console": "off",
-    "no-unused-vars": "warn"
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }]
   },
   "globals": {
-    "emailjs": "readonly"
+    "emailjs": "readonly",
+    "Papa": "readonly",
+    "Chart": "readonly",
+    "toast": "readonly",
+    "ModalManager": "readonly",
+    "PromptDialog": "readonly",
+    "Utils": "readonly",
+    "EmailConfig": "readonly"
   }
 };
