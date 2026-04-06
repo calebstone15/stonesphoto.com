@@ -314,21 +314,32 @@ function displayMetrics() {
 // DATA HELPERS
 // ============================================
 
+// ⚡ Bolt: Use numericCache for fast, single-pass O(1) fetch rather than re-parsing row strings O(N)
 function getColumnData(colName) {
     if (!ctx.df || !colName) return [];
-    return ctx.df.map(row => Utils.parseNumber(row[colName]));
+    return ctx.getNumericColumn(colName);
 }
 
+// ⚡ Bolt: Compute total thrust using cached numeric arrays pre-fetched for each column.
+// Avoids parsing values inside the tight loop (reduces O(N*M) parsing calls to O(N)).
 function getTotalThrust() {
     if (ctx.thrustCols.length === 0) return [];
-    return ctx.df.map(row => {
+
+    // Fetch numeric columns once
+    const thrustColsData = ctx.thrustCols.map(col => ctx.getNumericColumn(col));
+    const len = ctx.df.length;
+    const total = new Array(len);
+
+    for (let i = 0; i < len; i++) {
         let sum = 0;
-        for (const col of ctx.thrustCols) {
-            const val = Utils.parseNumber(row[col]);
+        for (let j = 0; j < thrustColsData.length; j++) {
+            const val = thrustColsData[j][i];
             if (!isNaN(val)) sum += val;
         }
-        return sum;
-    });
+        total[i] = sum;
+    }
+
+    return total;
 }
 
 // ============================================
