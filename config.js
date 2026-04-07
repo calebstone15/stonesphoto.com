@@ -4,3 +4,5 @@ const EmailConfig = {
     CONTACT_TEMPLATE_ID: "template_3codtcb",
     BOOKING_TEMPLATE_ID: "template_31tqjn8"
 };
+
+window.EmailConfig = EmailConfig;
