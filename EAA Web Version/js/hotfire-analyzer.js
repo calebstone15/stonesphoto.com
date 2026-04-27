@@ -316,19 +316,23 @@ function displayMetrics() {
 
 function getColumnData(colName) {
     if (!ctx.df || !colName) return [];
-    return ctx.df.map(row => Utils.parseNumber(row[colName]));
+    return ctx.getNumericColumn(colName);
 }
 
 function getTotalThrust() {
     if (ctx.thrustCols.length === 0) return [];
-    return ctx.df.map(row => {
+    const len = ctx.df.length;
+    const thrustColsData = ctx.thrustCols.map(col => ctx.getNumericColumn(col));
+    const result = new Array(len);
+    for (let i = 0; i < len; i++) {
         let sum = 0;
-        for (const col of ctx.thrustCols) {
-            const val = Utils.parseNumber(row[col]);
+        for (let j = 0; j < thrustColsData.length; j++) {
+            const val = thrustColsData[j][i];
             if (!isNaN(val)) sum += val;
         }
-        return sum;
-    });
+        result[i] = sum;
+    }
+    return result;
 }
 
 // ============================================
