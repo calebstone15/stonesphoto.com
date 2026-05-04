@@ -18,8 +18,8 @@
         <div class="header-left">
             <h1 class="header-title">Caleb Stone</h1>
         </div>
-        <button class="header-menu-btn" aria-label="Menu">Menu</button>
-        <nav class="header-nav">
+        <button class="header-menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="header-nav">Menu</button>
+        <nav id="header-nav" class="header-nav">
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="galleries.html">Galleries</a>
@@ -107,13 +107,15 @@
     <script>
         // Mobile menu toggle
         document.querySelector('.header-menu-btn').onclick = function () {
-            document.querySelector('.header-nav').classList.toggle('show');
+            const isExpanded = document.querySelector('.header-nav').classList.toggle('show');
+            document.querySelector('.header-menu-btn').setAttribute('aria-expanded', isExpanded);
         };
         // Optional: close menu when clicking a link (on mobile)
         document.querySelectorAll('.header-nav a').forEach(link => {
             link.onclick = () => {
                 if (window.innerWidth <= 1350) {
                     document.querySelector('.header-nav').classList.remove('show');
+                    document.querySelector('.header-menu-btn').setAttribute('aria-expanded', 'false');
                 }
             };
         });
