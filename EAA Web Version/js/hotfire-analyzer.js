@@ -782,9 +782,9 @@ function plotChamberPressure() {
         return;
     }
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const pressure = data.map(row => Utils.parseNumber(row[ctx.chamberCol]));
+    updateDataMask();
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const pressure = getFilteredNumericColumn(ctx.chamberCol);
 
     createPlot('Chamber Pressure vs Time', time, pressure, 'Time (s)', 'Pressure (psi)', '#ef4444');
 }
@@ -796,13 +796,16 @@ function plotOFRatio() {
         return;
     }
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const ofRatio = data.map(row => {
-        const fuel = Utils.parseNumber(row[ctx.fuelCol]);
-        const ox = Utils.parseNumber(row[ctx.oxidizerCol]);
-        return ox / (fuel + 1e-6);
-    });
+    updateDataMask();
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const fuel = getFilteredNumericColumn(ctx.fuelCol);
+    const ox = getFilteredNumericColumn(ctx.oxidizerCol);
+
+    const len = time.length;
+    const ofRatio = new Array(len);
+    for (let i = 0; i < len; i++) {
+        ofRatio[i] = ox[i] / (fuel[i] + 1e-6);
+    }
 
     createPlot('O/F Ratio vs Time', time, ofRatio, 'Time (s)', 'O/F Ratio', '#8b5cf6');
 }
@@ -814,9 +817,9 @@ function plotFuelWeight() {
         return;
     }
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const weight = data.map(row => Utils.parseNumber(row[ctx.fuelCol]));
+    updateDataMask();
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const weight = getFilteredNumericColumn(ctx.fuelCol);
 
     createPlot('Fuel Tank Weight', time, weight, 'Time (s)', 'Weight (lbs)', '#3b82f6');
 }
@@ -828,9 +831,9 @@ function plotOxidizerWeight() {
         return;
     }
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const weight = data.map(row => Utils.parseNumber(row[ctx.oxidizerCol]));
+    updateDataMask();
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const weight = getFilteredNumericColumn(ctx.oxidizerCol);
 
     createPlot('Oxidizer Tank Weight', time, weight, 'Time (s)', 'Weight (lbs)', '#f97316');
 }
@@ -848,18 +851,21 @@ async function plotISP() {
     const mdot = mdotLbs / 32.174; // Convert to slugs/s
     const gravity = 32.174;
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const thrust = data.map(row => {
-        let sum = 0;
-        for (const col of ctx.thrustCols) {
-            const val = Utils.parseNumber(row[col]);
-            if (!isNaN(val)) sum += val;
-        }
-        return sum;
-    });
+    updateDataMask();
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const thrustColsData = ctx.thrustCols.map(col => getFilteredNumericColumn(col));
 
-    const isp = thrust.map(t => t / (mdot * gravity));
+    const len = time.length;
+    const isp = new Array(len);
+
+    for (let i = 0; i < len; i++) {
+        let thrustSum = 0;
+        for (const colData of thrustColsData) {
+            const val = colData[i];
+            if (!isNaN(val)) thrustSum += val;
+        }
+        isp[i] = thrustSum / (mdot * gravity);
+    }
 
     createPlot('ISP vs Time', time, isp, 'Time (s)', 'ISP (s)', '#10b981');
 }
@@ -878,19 +884,21 @@ async function plotExhaustVelocity() {
     const gravity = 32.174;
     const gravityMs = 9.80665;
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const thrust = data.map(row => {
-        let sum = 0;
-        for (const col of ctx.thrustCols) {
-            const val = Utils.parseNumber(row[col]);
-            if (!isNaN(val)) sum += val;
-        }
-        return sum;
-    });
+    updateDataMask();
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const thrustColsData = ctx.thrustCols.map(col => getFilteredNumericColumn(col));
 
-    const isp = thrust.map(t => t / (mdot * gravity));
-    const ve = isp.map(i => i * gravityMs);
+    const len = time.length;
+    const ve = new Array(len);
+
+    for (let i = 0; i < len; i++) {
+        let thrustSum = 0;
+        for (const colData of thrustColsData) {
+            const val = colData[i];
+            if (!isNaN(val)) thrustSum += val;
+        }
+        ve[i] = (thrustSum / (mdot * gravity)) * gravityMs;
+    }
 
     createPlot('Exhaust Velocity (Ve) vs Time', time, ve, 'Time (s)', 'Exhaust Velocity (m/s)', '#3b82f6');
 }
@@ -913,14 +921,20 @@ async function plotCStar() {
 
     const mdotLbs = parseFloat(fuelMdot) + parseFloat(oxMdot);
     const mdot = mdotLbs / 32.174;
+    const parsedThroatArea = parseFloat(throatArea);
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const chamberPressure = data.map(row => Utils.parseNumber(row[ctx.chamberCol]));
+    updateDataMask();
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const chamberPressure = getFilteredNumericColumn(ctx.chamberCol);
 
-    // Convert psi to lbf/ft² and calculate c*
-    const cStarFtS = chamberPressure.map(p => (p * 144 * parseFloat(throatArea)) / mdot);
-    const cStar = cStarFtS.map(c => c * 0.3048); // Convert to m/s
+    const len = time.length;
+    const cStar = new Array(len);
+
+    for (let i = 0; i < len; i++) {
+        // Convert psi to lbf/ft² and calculate c*
+        const cStarFtS = (chamberPressure[i] * 144 * parsedThroatArea) / mdot;
+        cStar[i] = cStarFtS * 0.3048; // Convert to m/s
+    }
 
     createPlot('Characteristic Velocity (c*) vs Time', time, cStar, 'Time (s)', 'c* (m/s)', '#8b5cf6');
 }
