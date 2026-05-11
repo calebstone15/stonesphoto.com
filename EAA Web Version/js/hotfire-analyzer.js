@@ -236,7 +236,8 @@ function computeMetrics(targetThrust) {
     const thrustTotal = getTotalThrust();
 
     // Check for custom splice
-    const useCustomSplice = document.getElementById('customSpliceCheckbox')?.checked;
+    const customSpliceCb = document.getElementById('customSpliceCheckbox');
+    const useCustomSplice = customSpliceCb ? customSpliceCb.checked : false;
     let mask;
 
     if (useCustomSplice) {
@@ -413,7 +414,7 @@ function getFilteredNumericColumn(colName) {
     const mask = ctx.dataMask || updateDataMask();
 
     const fullCol = ctx.getNumericColumn(colName);
-    const filtered = fullCol.filter((_, i) => mask[i]);
+    const filtered = Utils.applyMask(mask, fullCol)[0];
     return Utils.downsample(filtered, downsample);
 }
 
@@ -726,7 +727,7 @@ function savePlot() {
     if (!currentChart) return;
 
     const canvas = document.getElementById('plotCanvas');
-    const title = currentPlotData?.title || 'plot';
+    const title = (currentPlotData && currentPlotData.title) ? currentPlotData.title : 'plot';
     const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
     const filename = title.replace(/[^a-zA-Z0-9]/g, '_') + '_' + timestamp + '.png';
 

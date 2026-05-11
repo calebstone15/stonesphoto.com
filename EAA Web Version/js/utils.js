@@ -232,9 +232,27 @@ const Utils = {
      * @returns {number[][]} Filtered arrays
      */
     applyMask(mask, ...arrays) {
-        return arrays.map(arr =>
-            arr.filter((_, i) => mask[i])
-        );
+        let trueCount = 0;
+        const maskLen = mask.length;
+        for (let i = 0; i < maskLen; i++) {
+            if (mask[i]) trueCount++;
+        }
+
+        return arrays.map(arr => {
+            const res = new Array(trueCount);
+            const len = Math.min(maskLen, arr.length);
+            let k = 0;
+            for (let i = 0; i < len; i++) {
+                if (mask[i]) {
+                    res[k++] = arr[i];
+                }
+            }
+            // Resize array if arr was shorter than mask
+            if (k < trueCount) {
+                res.length = k;
+            }
+            return res;
+        });
     },
 
     /**
