@@ -413,23 +413,23 @@ function calculateMdot() {
     }
 
     // Get data within time range
-    const mask = cdaState.timeData.map(t => t >= cdaState.startTime && t <= cdaState.endTime);
-
-    const validIndices = mask.map((v, i) => v ? i : -1).filter(i => i >= 0);
-
-    if (validIndices.length < 2) {
-        cdaState.calculatedMdot = null;
-        document.getElementById('calculatedMdot').textContent = 'Not enough data';
-        document.getElementById('calculatedMdot').style.color = 'var(--error)';
-        return;
+    const tSlice = [];
+    const wSlice = [];
+    const timeDataLen = cdaState.timeData.length;
+    for (let i = 0; i < timeDataLen; i++) {
+        const t = cdaState.timeData[i];
+        if (t >= cdaState.startTime && t <= cdaState.endTime) {
+            const w = cdaState.weightData[i];
+            if (!isNaN(t) && !isNaN(w)) {
+                tSlice.push(t);
+                wSlice.push(w);
+            }
+        }
     }
-
-    const tSlice = validIndices.map(i => cdaState.timeData[i]).filter(v => !isNaN(v));
-    const wSlice = validIndices.map(i => cdaState.weightData[i]).filter(v => !isNaN(v));
 
     if (tSlice.length < 2) {
         cdaState.calculatedMdot = null;
-        document.getElementById('calculatedMdot').textContent = 'Invalid data';
+        document.getElementById('calculatedMdot').textContent = 'Not enough data';
         document.getElementById('calculatedMdot').style.color = 'var(--error)';
         return;
     }
@@ -463,7 +463,7 @@ function useAvgPressure(which) {
 
     // Get average pressure in time range
     const mask = cdaState.timeData.map(t => t >= cdaState.startTime && t <= cdaState.endTime);
-    const pressureInRange = cdaState.pressureData.filter((_, i) => mask[i]);
+    const pressureInRange = Utils.applyMask(mask, cdaState.pressureData)[0];
 
     if (pressureInRange.length === 0) {
         toast.error('No data in selected time range');
@@ -509,7 +509,7 @@ function applyPLowColumn() {
 
     // Filter to time range
     const mask = cdaState.timeData.map(t => t >= cdaState.startTime && t <= cdaState.endTime);
-    const dataInRange = colData.filter((_, i) => mask[i]);
+    const dataInRange = Utils.applyMask(mask, colData)[0];
 
     if (dataInRange.length === 0) {
         toast.error('No data in selected time range');
