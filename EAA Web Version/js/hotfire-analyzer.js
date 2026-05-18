@@ -236,7 +236,8 @@ function computeMetrics(targetThrust) {
     const thrustTotal = getTotalThrust();
 
     // Check for custom splice
-    const useCustomSplice = document.getElementById('customSpliceCheckbox')?.checked;
+    const customSpliceElement = document.getElementById('customSpliceCheckbox');
+    const useCustomSplice = customSpliceElement ? customSpliceElement.checked : false;
     let mask;
 
     if (useCustomSplice) {
@@ -726,7 +727,7 @@ function savePlot() {
     if (!currentChart) return;
 
     const canvas = document.getElementById('plotCanvas');
-    const title = currentPlotData?.title || 'plot';
+    const title = (currentPlotData && currentPlotData.title) ? currentPlotData.title : 'plot';
     const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
     const filename = title.replace(/[^a-zA-Z0-9]/g, '_') + '_' + timestamp + '.png';
 
@@ -782,9 +783,10 @@ function plotChamberPressure() {
         return;
     }
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const pressure = data.map(row => Utils.parseNumber(row[ctx.chamberCol]));
+    updateDataMask();
+
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const pressure = getFilteredNumericColumn(ctx.chamberCol);
 
     createPlot('Chamber Pressure vs Time', time, pressure, 'Time (s)', 'Pressure (psi)', '#ef4444');
 }
@@ -796,13 +798,16 @@ function plotOFRatio() {
         return;
     }
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const ofRatio = data.map(row => {
-        const fuel = Utils.parseNumber(row[ctx.fuelCol]);
-        const ox = Utils.parseNumber(row[ctx.oxidizerCol]);
-        return ox / (fuel + 1e-6);
-    });
+    updateDataMask();
+
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const fuelData = getFilteredNumericColumn(ctx.fuelCol);
+    const oxData = getFilteredNumericColumn(ctx.oxidizerCol);
+
+    const ofRatio = new Array(time.length);
+    for (let i = 0; i < time.length; i++) {
+        ofRatio[i] = oxData[i] / (fuelData[i] + 1e-6);
+    }
 
     createPlot('O/F Ratio vs Time', time, ofRatio, 'Time (s)', 'O/F Ratio', '#8b5cf6');
 }
@@ -814,9 +819,10 @@ function plotFuelWeight() {
         return;
     }
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const weight = data.map(row => Utils.parseNumber(row[ctx.fuelCol]));
+    updateDataMask();
+
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const weight = getFilteredNumericColumn(ctx.fuelCol);
 
     createPlot('Fuel Tank Weight', time, weight, 'Time (s)', 'Weight (lbs)', '#3b82f6');
 }
@@ -828,9 +834,10 @@ function plotOxidizerWeight() {
         return;
     }
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const weight = data.map(row => Utils.parseNumber(row[ctx.oxidizerCol]));
+    updateDataMask();
+
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const weight = getFilteredNumericColumn(ctx.oxidizerCol);
 
     createPlot('Oxidizer Tank Weight', time, weight, 'Time (s)', 'Weight (lbs)', '#f97316');
 }
@@ -848,12 +855,15 @@ async function plotISP() {
     const mdot = mdotLbs / 32.174; // Convert to slugs/s
     const gravity = 32.174;
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const thrust = data.map(row => {
+    updateDataMask();
+
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const thrustColsData = ctx.thrustCols.map(col => getFilteredNumericColumn(col));
+
+    const thrust = thrustColsData.length === 0 ? [] : thrustColsData[0].map((_, i) => {
         let sum = 0;
-        for (const col of ctx.thrustCols) {
-            const val = Utils.parseNumber(row[col]);
+        for (const colData of thrustColsData) {
+            const val = colData[i];
             if (!isNaN(val)) sum += val;
         }
         return sum;
@@ -878,12 +888,15 @@ async function plotExhaustVelocity() {
     const gravity = 32.174;
     const gravityMs = 9.80665;
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const thrust = data.map(row => {
+    updateDataMask();
+
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const thrustColsData = ctx.thrustCols.map(col => getFilteredNumericColumn(col));
+
+    const thrust = thrustColsData.length === 0 ? [] : thrustColsData[0].map((_, i) => {
         let sum = 0;
-        for (const col of ctx.thrustCols) {
-            const val = Utils.parseNumber(row[col]);
+        for (const colData of thrustColsData) {
+            const val = colData[i];
             if (!isNaN(val)) sum += val;
         }
         return sum;
@@ -914,9 +927,10 @@ async function plotCStar() {
     const mdotLbs = parseFloat(fuelMdot) + parseFloat(oxMdot);
     const mdot = mdotLbs / 32.174;
 
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const chamberPressure = data.map(row => Utils.parseNumber(row[ctx.chamberCol]));
+    updateDataMask();
+
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const chamberPressure = getFilteredNumericColumn(ctx.chamberCol);
 
     // Convert psi to lbf/ft² and calculate c*
     const cStarFtS = chamberPressure.map(p => (p * 144 * parseFloat(throatArea)) / mdot);
@@ -1166,8 +1180,8 @@ function generateCustomPlot() {
     ModalManager.close('customPlotModal');
 
     // Get data
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
+    updateDataMask();
+    const time = getFilteredNumericColumn(ctx.timeCol);
 
     // Group columns by unit for multiple Y-axes
     const unitGroups = {};
@@ -1187,31 +1201,35 @@ function generateCustomPlot() {
     customPlotRawDatasets = []; // Reset raw data storage for smoothing
     let colorIndex = 0;
 
+    // Pre-fetch commonly used columns to prevent multiple cache calls
+    const thrustColsData = ctx.thrustCols.length > 0 ? ctx.thrustCols.map(c => getFilteredNumericColumn(c)) : [];
+
     selectedCols.forEach((col, i) => {
         let yData;
 
         if (col.generated) {
             // Handle generated columns
             if (col.name === 'Total Thrust (lbf)') {
-                yData = data.map(row => {
+                yData = thrustColsData.length === 0 ? [] : thrustColsData[0].map((_, idx) => {
                     let sum = 0;
-                    for (const c of ctx.thrustCols) {
-                        const val = Utils.parseNumber(row[c]);
+                    for (const cData of thrustColsData) {
+                        const val = cData[idx];
                         if (!isNaN(val)) sum += val;
                     }
                     return sum;
                 });
             } else if (col.name === 'Chamber Pressure (psi)') {
-                yData = data.map(row => Utils.parseNumber(row[ctx.chamberCol]));
+                yData = getFilteredNumericColumn(ctx.chamberCol);
             } else if (col.name === 'O/F Ratio') {
-                yData = data.map(row => {
-                    const fuel = Utils.parseNumber(row[ctx.fuelCol]);
-                    const ox = Utils.parseNumber(row[ctx.oxidizerCol]);
-                    return ox / (fuel + 1e-6);
-                });
+                const fuelData = getFilteredNumericColumn(ctx.fuelCol);
+                const oxData = getFilteredNumericColumn(ctx.oxidizerCol);
+                yData = new Array(time.length);
+                for (let j = 0; j < time.length; j++) {
+                    yData[j] = oxData[j] / (fuelData[j] + 1e-6);
+                }
             }
         } else {
-            yData = data.map(row => Utils.parseNumber(row[col.name]));
+            yData = getFilteredNumericColumn(col.name);
         }
 
         // Store raw data for smoothing
@@ -1461,10 +1479,10 @@ function calculateVenturiMdot() {
     const a2 = a2_in2 * IN2_TO_M2;
 
     // Get filtered data
-    const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const p1_psi = data.map(row => Utils.parseNumber(row[p1Col]));
-    const p2_psi = data.map(row => Utils.parseNumber(row[p2Col]));
+    updateDataMask();
+    const time = getFilteredNumericColumn(ctx.timeCol);
+    const p1_psi = getFilteredNumericColumn(p1Col);
+    const p2_psi = getFilteredNumericColumn(p2Col);
 
     // Convert pressures to Pa
     const p1_pa = p1_psi.map(p => p * PSI_TO_PA);
