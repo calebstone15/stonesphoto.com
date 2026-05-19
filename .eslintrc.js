@@ -9,9 +9,17 @@ module.exports = {
   },
   "rules": {
     "no-console": "off",
-    "no-unused-vars": "warn"
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }]
   },
   "globals": {
-    "emailjs": "readonly"
+    "emailjs": "readonly",
+    "module": "readonly",
+    "Papa": "readonly",
+    "Chart": "readonly",
+    "toast": "writable",
+    "ModalManager": "readonly",
+    "PromptDialog": "readonly",
+    "Utils": "readonly",
+    "EmailConfig": "readonly"
   }
 };

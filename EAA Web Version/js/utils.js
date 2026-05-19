@@ -4,7 +4,7 @@
  */
 
 // Unit conversion constants
-const Utils = {
+window.Utils = {
     // Conversion constants
     LBS_TO_KG: 0.453592,
     PSI_TO_PA: 6894.76,
@@ -162,7 +162,6 @@ const Utils = {
         const len = timeData.length;
         const numeric = new Array(len);
         const dates = new Array(len);
-        let anyNumber = false;
         let anyValidDate = false;
         let minTs = Infinity;
 
@@ -172,7 +171,6 @@ const Utils = {
             numeric[i] = n;
 
             if (!isNaN(n)) {
-                anyNumber = true;
                 // Optimization: switch to numeric-only parsing for the rest
                 for (let j = i + 1; j < len; j++) {
                     numeric[j] = this.parseNumber(timeData[j]);
