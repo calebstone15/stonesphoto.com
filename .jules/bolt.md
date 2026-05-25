@@ -5,3 +5,7 @@
 ## 2025-05-18 - Array Search and Allocation Performance
 **Learning:** Using `[...arr].reverse().findIndex()` to find the last index is an anti-pattern. It creates a full copy of the array and reverses it, which is O(N) memory and time. Use `arr.lastIndexOf()` instead for primitive types or simple predicates.
 **Action:** Scan for usage of `.reverse()` on array copies used solely for finding indices. Replace with `lastIndexOf` or a reverse loop.
+
+## 2026-05-25 - Redundant String Parsing in Rendering Loop
+**Learning:** Using `getFilteredData()` and parsing string rows on every plot action creates severe performance overhead and garbage collection pressure, as opposed to using pre-cached numeric arrays via `getFilteredNumericColumn()`.
+**Action:** Always prefer fetching cached numeric columns when plotting, avoiding raw row iteration and redundant `Utils.parseNumber` calls.
