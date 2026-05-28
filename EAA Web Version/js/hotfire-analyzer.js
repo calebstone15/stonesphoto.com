@@ -122,7 +122,7 @@ function inferColumns() {
         // Time column — prioritize elapsed_s/elapsed_ms over timestamp
         if (lower === 'elapsed_s' || lower === 'elapsed time') {
             ctx.timeCol = col;
-        } else if (lower === 'elapsed_ms' && !ctx.timeCol) {
+        } else if (lower === 'elapsed_ms') {
             ctx.timeCol = col;
         } else if (!ctx.timeCol && (lower === 'time' || lower === 't' || lower === 'time (s)' || lower.includes('time'))) {
             ctx.timeCol = col;
