@@ -1123,7 +1123,7 @@ async function generateAllPlots() {
             fn();
             await new Promise(r => setTimeout(r, 500));
         } catch (e) {
-            console.log('Skipped plot:', e);
+            console.warn('Skipped plot:', e);
         }
     }
 

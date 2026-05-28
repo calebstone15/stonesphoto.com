@@ -94,10 +94,15 @@ function autoDetectColumns() {
     for (const col of cdaState.columns) {
         const lower = col.toLowerCase();
 
-        // Time
-        if (!cdaState.timeCol && (lower === 'time' || lower === 't' || lower.includes('time'))) {
+        // Time: Prioritize numeric elapsed time over timestamp strings
+        if (lower === 'elapsed_s' || lower === 'elapsed time') {
             cdaState.timeCol = col;
-            document.getElementById('cdaTimeSelect').value = col;
+        } else if (!cdaState.timeCol && (lower === 'time' || lower === 't' || lower.includes('time'))) {
+            cdaState.timeCol = col;
+        }
+        
+        if (cdaState.timeCol) {
+            document.getElementById('cdaTimeSelect').value = cdaState.timeCol;
         }
 
         // Pressure

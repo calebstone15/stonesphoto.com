@@ -168,14 +168,24 @@ const Utils = {
 
         for (let i = 0; i < len; i++) {
             const v = timeData[i];
-            const n = this.parseNumber(v);
+            
+            // Check if it's an ISO date or contains typical date characters
+            const isDateString = typeof v === 'string' && ((v.includes('-') && v.includes('T')) || v.includes(':'));
+            
+            let n = NaN;
+            if (!isDateString) {
+                n = this.parseNumber(v);
+            }
+            
             numeric[i] = n;
 
             if (!isNaN(n)) {
                 anyNumber = true;
                 // Optimization: switch to numeric-only parsing for the rest
                 for (let j = i + 1; j < len; j++) {
-                    numeric[j] = this.parseNumber(timeData[j]);
+                    const nextV = timeData[j];
+                    const nextIsDate = typeof nextV === 'string' && ((nextV.includes('-') && nextV.includes('T')) || nextV.includes(':'));
+                    numeric[j] = nextIsDate ? NaN : this.parseNumber(nextV);
                 }
                 return numeric;
             }
