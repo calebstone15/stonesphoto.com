@@ -119,7 +119,9 @@ function inferColumns() {
         const lower = col.toLowerCase();
 
         // Time column
-        if (!ctx.timeCol && (lower === 'time' || lower === 't' || lower.includes('time'))) {
+        if (lower === 'elapsed_s' || lower === 'elapsed time') {
+            ctx.timeCol = col;
+        } else if (!ctx.timeCol && (lower === 'time' || lower === 't' || lower.includes('time'))) {
             ctx.timeCol = col;
         }
 
@@ -316,7 +318,19 @@ function displayMetrics() {
 
 function getColumnData(colName) {
     if (!ctx.df || !colName) return [];
+    if (colName === ctx.timeCol) {
+        return Utils.parseTimeColumn(ctx.df.map(row => row[colName]));
+    }
     return ctx.df.map(row => Utils.parseNumber(row[colName]));
+}
+
+function getFilteredNumericColumn(colName) {
+    if (!ctx.df || !colName || !ctx.dataMask) return [];
+    if (colName === ctx.timeCol) {
+        const fullTime = Utils.parseTimeColumn(ctx.df.map(row => row[colName]));
+        return fullTime.filter((_, i) => ctx.dataMask[i]);
+    }
+    return ctx.df.filter((_, i) => ctx.dataMask[i]).map(row => Utils.parseNumber(row[colName]));
 }
 
 function getTotalThrust() {
@@ -816,7 +830,7 @@ function plotChamberPressure() {
     }
 
     const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
+    const time = getFilteredNumericColumn(ctx.timeCol);
     const pressure = data.map(row => Utils.parseNumber(row[ctx.chamberCol]));
 
     createPlot('Chamber Pressure vs Time', time, pressure, 'Time (s)', 'Pressure (psi)', '#ef4444');
@@ -830,7 +844,7 @@ function plotOFRatio() {
     }
 
     const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
+    const time = getFilteredNumericColumn(ctx.timeCol);
     const fuel = data.map(row => Utils.parseNumber(row[ctx.fuelCol]));
     const ox = data.map(row => Utils.parseNumber(row[ctx.oxidizerCol]));
 
@@ -872,7 +886,7 @@ function plotFuelWeight() {
     }
 
     const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
+    const time = getFilteredNumericColumn(ctx.timeCol);
     const weight = data.map(row => Utils.parseNumber(row[ctx.fuelCol]));
 
     createPlot('Fuel Tank Weight', time, weight, 'Time (s)', 'Weight (lbs)', '#3b82f6');
@@ -886,7 +900,7 @@ function plotOxidizerWeight() {
     }
 
     const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
+    const time = getFilteredNumericColumn(ctx.timeCol);
     const weight = data.map(row => Utils.parseNumber(row[ctx.oxidizerCol]));
 
     createPlot('Oxidizer Tank Weight', time, weight, 'Time (s)', 'Weight (lbs)', '#f97316');
@@ -906,7 +920,7 @@ async function plotISP() {
     const gravity = 32.174;
 
     const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
+    const time = getFilteredNumericColumn(ctx.timeCol);
     const thrust = data.map(row => {
         let sum = 0;
         for (const col of ctx.thrustCols) {
@@ -936,7 +950,7 @@ async function plotExhaustVelocity() {
     const gravityMs = 9.80665;
 
     const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
+    const time = getFilteredNumericColumn(ctx.timeCol);
     const thrust = data.map(row => {
         let sum = 0;
         for (const col of ctx.thrustCols) {
@@ -972,7 +986,7 @@ async function plotCStar() {
     const mdot = mdotLbs / 32.174;
 
     const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
+    const time = getFilteredNumericColumn(ctx.timeCol);
     const chamberPressure = data.map(row => Utils.parseNumber(row[ctx.chamberCol]));
 
     // Convert psi to lbf/ft² and calculate c*
@@ -995,7 +1009,7 @@ function testData() {
     }
 
     // Get ALL data (unfiltered) to check thrust threshold
-    let time = ctx.df.map(row => Utils.parseNumber(row[ctx.timeCol]));
+    let time = getColumnData(ctx.timeCol);
     let thrust = ctx.df.map(row => {
         let sum = 0;
         for (const col of ctx.thrustCols) {
@@ -1224,7 +1238,7 @@ function generateCustomPlot() {
 
     // Get data
     const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
+    const time = getFilteredNumericColumn(ctx.timeCol);
 
     // Group columns by unit for multiple Y-axes
     const unitGroups = {};
@@ -1519,7 +1533,7 @@ function calculateVenturiMdot() {
 
     // Get filtered data
     const data = getFilteredData();
-    const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
+    const time = getFilteredNumericColumn(ctx.timeCol);
     const p1_psi = data.map(row => Utils.parseNumber(row[p1Col]));
     const p2_psi = data.map(row => Utils.parseNumber(row[p2Col]));
 
