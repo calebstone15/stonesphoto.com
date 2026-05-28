@@ -175,9 +175,10 @@ document.addEventListener('DOMContentLoaded', () => {
             item.addEventListener('click', () => {
                 const img = item.querySelector('img');
                 if (img) {
-                    lightboxImg.src = img.src;
-                    if(img.srcset) lightboxImg.srcset = img.srcset;
-                    lightboxImg.sizes = "100vw";
+                    let highResSrc = img.src.split('?')[0];
+                    lightboxImg.removeAttribute('srcset');
+                    lightboxImg.removeAttribute('sizes');
+                    lightboxImg.src = highResSrc;
                     lightbox.style.display = "block";
                     document.body.style.overflow = "hidden"; // Prevent scrolling
                 }
