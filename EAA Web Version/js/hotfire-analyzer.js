@@ -326,11 +326,27 @@ function getColumnData(colName) {
 
 function getFilteredNumericColumn(colName) {
     if (!ctx.df || !colName || !ctx.dataMask) return [];
+    
+    const downsample = parseInt(document.getElementById('downsampleSlider').value) || 1;
+    let baseData;
+    
     if (colName === ctx.timeCol) {
-        const fullTime = Utils.parseTimeColumn(ctx.df.map(row => row[colName]));
-        return fullTime.filter((_, i) => ctx.dataMask[i]);
+        baseData = Utils.parseTimeColumn(ctx.df.map(row => row[colName]));
+    } else {
+        baseData = ctx.df.map(row => Utils.parseNumber(row[colName]));
     }
-    return ctx.df.filter((_, i) => ctx.dataMask[i]).map(row => Utils.parseNumber(row[colName]));
+    
+    const result = [];
+    let passedCount = 0;
+    for (let i = 0; i < ctx.df.length; i++) {
+        if (ctx.dataMask[i]) {
+            if (passedCount % downsample === 0) {
+                result.push(baseData[i]);
+            }
+            passedCount++;
+        }
+    }
+    return result;
 }
 
 function getTotalThrust() {
