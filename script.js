@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		// Close menu when clicking a link (on mobile)
 		document.querySelectorAll('.header-nav a').forEach(link => {
 			link.onclick = () => {
-				if (window.innerWidth <= 700) {
+				if (window.innerWidth <= 1500) {
 					nav.classList.remove('show');
 				}
 			};

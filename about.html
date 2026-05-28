@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About Caleb Stone - Photographer based in Daytona Beach, FL and Louisville, KY. Nearly a decade of photography experience.">
     <title>Stones Photos - Photography Portfolio</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preload" as="image" href="/Photos/aboutmephoto.webp">
@@ -11,6 +12,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @media (max-width: 768px) {
+            .about-me h2 { font-size: 1.8rem; }
+            .about-me p { font-size: 1.1rem; padding: 0 16px; }
+            .about-photo img { padding: 0 16px; }
+        }
+        @media (max-width: 480px) {
+            .about-me { padding: 24px 0 20px 0; }
+            .about-me h2 { font-size: 1.5rem; }
+            .about-me p { font-size: 1rem; }
+        }
+    </style>
 </head>
 
 <body>
@@ -32,7 +45,7 @@
     <section class="about-me">
         <h2>About Me</h2>
         <div class="about-photo">
-            <img src="/Photos/aboutmephoto.webp" />
+            <img src="/Photos/aboutmephoto.webp" alt="Caleb Stone - Photographer" loading="lazy" width="600" height="800" />
         </div>
         <p>
             Hello, I'm Caleb and have been a photographer for almost a decade. I do many different types of photography
@@ -57,7 +70,7 @@
         // Optional: close menu when clicking a link (on mobile)
         document.querySelectorAll('.header-nav a').forEach(link => {
             link.onclick = () => {
-                if (window.innerWidth <= 700) {
+                if (window.innerWidth <= 1500) {
                     document.querySelector('.header-nav').classList.remove('show');
                 }
             };

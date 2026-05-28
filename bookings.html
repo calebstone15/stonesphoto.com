@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookings - Caleb Stone Photography</title>
+    <meta name="description" content="Book a photoshoot with Caleb Stone. Easy online booking for couples, engagements, weddings, portraits, and more.">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="Websitelogo.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,6 +76,7 @@
             font-size: 1rem;
             background: #fff;
             transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box;
         }
 
         .form-group input:focus,
@@ -180,6 +182,14 @@
             .bookings-wrapper {
                 grid-template-columns: 1fr;
             }
+        }
+
+        @media (max-width: 480px) {
+            .bookings-container { padding: 0 12px; margin: 20px auto; }
+            .bookings-title { font-size: 1.5rem; }
+            .booking-form, .booking-info { padding: 20px 16px; }
+            .booking-form h2, .booking-info h2 { font-size: 1.3rem; }
+            .submit-btn { font-size: 1rem; padding: 12px; }
         }
     </style>
 </head>
@@ -336,6 +346,7 @@
         <p>&copy; 2025 Stones Photos</p>
     </footer>
     <script>
+
         // Form validation
         const bookingForm = document.getElementById('booking-form');
 

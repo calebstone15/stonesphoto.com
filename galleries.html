@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galleries - Caleb Stone Photography</title>
+  <meta name="description" content="Photography galleries by Caleb Stone - Browse couples, vehicles, landscapes, and portrait photography collections.">
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" type="image/x-icon" href="Websitelogo.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -302,6 +303,11 @@
         grid-column: 1 / span 2;
         grid-row: span 1;
       }
+
+      .gallery-section { margin: 40px 0; }
+      .gallery-section h2 { font-size: 1.6rem; margin-bottom: 24px; }
+      .nav-arrow { width: 44px; height: 44px; }
+      .gallery-nav { margin-top: 20px; }
     }
   </style>
 </head>
@@ -335,31 +341,31 @@
           <img class="optimized-image" src="Photos/Couples/proposal1.webp" srcset="Photos/Couples/proposal1.webp 1200w, 
                       Photos/Couples/proposal1.webp?width=800 800w, 
                       Photos/Couples/proposal1.webp?width=400 400w" sizes="(max-width: 768px) 100vw, 33vw"
-            alt="Couple embracing at sunset" loading="lazy" width="800" height="1200">
+            alt="Couple embracing at sunset" loading="eager" width="800" height="1200">
         </div>
         <div class="gallery-item landscape-top-left loading" data-page="1">
           <img class="optimized-image" src="Photos/Couples/gandp.webp" srcset="Photos/Couples/gandp.webp 1200w, 
                       Photos/Couples/gandp.webp?width=800 800w, 
                       Photos/Couples/gandp.webp?width=400 400w" sizes="(max-width: 768px) 100vw, 33vw"
-            alt="Couple walking on beach" loading="lazy" width="1200" height="800">
+            alt="Couple walking on beach" loading="eager" width="1200" height="800">
         </div>
         <div class="gallery-item landscape-top-right loading" data-page="1">
           <img class="optimized-image" src="Photos/Couples/gp2.webp" srcset="Photos/Couples/gp2.webp 1200w, 
                       Photos/Couples/gp2.webp?width=800 800w, 
                       Photos/Couples/gp2.webp?width=400 400w" sizes="(max-width: 768px) 100vw, 33vw"
-            alt="Engagement portrait" loading="lazy" width="1200" height="800">
+            alt="Engagement portrait" loading="eager" width="1200" height="800">
         </div>
         <div class="gallery-item landscape-bottom-left loading" data-page="1">
           <img class="optimized-image" src="Photos/Couples/gp1.webp" srcset="Photos/Couples/gp1.webp 1200w, 
                       Photos/Couples/gp1.webp?width=800 800w, 
                       Photos/Couples/gp1.webp?width=400 400w" sizes="(max-width: 768px) 100vw, 33vw"
-            alt="Couple laughing" loading="lazy" width="1200" height="800">
+            alt="Couple laughing" loading="eager" width="1200" height="800">
         </div>
         <div class="gallery-item landscape-bottom-right loading" data-page="1">
           <img class="optimized-image" src="Photos/Couples/gp3.webp" srcset="Photos/Couples/gp3.webp 1200w, 
                       Photos/Couples/gp3.webp?width=800 800w, 
                       Photos/Couples/gp3.webp?width=400 400w" sizes="(max-width: 768px) 100vw, 33vw"
-            alt="Silhouette of couple" loading="lazy" width="1200" height="800">
+            alt="Silhouette of couple" loading="eager" width="1200" height="800">
         </div>
 
         <!-- Second page (5 images) - hidden initially -->
@@ -816,7 +822,7 @@
     // Close mobile menu on link click
     document.querySelectorAll('.header-nav a').forEach(link => {
       link.onclick = () => {
-        if (window.innerWidth <= 700) {
+        if (window.innerWidth <= 1500) {
           document.querySelector('.header-nav').classList.remove('show');
         }
       };

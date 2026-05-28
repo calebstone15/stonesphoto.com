@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pricing - Caleb Stone Photography</title>
+    <meta name="description" content="Stone's Photos Pricing - Simple photography pricing. $200/day plus travel. 30 free edited photos included. No hidden charges.">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="Websitelogo.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,6 +20,19 @@
         footer {
             font-family: 'Old Standard TT', serif !important;
         }
+    </style>
+    <style>
+      @media (max-width: 768px) {
+        main section { padding: 24px 16px !important; }
+        main section h2 { font-size: 1.8rem !important; }
+        main section h3 { font-size: 1.4rem !important; }
+        main section p, main section ul, main section li { font-size: 1rem !important; }
+      }
+      @media (max-width: 480px) {
+        main section h2 { font-size: 1.5rem !important; }
+        main section h3 { font-size: 1.2rem !important; }
+        main section div[style*='display: flex'] > div { min-width: auto !important; }
+      }
     </style>
 </head>
 
@@ -172,7 +186,7 @@
         // Optional: close menu when clicking a link (on mobile)
         document.querySelectorAll('.header-nav a').forEach(link => {
             link.onclick = () => {
-                if (window.innerWidth <= 700) {
+                if (window.innerWidth <= 1500) {
                     document.querySelector('.header-nav').classList.remove('show');
                 }
             };

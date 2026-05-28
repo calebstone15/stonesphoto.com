@@ -9,6 +9,17 @@
     <link rel="icon" type="image/x-icon" href="../Websitelogo.ico">
     <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+      @media (max-width: 768px) {
+        main { padding: 30px 16px !important; }
+        main h1 { font-size: 2rem !important; }
+        main p { font-size: 1rem !important; }
+      }
+      @media (max-width: 480px) {
+        main { padding: 20px 12px !important; }
+        main h1 { font-size: 1.6rem !important; }
+      }
+    </style>
 </head>
 
 <body>
@@ -34,7 +45,7 @@
             This is a placeholder for Project Six. Adding content about this specific project here soon.
         </p>
         <div style="margin: 40px 0;">
-            <img src="/Photos/portfolio/project6.png" alt="Project Six Detail"
+            <img src="/Photos/portfolio/project6.png" alt="Project Six Detail" loading="lazy"
                 style="max-width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
         </div>
         <a href="../portfolio.html" class="back-btn">&larr; Back to Portfolio</a>
@@ -51,7 +62,7 @@
         };
         document.querySelectorAll('.header-nav a').forEach(link => {
             link.onclick = () => {
-                if (window.innerWidth <= 700) {
+                if (window.innerWidth <= 1500) {
                     document.querySelector('.header-nav').classList.remove('show');
                 }
             };
