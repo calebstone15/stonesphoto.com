@@ -313,8 +313,13 @@ const Utils = {
      * @returns {string|null} Unit or null
      */
     extractUnit(name) {
+        // Match parenthesized units like "(lbf)" or "(psi)"
         const match = name.match(/\(([^)]+)\)/);
-        return match ? match[1] : null;
+        if (match) return match[1];
+        // Match underscore-suffix units like "LC0_lbf" or "PT0_psi"
+        const underscoreMatch = name.match(/_([a-zA-Z]+)$/);
+        if (underscoreMatch) return underscoreMatch[1];
+        return null;
     }
 };
 

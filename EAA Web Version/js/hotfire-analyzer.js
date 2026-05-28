@@ -119,20 +119,22 @@ function inferColumns() {
     for (const col of ctx.columns) {
         const lower = col.toLowerCase();
 
-        // Time column
+        // Time column — prioritize elapsed_s/elapsed_ms over timestamp
         if (lower === 'elapsed_s' || lower === 'elapsed time') {
             ctx.timeCol = col;
-        } else if (!ctx.timeCol && (lower === 'time' || lower === 't' || lower.includes('time'))) {
+        } else if (lower === 'elapsed_ms' && !ctx.timeCol) {
+            ctx.timeCol = col;
+        } else if (!ctx.timeCol && (lower === 'time' || lower === 't' || lower === 'time (s)' || lower.includes('time'))) {
             ctx.timeCol = col;
         }
 
-        // Thrust columns
-        if (lower.includes('thrust')) {
+        // Thrust columns — skip pre-computed combined/total columns to avoid double-counting
+        if (lower.includes('thrust') && !lower.includes('combined') && !lower.includes('total')) {
             ctx.thrustCols.push(col);
         }
 
-        // Chamber pressure
-        if (!ctx.chamberCol && lower.includes('chamber') && lower.includes('press')) {
+        // Chamber pressure — handle both "Chamber Pressure (psi)" and "PT0 Chamber (psi)" patterns
+        if (!ctx.chamberCol && lower.includes('chamber') && (lower.includes('press') || lower.includes('psi'))) {
             ctx.chamberCol = col;
         }
 
@@ -320,7 +322,12 @@ function displayMetrics() {
 function getColumnData(colName) {
     if (!ctx.df || !colName) return [];
     if (colName === ctx.timeCol) {
-        return Utils.parseTimeColumn(ctx.df.map(row => row[colName]));
+        let timeVals = Utils.parseTimeColumn(ctx.df.map(row => row[colName]));
+        // Convert elapsed_ms to seconds
+        if (colName.toLowerCase() === 'elapsed_ms') {
+            timeVals = timeVals.map(v => isNaN(v) ? NaN : v / 1000);
+        }
+        return timeVals;
     }
     return ctx.df.map(row => Utils.parseNumber(row[colName]));
 }
@@ -333,6 +340,10 @@ function getFilteredNumericColumn(colName) {
     
     if (colName === ctx.timeCol) {
         baseData = Utils.parseTimeColumn(ctx.df.map(row => row[colName]));
+        // Convert elapsed_ms to seconds
+        if (colName.toLowerCase() === 'elapsed_ms') {
+            baseData = baseData.map(v => isNaN(v) ? NaN : v / 1000);
+        }
     } else {
         baseData = ctx.df.map(row => Utils.parseNumber(row[colName]));
     }
