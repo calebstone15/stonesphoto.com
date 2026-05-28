@@ -438,14 +438,6 @@ function getFilteredData() {
     return result;
 }
 
-function getFilteredNumericColumn(colName) {
-    const downsample = parseInt(document.getElementById('downsampleSlider').value) || 1;
-    const mask = ctx.dataMask || updateDataMask();
-
-    const fullCol = ctx.getNumericColumn(colName);
-    const filtered = fullCol.filter((_, i) => mask[i]);
-    return Utils.downsample(filtered, downsample);
-}
 
 function toggleCustomSplice() {
     const checked = document.getElementById('customSpliceCheckbox').checked;
