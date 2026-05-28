@@ -78,6 +78,7 @@ function loadCSV(input) {
         header: true,
         dynamicTyping: true,
         skipEmptyLines: true,
+        transformHeader: function(h) { return h.trim(); },
         complete: function (results) {
             if (results.errors.length > 0) {
                 toast.error('Error parsing CSV: ' + results.errors[0].message);
@@ -353,11 +354,15 @@ function getTotalThrust() {
     if (ctx.thrustCols.length === 0) return [];
     return ctx.df.map(row => {
         let sum = 0;
+        let hasValid = false;
         for (const col of ctx.thrustCols) {
             const val = Utils.parseNumber(row[col]);
-            if (!isNaN(val)) sum += val;
+            if (!isNaN(val)) {
+                sum += val;
+                hasValid = true;
+            }
         }
-        return sum;
+        return hasValid ? sum : NaN;
     });
 }
 
@@ -1274,11 +1279,15 @@ function generateCustomPlot() {
             if (col.name === 'Total Thrust (lbf)') {
                 yData = data.map(row => {
                     let sum = 0;
+                    let hasValid = false;
                     for (const c of ctx.thrustCols) {
                         const val = Utils.parseNumber(row[c]);
-                        if (!isNaN(val)) sum += val;
+                        if (!isNaN(val)) {
+                            sum += val;
+                            hasValid = true;
+                        }
                     }
-                    return sum;
+                    return hasValid ? sum : NaN;
                 });
             } else if (col.name === 'Chamber Pressure (psi)') {
                 yData = data.map(row => Utils.parseNumber(row[ctx.chamberCol]));
@@ -1286,6 +1295,7 @@ function generateCustomPlot() {
                 yData = data.map(row => {
                     const fuel = Utils.parseNumber(row[ctx.fuelCol]);
                     const ox = Utils.parseNumber(row[ctx.oxidizerCol]);
+                    if (isNaN(fuel) || isNaN(ox)) return NaN;
                     return ox / (fuel + 1e-6);
                 });
             }

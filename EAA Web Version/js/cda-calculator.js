@@ -44,6 +44,7 @@ function cdaLoadCSV(input) {
         header: true,
         dynamicTyping: true,
         skipEmptyLines: true,
+        transformHeader: function(h) { return h.trim(); },
         complete: function (results) {
             if (results.errors.length > 0) {
                 toast.error('Error parsing CSV: ' + results.errors[0].message);
