@@ -8,9 +8,6 @@
   <meta name="description" content="Photography galleries by Caleb Stone - Browse couples, vehicles, landscapes, and portrait photography collections.">
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" type="image/x-icon" href="Websitelogo.ico">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body,
     h1,
@@ -18,7 +15,7 @@
     p,
     .about-photo,
     footer {
-      font-family: 'Old Standard TT', serif !important;
+      font-family: var(--font-heading) !important;
     }
 
     /* Gallery layout and styles */
@@ -317,9 +314,10 @@
   <!-- site header/nav copied from index.html -->
   <header>
     <div class="header-left">
-      <h1 class="header-title">Caleb Stone</h1>
+      <a href="index.html" class="header-title">Caleb Stone</a>
+      <div class="header-quote">Capturing moments with clarity and elegance.</div>
     </div>
-    <button class="header-menu-btn" aria-label="Menu">Menu</button>
+    <button class="header-menu-btn" aria-label="Menu" onclick="document.querySelector('.header-nav').classList.toggle('show')">Menu</button>
     <nav class="header-nav">
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
@@ -327,7 +325,6 @@
       <a href="pricing.html">Pricing</a>
       <a href="bookings.html">Bookings</a>
       <a href="contact.html">Contact</a>
-      <a href="portfolio.html">Career Portfolio</a>
     </nav>
   </header>
 

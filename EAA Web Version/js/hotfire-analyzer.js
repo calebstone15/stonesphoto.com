@@ -649,42 +649,75 @@ function handleChartClick(event, elements) {
         borderDash: [5, 5]
     };
 
-    // If two points selected, calculate average
+    // If two points selected, calculate average or slope
     if (selectedPoints.length === 2) {
         const idx1 = Math.min(selectedPoints[0].idx, selectedPoints[1].idx);
         const idx2 = Math.max(selectedPoints[0].idx, selectedPoints[1].idx);
 
-        const slice = yData.slice(idx1, idx2 + 1);
-        const avg = Utils.mean(slice);
+        const x1 = selectedPoints[0].x;
+        const y1 = selectedPoints[0].y;
+        const x2 = selectedPoints[1].x;
+        const y2 = selectedPoints[1].y;
+
+        const minX = Math.min(x1, x2);
+        const maxX = Math.max(x1, x2);
         const unitMatch = currentPlotData.yLabel.match(/\(([^)]+)\)/);
         const unit = unitMatch ? unitMatch[1] : '';
 
-        document.getElementById('avgDisplay').innerHTML = `
-      <span class="chart-avg-value">Average: ${avg.toFixed(3)} ${unit}</span>
-      <span style="margin-left: 20px; color: var(--text-muted);">Range: ${selectedPoints[0].x.toFixed(2)}s - ${selectedPoints[1].x.toFixed(2)}s</span>
+        if (currentPlotData.title.includes('Weight')) {
+            const slope = (y2 - y1) / (x2 - x1);
+            const slopeVal = Math.abs(slope);
+
+            document.getElementById('avgDisplay').innerHTML = `
+      <span class="chart-avg-value">Mdot: ${slopeVal.toFixed(3)} ${unit}/s</span>
+      <span style="margin-left: 20px; color: var(--text-muted);">Range: ${Math.min(x1, x2).toFixed(2)}s - ${Math.max(x1, x2).toFixed(2)}s</span>
     `;
 
-        // Add horizontal average line between the two selection points
-        const minX = Math.min(selectedPoints[0].x, selectedPoints[1].x);
-        const maxX = Math.max(selectedPoints[0].x, selectedPoints[1].x);
+            currentChart.options.plugins.annotation.annotations.slopeLine = {
+                type: 'line',
+                xMin: x1,
+                xMax: x2,
+                yMin: y1,
+                yMax: y2,
+                borderColor: 'rgba(255, 0, 0, 0.9)',
+                borderWidth: 2,
+                borderDash: [5, 5],
+                label: {
+                    display: true,
+                    content: `mdot: ${slopeVal.toFixed(3)} ${unit}/s`,
+                    position: 'center',
+                    backgroundColor: 'rgba(255, 0, 0, 0.9)',
+                    color: '#fff',
+                    font: { weight: 'bold' }
+                }
+            };
+        } else {
+            const slice = yData.slice(idx1, idx2 + 1);
+            const avg = Utils.mean(slice);
 
-        currentChart.options.plugins.annotation.annotations.avgLine = {
-            type: 'line',
-            yMin: avg,
-            yMax: avg,
-            xMin: minX,
-            xMax: maxX,
-            borderColor: 'rgba(255, 165, 0, 0.9)',
-            borderWidth: 3,
-            label: {
-                display: true,
-                content: `Avg: ${avg.toFixed(2)} ${unit}`,
-                position: 'center',
-                backgroundColor: 'rgba(255, 165, 0, 0.9)',
-                color: '#000',
-                font: { weight: 'bold' }
-            }
-        };
+            document.getElementById('avgDisplay').innerHTML = `
+      <span class="chart-avg-value">Average: ${avg.toFixed(3)} ${unit}</span>
+      <span style="margin-left: 20px; color: var(--text-muted);">Range: ${minX.toFixed(2)}s - ${maxX.toFixed(2)}s</span>
+    `;
+
+            currentChart.options.plugins.annotation.annotations.avgLine = {
+                type: 'line',
+                yMin: avg,
+                yMax: avg,
+                xMin: minX,
+                xMax: maxX,
+                borderColor: 'rgba(255, 165, 0, 0.9)',
+                borderWidth: 3,
+                label: {
+                    display: true,
+                    content: `Avg: ${avg.toFixed(2)} ${unit}`,
+                    position: 'center',
+                    backgroundColor: 'rgba(255, 165, 0, 0.9)',
+                    color: '#000',
+                    font: { weight: 'bold' }
+                }
+            };
+        }
     }
 
     currentChart.update();
@@ -798,13 +831,37 @@ function plotOFRatio() {
 
     const data = getFilteredData();
     const time = data.map(row => Utils.parseNumber(row[ctx.timeCol]));
-    const ofRatio = data.map(row => {
-        const fuel = Utils.parseNumber(row[ctx.fuelCol]);
-        const ox = Utils.parseNumber(row[ctx.oxidizerCol]);
-        return ox / (fuel + 1e-6);
-    });
+    const fuel = data.map(row => Utils.parseNumber(row[ctx.fuelCol]));
+    const ox = data.map(row => Utils.parseNumber(row[ctx.oxidizerCol]));
 
-    createPlot('O/F Ratio vs Time', time, ofRatio, 'Time (s)', 'O/F Ratio', '#8b5cf6');
+    const fuelSlugs = fuel.map(f => f / 32.174);
+    const oxSlugs = ox.map(o => o / 32.174);
+
+    const dt = [];
+    const fuelMdot = [];
+    const oxMdot = [];
+
+    for (let i = 0; i < time.length - 1; i++) {
+        let deltaT = time[i + 1] - time[i];
+        if (deltaT === 0) deltaT = 1e-6; // Prevent division by zero
+        dt.push(deltaT);
+
+        fuelMdot.push(-(fuelSlugs[i + 1] - fuelSlugs[i]) / deltaT);
+        oxMdot.push(-(oxSlugs[i + 1] - oxSlugs[i]) / deltaT);
+    }
+
+    const windowSize = Math.max(5, Math.floor(fuelMdot.length * 0.05));
+    const fuelMdotSmoothed = Utils.smooth(fuelMdot, windowSize);
+    const oxMdotSmoothed = Utils.smooth(oxMdot, windowSize);
+
+    const ofRatio = [];
+    for (let i = 0; i < fuelMdotSmoothed.length; i++) {
+        ofRatio.push(oxMdotSmoothed[i] / (fuelMdotSmoothed[i] + 1e-6));
+    }
+
+    const timePlot = time.slice(0, time.length - 1);
+
+    createPlot('O/F Ratio vs Time', timePlot, ofRatio, 'Time (s)', 'O/F Ratio', '#8b5cf6');
 }
 
 function plotFuelWeight() {

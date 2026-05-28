@@ -8,9 +8,6 @@
     <meta name="description" content="Book a photoshoot with Caleb Stone. Easy online booking for couples, engagements, weddings, portraits, and more.">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="Websitelogo.ico">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- EmailJS SDK first -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
@@ -25,7 +22,7 @@
         p,
         .about-photo,
         footer {
-            font-family: 'Old Standard TT', serif !important;
+            font-family: var(--font-heading) !important;
         }
 
         .bookings-container {
@@ -195,12 +192,12 @@
 </head>
 
 <body>
-    <!-- Header from other pages -->
     <header>
         <div class="header-left">
-            <h1 class="header-title">Caleb Stone</h1>
+            <a href="index.html" class="header-title">Caleb Stone</a>
+            <div class="header-quote">Capturing moments with clarity and elegance.</div>
         </div>
-        <button class="header-menu-btn" aria-label="Menu">Menu</button>
+        <button class="header-menu-btn" aria-label="Menu" onclick="document.querySelector('.header-nav').classList.toggle('show')">Menu</button>
         <nav class="header-nav">
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
@@ -208,7 +205,6 @@
             <a href="pricing.html">Pricing</a>
             <a href="bookings.html">Bookings</a>
             <a href="contact.html">Contact</a>
-            <a href="portfolio.html">Career Portfolio</a>
         </nav>
     </header>
 

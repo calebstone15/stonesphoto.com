@@ -2,196 +2,108 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pricing - Caleb Stone Photography</title>
-    <meta name="description" content="Stone's Photos Pricing - Simple photography pricing. $200/day plus travel. 30 free edited photos included. No hidden charges.">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" type="image/x-icon" href="Websitelogo.ico">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body,
-        h1,
-        h2,
-        p,
-        .about-photo,
-        footer {
-            font-family: 'Old Standard TT', serif !important;
-        }
-    </style>
-    <style>
-      @media (max-width: 768px) {
-        main section { padding: 24px 16px !important; }
-        main section h2 { font-size: 1.8rem !important; }
-        main section h3 { font-size: 1.4rem !important; }
-        main section p, main section ul, main section li { font-size: 1rem !important; }
-      }
-      @media (max-width: 480px) {
-        main section h2 { font-size: 1.5rem !important; }
-        main section h3 { font-size: 1.2rem !important; }
-        main section div[style*='display: flex'] > div { min-width: auto !important; }
-      }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing - Stones Photos</title>
+  <meta name="description" content="Stone's Photos Pricing - Simple photography pricing. $200/day plus travel. 30 free edited photos included. No hidden charges.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/x-icon" href="Websitelogo.ico">
 </head>
 
 <body>
-    <!-- header copied from index.html -->
-    <header>
-        <div class="header-left">
-            <h1 class="header-title">Caleb Stone</h1>
+  <header>
+    <div class="header-left">
+      <a href="index.html" class="header-title">Caleb Stone</a>
+      <div class="header-quote">Capturing moments with clarity and elegance.</div>
+    </div>
+    <button class="header-menu-btn" aria-label="Menu" onclick="document.querySelector('.header-nav').classList.toggle('show')">Menu</button>
+    <nav class="header-nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="galleries.html">Galleries</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="bookings.html">Bookings</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Formula Section -->
+    <section class="info-panel">
+      <h2 class="info-title">Total Cost Formula</h2>
+      <p class="info-text"><strong>Total Cost = Travel Cost + Daily Rate + Optional Edits</strong></p>
+      <p class="info-text" style="margin-top: 15px;">
+        Travel Cost is calculated as <strong>$0.20 per mile</strong> for round-trip travel or if travel by plane is required I will quote you the price of that ticket. The Daily Rate is <strong>$200 per day</strong>, and optional edits are <strong>$2 per photo</strong> beyond the 30 free edits included.
+      </p>
+      <p class="info-text" style="margin-top: 15px;">
+        This formula applies to all types of shoots, including cars, engagements, weddings, portraits, and more.
+      </p>
+    </section>
+
+    <!-- What You Get Section -->
+    <section class="info-panel">
+      <h2 class="info-title">What You Get</h2>
+      <ul class="features-list" style="max-width: 600px; margin: 30px auto 0;">
+        <li>100% of the photos taken during the shoot, including raw files.</li>
+        <li>30 free edited photos of your choice, with additional edits available for $2 per photo.</li>
+        <li>No watermarks, full ownership of all photos.</li>
+        <li>My time and dedication for as long as you need during the shoot, without any additional hourly charges.</li>
+        <li>14 bit RAW 45mp photos. (Very high resolution photos and easily editable files)</li>
+      </ul>
+    </section>
+
+    <!-- Example Cost Breakdown Section -->
+    <section class="info-panel" style="max-width: 1000px;">
+      <h2 class="info-title">Example Cost Breakdown</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; margin-top: 30px;">
+        <!-- Close Shoot -->
+        <div style="flex: 1; min-width: 300px; background: rgba(255,255,255,0.4); padding: 30px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left;">
+          <h3 style="font-size: 1.8rem; margin-bottom: 20px;">Close Shoot (100 Miles)</h3>
+          <ul class="features-list" style="margin-top: 0; padding-left: 20px;">
+            <li style="font-size: 1.05rem;">Travel: 100 miles x $0.20/mile = $20</li>
+            <li style="font-size: 1.05rem;">Daily Rate: $200</li>
+            <li style="font-size: 1.05rem;">Optional Edits: 10 additional edits x $2 = $20</li>
+          </ul>
+          <p style="font-weight: 700; font-size: 1.4rem; color: var(--accent); margin-top: 20px;">Total: $240</p>
         </div>
-        <button class="header-menu-btn" aria-label="Menu">Menu</button>
-        <nav class="header-nav">
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="galleries.html">Galleries</a>
-            <a href="pricing.html">Pricing</a>
-            <a href="bookings.html">Bookings</a>
-            <a href="contact.html">Contact</a>
-            <a href="portfolio.html">Career Portfolio</a>
-        </nav>
-    </header>
 
-    <main>
-        <!-- Formula Section -->
-        <section style="padding: 40px; text-align: center; background: #ffffff;">
-            <h2 style="font-family: 'Old Standard TT', serif; font-size: 2.5rem; color: #23395d; margin-bottom: 20px;">
-                Total Cost Formula
-            </h2>
-            <p
-                style="font-family: 'Old Standard TT', serif; font-size: 1.2rem; color: #4e5a6d; line-height: 1.8; max-width: 800px; margin: 0 auto;">
-                <strong>Total Cost = Travel Cost + Daily Rate + Optional Edits</strong>
-            </p>
-            <p
-                style="font-family: 'Old Standard TT', serif; font-size: 1.2rem; color: #4e5a6d; line-height: 1.8; max-width: 800px; margin: 20px auto;">
-                Travel Cost is calculated as <strong>$0.20 per mile</strong> for round-trip travel or if travel by plane
-                is required I will quote you the price of that ticket. The Daily Rate is <strong>$200 per day</strong>,
-                and optional edits are <strong>$2 per photo</strong> beyond the 30 free edits included.
-            </p>
-            <p
-                style="font-family: 'Old Standard TT', serif; font-size: 1.2rem; color: #4e5a6d; line-height: 1.8; max-width: 800px; margin: 20px auto;">
-                This formula applies to all types of shoots, including cars, engagements, weddings, portraits, and more.
-            </p>
-        </section>
+        <!-- Far-Away Shoot -->
+        <div style="flex: 1; min-width: 300px; background: rgba(255,255,255,0.4); padding: 30px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: left;">
+          <h3 style="font-size: 1.8rem; margin-bottom: 20px;">Far-Away Shoot</h3>
+          <ul class="features-list" style="margin-top: 0; padding-left: 20px;">
+            <li style="font-size: 1.05rem;">Airfare: $300</li>
+            <li style="font-size: 1.05rem;">Rental Car: $100/day</li>
+            <li style="font-size: 1.05rem;">Hotel: $150/night</li>
+            <li style="font-size: 1.05rem;">Food: $30/day</li>
+            <li style="font-size: 1.05rem;">Daily Rate: $200</li>
+            <li style="font-size: 1.05rem;">Optional Edits: 10 additional edits x $2 = $20</li>
+          </ul>
+          <p style="font-weight: 700; font-size: 1.4rem; color: var(--accent); margin-top: 20px;">Total: $800</p>
+        </div>
+      </div>
+      <p class="info-text" style="margin-top: 30px; font-style: italic;">
+        Note: This exact breakdown will be provided when you request a quote, ensuring full transparency for your shoot.
+      </p>
+    </section>
 
-        <!-- What You Get Section -->
-        <section style="padding: 40px; text-align: center; background: #f9f9f9;">
-            <h2 style="font-family: 'Old Standard TT', serif; font-size: 2.5rem; color: #23395d; margin-bottom: 20px;">
-                What You Get
-            </h2>
-            <ul
-                style="font-family: 'Old Standard TT', serif; font-size: 1.2rem; color: #4e5a6d; line-height: 1.8; list-style: disc; margin: 0 auto; max-width: 800px; text-align: left;">
-                <li style="margin-bottom: 15px;">100% of the photos taken during the shoot, including raw files.</li>
-                <li style="margin-bottom: 15px;">30 free edited photos of your choice, with additional edits available
-                    for $2 per photo.</li>
-                <li style="margin-bottom: 15px;">No watermarks, full ownership of all photos.</li>
-                <li style="margin-bottom: 15px;">My time and dedication for as long as you need during the shoot,
-                    without any additional hourly charges.</li>
-                <li style="margin-bottom: 15px;">14 bit RAW 45mp photos. (If you dont know what this means it's very
-                    high resolution photos and easily editable files)</li>
-            </ul>
-        </section>
+    <!-- Why This Business Model Section -->
+    <section class="info-panel">
+      <h2 class="info-title">Why Low Prices?</h2>
+      <p class="info-text">
+        Why am I so cheap you may ask? By focusing on just simply capturing the raw photos without having to edit immediately I am able to get you hundreds of photos the day of the shoot. All I have to do is just upload the photos. So you get more photos and faster delivery.
+      </p>
+      <p class="info-text" style="margin-top: 15px;">
+        Another reason is this is just a side job for me. Many photographers try to make a career out of photography and reveal that with their pricing when in reality it is just meant to be a side job. I do this because it is relaxing to me not to make a living.
+      </p>
+      <p class="info-text" style="margin-top: 15px;">
+        Additionally, my ability to code and locally host my own website significantly reduces my operational costs. If you are a photographer and would like information or the code for this website, I’d be happy to help.
+      </p>
+    </section>
+  </main>
 
-        <!-- Example Cost Breakdown Section -->
-        <section style="padding: 40px; text-align: center; background: #ffffff;">
-            <h2 style="font-family: 'Old Standard TT', serif; font-size: 2.5rem; color: #23395d; margin-bottom: 20px;">
-                Example Cost Breakdown
-            </h2>
-            <div
-                style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto;">
-                <!-- Close Shoot -->
-                <div
-                    style="flex: 1; min-width: 300px; background: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                    <h3
-                        style="font-family: 'Old Standard TT', serif; font-size: 2rem; color: #23395d; margin-bottom: 20px;">
-                        Close Shoot (100 Miles)
-                    </h3>
-                    <ul
-                        style="font-family: 'Old Standard TT', serif; font-size: 1.2rem; color: #4e5a6d; line-height: 1.8; list-style: none; padding: 0; text-align: left;">
-                        <li style="margin-bottom: 15px;">Travel: 100 miles x $0.20/mile = $20</li>
-                        <li style="margin-bottom: 15px;">Daily Rate: $200</li>
-                        <li style="margin-bottom: 15px;">Optional Edits: 10 additional edits x $2 = $20</li>
-                    </ul>
-                    <p
-                        style="font-family: 'Old Standard TT', serif; font-size: 1.2rem; color: #4e5a6d; font-weight: bold; margin-top: 20px;">
-                        Total: $240
-                    </p>
-                </div>
-
-                <!-- Far-Away Shoot -->
-                <div
-                    style="flex: 1; min-width: 300px; background: #f9f9f9; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                    <h3
-                        style="font-family: 'Old Standard TT', serif; font-size: 2rem; color: #23395d; margin-bottom: 20px;">
-                        Far-Away Shoot
-                    </h3>
-                    <ul
-                        style="font-family: 'Old Standard TT', serif; font-size: 1.2rem; color: #4e5a6d; line-height: 1.8; list-style: none; padding: 0; text-align: left;">
-                        <li style="margin-bottom: 15px;">Airfare: $300</li>
-                        <li style="margin-bottom: 15px;">Rental Car: $100/day</li>
-                        <li style="margin-bottom: 15px;">Hotel: $150/night</li>
-                        <li style="margin-bottom: 15px;">Food: $30/day</li>
-                        <li style="margin-bottom: 15px;">Daily Rate: $200</li>
-                        <li style="margin-bottom: 15px;">Optional Edits: 10 additional edits x $2 = $20</li>
-                    </ul>
-                    <p
-                        style="font-family: 'Old Standard TT', serif; font-size: 1.2rem; color: #4e5a6d; font-weight: bold; margin-top: 20px;">
-                        Total: $800
-                    </p>
-                </div>
-            </div>
-            <p
-                style="font-family: 'Old Standard TT', serif; font-size: 1.2rem; color: #4e5a6d; line-height: 1.8; max-width: 800px; margin: 20px auto; text-align: center;">
-                Note: This exact breakdown will be provided when you request a quote, ensuring full transparency for
-                your shoot.
-            </p>
-        </section>
-
-        <!-- Why This Business Model Section -->
-        <section style="padding: 40px; text-align: center; background: #f9f9f9;">
-            <h2 style="font-family: 'Old Standard TT', serif; font-size: 2.5rem; color: #23395d; margin-bottom: 20px;">
-                Why This Business Model Allows Me to Have Such Low Prices
-            </h2>
-            <p
-                style="font-family: 'Old Standard TT', serif; font-size: 1.2rem; color: #4e5a6d; line-height: 1.8; max-width: 800px; margin: 0 auto;">
-                Why am I so cheap you may ask? By focusing on just simply capturing the raw photos without having to
-                edit immediately I am able to get you hundreds of photos the day of the shoot. All I have to do is just
-                upload the photos. So you get more photos and faster delivery.<br />
-
-                <br /> Another reason is this is just a side job for me. Many photographers try to make a career out of
-                photography and reveal that with their pricing when in reality it is just meant to be a side job. I do
-                this because it is relaxing to me not to make a living.
-            </p>
-            <p
-                style="font-family: 'Old Standard TT', serif; font-size: 1.2rem; color: #4e5a6d; line-height: 1.8; max-width: 800px; margin: 20px auto;">
-                Additionally, my ability to code and locally host my own website significantly reduces my operational
-                costs. If you are a photographer and would like information or the code for this website, I’d be happy
-                to help.
-            </p>
-        </section>
-    </main>
-
-    <!-- footer copied from index.html -->
-    <footer>
-        <p>&copy; 2025 Stones Photos</p>
-    </footer>
-    <script src="script.js"></script>
-    <script>
-        // Mobile menu toggle
-        document.querySelector('.header-menu-btn').onclick = function () {
-            document.querySelector('.header-nav').classList.toggle('show');
-        };
-        // Optional: close menu when clicking a link (on mobile)
-        document.querySelectorAll('.header-nav a').forEach(link => {
-            link.onclick = () => {
-                if (window.innerWidth <= 1500) {
-                    document.querySelector('.header-nav').classList.remove('show');
-                }
-            };
-        });
-    </script>
+  <footer>
+    <p>&copy; 2026 Stones Photos</p>
+  </footer>
+  <script src="script.js"></script>
 </body>
-
 </html>
