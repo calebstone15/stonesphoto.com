@@ -466,3 +466,21 @@ footer p {
   from {transform: translate(-50%, -50%) scale(0.9); opacity: 0;}
   to {transform: translate(-50%, -50%) scale(1); opacity: 1;}
 }
+
+/* Focus styles for keyboard navigation on gallery items */
+.gallery-item:focus-visible, .portfolio-item:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.gallery-item:focus-visible img, .portfolio-item:focus-visible img {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.lightbox-close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
