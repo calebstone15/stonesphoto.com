@@ -46,7 +46,18 @@ class AnalyzerContext {
         if (this.numericCache && this.numericCache[colName]) return this.numericCache[colName];
 
         if (!this.numericCache) this.numericCache = {};
-        const colData = this.df.map(row => Utils.parseNumber(row[colName]));
+
+        let colData;
+        if (colName === this.timeCol) {
+            colData = Utils.parseTimeColumn(this.df.map(row => row[colName]));
+            // Convert elapsed_ms to seconds
+            if (colName.toLowerCase() === 'elapsed_ms') {
+                colData = colData.map(v => isNaN(v) ? NaN : v / 1000);
+            }
+        } else {
+            colData = this.df.map(row => Utils.parseNumber(row[colName]));
+        }
+
         this.numericCache[colName] = colData;
         return colData;
     }
@@ -320,33 +331,14 @@ function displayMetrics() {
 // ============================================
 
 function getColumnData(colName) {
-    if (!ctx.df || !colName) return [];
-    if (colName === ctx.timeCol) {
-        let timeVals = Utils.parseTimeColumn(ctx.df.map(row => row[colName]));
-        // Convert elapsed_ms to seconds
-        if (colName.toLowerCase() === 'elapsed_ms') {
-            timeVals = timeVals.map(v => isNaN(v) ? NaN : v / 1000);
-        }
-        return timeVals;
-    }
-    return ctx.df.map(row => Utils.parseNumber(row[colName]));
+    return ctx.getNumericColumn(colName);
 }
 
 function getFilteredNumericColumn(colName) {
     if (!ctx.df || !colName || !ctx.dataMask) return [];
     
     const downsample = parseInt(document.getElementById('downsampleSlider').value) || 1;
-    let baseData;
-    
-    if (colName === ctx.timeCol) {
-        baseData = Utils.parseTimeColumn(ctx.df.map(row => row[colName]));
-        // Convert elapsed_ms to seconds
-        if (colName.toLowerCase() === 'elapsed_ms') {
-            baseData = baseData.map(v => isNaN(v) ? NaN : v / 1000);
-        }
-    } else {
-        baseData = ctx.df.map(row => Utils.parseNumber(row[colName]));
-    }
+    let baseData = ctx.getNumericColumn(colName);
     
     const result = [];
     let passedCount = 0;
