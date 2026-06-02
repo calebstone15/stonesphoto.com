@@ -1,0 +1,6 @@
+127.0.0.1 - - [09/Feb/2026 21:17:56] "GET /EAA%20Web%20Version/pages/hotfire.html HTTP/1.1" 200 -
+127.0.0.1 - - [09/Feb/2026 21:17:56] "GET /EAA%20Web%20Version/assets/ERPL%20Logo%20Downscaled.png HTTP/1.1" 200 -
+127.0.0.1 - - [09/Feb/2026 21:17:56] "GET /EAA%20Web%20Version/css/styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [09/Feb/2026 21:17:56] "GET /EAA%20Web%20Version/js/utils.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Feb/2026 21:17:56] "GET /EAA%20Web%20Version/js/hotfire-analyzer.js HTTP/1.1" 200 -
+127.0.0.1 - - [09/Feb/2026 21:17:56] "GET /EAA%20Web%20Version/js/app.js HTTP/1.1" 200 -

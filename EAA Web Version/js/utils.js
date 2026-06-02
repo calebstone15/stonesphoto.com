@@ -16,15 +16,15 @@ const Utils = {
      * Smooth data using a moving average (convolution)
      * @param {number[]} data - Array of values to smooth
      * @param {number} windowSize - Size of the smoothing window
-     * @returns {number[]} Smoothed array
+     * @returns {Float64Array} Smoothed array
      */
     smooth(data, windowSize) {
-        if (windowSize <= 1) return [...data];
-        if (data.length === 0) return [];
+        if (windowSize <= 1) return new Float64Array(data);
+        if (data.length === 0) return new Float64Array(0);
 
-        const result = [];
-        const halfWindow = Math.floor(windowSize / 2);
         const len = data.length;
+        const result = new Float64Array(len);
+        const halfWindow = Math.floor(windowSize / 2);
 
         // Initialize sum and count for the first window centered at i=0
         // Window range: [0, min(len-1, halfWindow)]
@@ -39,7 +39,7 @@ const Utils = {
             }
         }
 
-        result.push(count > 0 ? sum / count : data[0]);
+        result[0] = count > 0 ? sum / count : data[0];
 
         // Sliding window
         for (let i = 1; i < len; i++) {
@@ -63,7 +63,7 @@ const Utils = {
                 }
             }
 
-            result.push(count > 0 ? sum / count : data[i]);
+            result[i] = count > 0 ? sum / count : data[i];
         }
 
         return result;
