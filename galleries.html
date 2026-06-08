@@ -855,43 +855,30 @@
         };
       });
 
-      // Lazy load images for later pages
-      function lazyLoadGalleryImages() {
-        document.querySelectorAll('.gallery-item[data-page]:not([data-page="1"])').forEach(item => {
-          const img = item.querySelector('img');
-          if (img && !img.dataset.lazyLoaded) {
-            // Set src attribute only when nearing viewport
-            img.setAttribute('loading', 'lazy');
-            img.dataset.lazyLoaded = 'true';
-          }
-        });
-      }
-
-      // Call lazy load on scroll and resize
-      window.addEventListener('scroll', lazyLoadGalleryImages);
-      window.addEventListener('resize', lazyLoadGalleryImages);
-
-      // Initial call for images that might be visible
-      lazyLoadGalleryImages();
     });
 
-    // Scroll animation - show sections when scrolled into view
-    function checkScroll() {
-      const sections = document.querySelectorAll('.gallery-section');
+    // Scroll animation - show sections when scrolled into view using IntersectionObserver
+    // This replaces the synchronous scroll event listener and getBoundingClientRect which causes layout thrashing
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
 
-      sections.forEach(section => {
-        const sectionTop = section.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
-
-        if (sectionTop < windowHeight * 0.8) {
-          section.classList.add('visible');
+    const sectionObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
         }
       });
-    }
+    }, observerOptions);
 
-    // Check scroll position on load and scroll
-    window.addEventListener('load', checkScroll);
-    window.addEventListener('scroll', checkScroll);
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.gallery-section').forEach(section => {
+        sectionObserver.observe(section);
+      });
+    });
   </script>
 
   <!-- Lightbox Modal -->
