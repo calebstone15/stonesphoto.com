@@ -302,12 +302,16 @@ section {
   opacity: 0.9;
 }
 
-.gallery-item:hover, .portfolio-item:hover {
+.gallery-item:hover, .portfolio-item:hover,
+.gallery-item:focus-visible, .portfolio-item:focus-visible {
   transform: translateY(-10px) scale(1.02);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
 }
 
-.gallery-item:hover img, .portfolio-item:hover img {
+.gallery-item:hover img, .portfolio-item:hover img,
+.gallery-item:focus-visible img, .portfolio-item:focus-visible img {
   transform: scale(1.1);
   opacity: 1;
 }
@@ -461,6 +465,13 @@ footer p {
   font-weight: bold;
   cursor: pointer;
   z-index: 2001;
+  transition: color 0.2s;
+}
+.lightbox-close:hover,
+.lightbox-close:focus-visible {
+  color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
 }
 @keyframes zoomIn {
   from {transform: translate(-50%, -50%) scale(0.9); opacity: 0;}
