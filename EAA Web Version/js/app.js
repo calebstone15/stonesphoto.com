@@ -14,10 +14,15 @@ class ToastManager {
     show(message, type = 'info', duration = 3000) {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        toast.innerHTML = `
-      <span>${this.getIcon(type)}</span>
-      <span>${message}</span>
-    `;
+
+        const iconSpan = document.createElement('span');
+        iconSpan.textContent = this.getIcon(type);
+        toast.appendChild(iconSpan);
+
+        const messageSpan = document.createElement('span');
+        messageSpan.textContent = message;
+        toast.appendChild(messageSpan);
+
         this.container.appendChild(toast);
 
         setTimeout(() => {
@@ -74,22 +79,72 @@ class PromptDialog {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.className = 'modal-overlay active';
-            overlay.innerHTML = `
-        <div class="modal" style="width: 400px;">
-          <div class="modal-header">
-            <h3 class="modal-title">${title}</h3>
-            <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
-          </div>
-          <div class="modal-body">
-            <p style="margin-bottom: var(--spacing-md);">${message}</p>
-            <input type="number" step="any" class="form-input" id="promptInput" value="${defaultValue}" autofocus>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" id="promptCancel">Cancel</button>
-            <button class="btn btn-primary" id="promptConfirm">Confirm</button>
-          </div>
-        </div>
-      `;
+
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.width = '400px';
+
+            // Header
+            const header = document.createElement('div');
+            header.className = 'modal-header';
+
+            const titleEl = document.createElement('h3');
+            titleEl.className = 'modal-title';
+            titleEl.textContent = title;
+
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'modal-close';
+            closeBtn.textContent = '×';
+            closeBtn.onclick = function() {
+                this.closest('.modal-overlay').remove();
+            };
+
+            header.appendChild(titleEl);
+            header.appendChild(closeBtn);
+
+            // Body
+            const body = document.createElement('div');
+            body.className = 'modal-body';
+
+            const msgEl = document.createElement('p');
+            msgEl.style.marginBottom = 'var(--spacing-md)';
+            msgEl.textContent = message;
+
+            const inputEl = document.createElement('input');
+            inputEl.type = 'number';
+            inputEl.step = 'any';
+            inputEl.className = 'form-input';
+            inputEl.id = 'promptInput';
+            if (defaultValue !== '') {
+                inputEl.value = defaultValue;
+            }
+            inputEl.autofocus = true;
+
+            body.appendChild(msgEl);
+            body.appendChild(inputEl);
+
+            // Footer
+            const footer = document.createElement('div');
+            footer.className = 'modal-footer';
+
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'btn btn-secondary';
+            cancelBtn.id = 'promptCancel';
+            cancelBtn.textContent = 'Cancel';
+
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'btn btn-primary';
+            confirmBtn.id = 'promptConfirm';
+            confirmBtn.textContent = 'Confirm';
+
+            footer.appendChild(cancelBtn);
+            footer.appendChild(confirmBtn);
+
+            // Assemble
+            modal.appendChild(header);
+            modal.appendChild(body);
+            modal.appendChild(footer);
+            overlay.appendChild(modal);
 
             document.body.appendChild(overlay);
 
