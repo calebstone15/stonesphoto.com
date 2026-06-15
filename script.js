@@ -172,7 +172,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (lightbox && galleryItems.length > 0) {
         galleryItems.forEach(item => {
-            item.addEventListener('click', () => {
+            item.setAttribute('tabindex', '0');
+            item.setAttribute('role', 'button');
+
+            const openLightbox = () => {
                 const img = item.querySelector('img');
                 if (img) {
                     let highResSrc = img.src.split('?')[0];
@@ -182,9 +185,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     lightbox.style.display = "block";
                     document.body.style.overflow = "hidden"; // Prevent scrolling
                 }
+            };
+
+            item.addEventListener('click', openLightbox);
+
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openLightbox();
+                }
             });
         });
     }
+
+    // Add global Escape key listener
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            window.closeLightbox();
+        }
+    });
 });
 
 window.closeLightbox = function() {
