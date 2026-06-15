@@ -14,10 +14,12 @@ class ToastManager {
     show(message, type = 'info', duration = 3000) {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        toast.innerHTML = `
-      <span>${this.getIcon(type)}</span>
-      <span>${message}</span>
-    `;
+        const iconSpan = document.createElement('span');
+        iconSpan.textContent = this.getIcon(type);
+        const messageSpan = document.createElement('span');
+        messageSpan.textContent = message;
+        toast.appendChild(iconSpan);
+        toast.appendChild(messageSpan);
         this.container.appendChild(toast);
 
         setTimeout(() => {
@@ -74,28 +76,70 @@ class PromptDialog {
         return new Promise((resolve) => {
             const overlay = document.createElement('div');
             overlay.className = 'modal-overlay active';
-            overlay.innerHTML = `
-        <div class="modal" style="width: 400px;">
-          <div class="modal-header">
-            <h3 class="modal-title">${title}</h3>
-            <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
-          </div>
-          <div class="modal-body">
-            <p style="margin-bottom: var(--spacing-md);">${message}</p>
-            <input type="number" step="any" class="form-input" id="promptInput" value="${defaultValue}" autofocus>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" id="promptCancel">Cancel</button>
-            <button class="btn btn-primary" id="promptConfirm">Confirm</button>
-          </div>
-        </div>
-      `;
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.width = '400px';
+
+            const header = document.createElement('div');
+            header.className = 'modal-header';
+
+            const titleEl = document.createElement('h3');
+            titleEl.className = 'modal-title';
+            titleEl.textContent = title;
+
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'modal-close';
+            closeBtn.textContent = '×';
+            closeBtn.onclick = function() { this.closest('.modal-overlay').remove(); };
+
+            header.appendChild(titleEl);
+            header.appendChild(closeBtn);
+
+            const body = document.createElement('div');
+            body.className = 'modal-body';
+
+            const msgP = document.createElement('p');
+            msgP.style.marginBottom = 'var(--spacing-md)';
+            msgP.textContent = message;
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.step = 'any';
+            input.className = 'form-input';
+            input.id = 'promptInput';
+            if (defaultValue !== '') input.value = defaultValue;
+            input.autofocus = true;
+
+            body.appendChild(msgP);
+            body.appendChild(input);
+
+            const footer = document.createElement('div');
+            footer.className = 'modal-footer';
+
+            const cancelBtn = document.createElement('button');
+            cancelBtn.className = 'btn btn-secondary';
+            cancelBtn.id = 'promptCancel';
+            cancelBtn.textContent = 'Cancel';
+
+            const confirmBtn = document.createElement('button');
+            confirmBtn.className = 'btn btn-primary';
+            confirmBtn.id = 'promptConfirm';
+            confirmBtn.textContent = 'Confirm';
+
+            footer.appendChild(cancelBtn);
+            footer.appendChild(confirmBtn);
+
+            modal.appendChild(header);
+            modal.appendChild(body);
+            modal.appendChild(footer);
+
+            overlay.appendChild(modal);
 
             document.body.appendChild(overlay);
 
-            const input = overlay.querySelector('#promptInput');
-            input.focus();
-            input.select();
+            const inputField = overlay.querySelector('#promptInput');
+            inputField.focus();
+            inputField.select();
 
             const cleanup = (value) => {
                 overlay.remove();
@@ -103,15 +147,15 @@ class PromptDialog {
             };
 
             overlay.querySelector('#promptConfirm').onclick = () => {
-                const value = parseFloat(input.value);
+                const value = parseFloat(inputField.value);
                 cleanup(isNaN(value) ? null : value);
             };
 
             overlay.querySelector('#promptCancel').onclick = () => cleanup(null);
 
-            input.onkeydown = (e) => {
+            inputField.onkeydown = (e) => {
                 if (e.key === 'Enter') {
-                    const value = parseFloat(input.value);
+                    const value = parseFloat(inputField.value);
                     cleanup(isNaN(value) ? null : value);
                 } else if (e.key === 'Escape') {
                     cleanup(null);
