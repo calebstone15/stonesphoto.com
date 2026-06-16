@@ -149,8 +149,20 @@ const Utils = {
         if (typeof value === 'number') return value;
         if (!value || value === '') return NaN;
 
-        const cleaned = String(value).trim().replace(/,/g, '');
-        return parseFloat(cleaned);
+        if (typeof value === 'string') {
+            const trimmed = value.trim();
+            if (trimmed === '') return NaN;
+            // Fast path for strings without commas (most CSV numeric data)
+            // Number() handles leading/trailing whitespace faster than parseFloat
+            if (trimmed.indexOf(',') === -1) {
+                const num = Number(trimmed);
+                if (!isNaN(num)) return num;
+            }
+            // Fallback for strings with commas or non-numeric trailing characters
+            return parseFloat(trimmed.replace(/,/g, ''));
+        }
+
+        return parseFloat(String(value));
     },
 
     /**
