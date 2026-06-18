@@ -14,10 +14,16 @@ class ToastManager {
     show(message, type = 'info', duration = 3000) {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        toast.innerHTML = `
-      <span>${this.getIcon(type)}</span>
-      <span>${message}</span>
-    `;
+
+        const iconSpan = document.createElement('span');
+        iconSpan.textContent = this.getIcon(type);
+
+        const msgSpan = document.createElement('span');
+        msgSpan.textContent = message;
+
+        toast.appendChild(iconSpan);
+        toast.appendChild(msgSpan);
+
         this.container.appendChild(toast);
 
         setTimeout(() => {
@@ -77,12 +83,12 @@ class PromptDialog {
             overlay.innerHTML = `
         <div class="modal" style="width: 400px;">
           <div class="modal-header">
-            <h3 class="modal-title">${title}</h3>
+            <h3 class="modal-title"></h3>
             <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
           </div>
           <div class="modal-body">
-            <p style="margin-bottom: var(--spacing-md);">${message}</p>
-            <input type="number" step="any" class="form-input" id="promptInput" value="${defaultValue}" autofocus>
+            <p style="margin-bottom: var(--spacing-md);"></p>
+            <input type="number" step="any" class="form-input" id="promptInput" autofocus>
           </div>
           <div class="modal-footer">
             <button class="btn btn-secondary" id="promptCancel">Cancel</button>
@@ -91,9 +97,15 @@ class PromptDialog {
         </div>
       `;
 
-            document.body.appendChild(overlay);
+            overlay.querySelector('.modal-title').textContent = title;
+            overlay.querySelector('.modal-body p').textContent = message;
 
             const input = overlay.querySelector('#promptInput');
+            if (defaultValue !== '') {
+                input.value = defaultValue;
+            }
+
+            document.body.appendChild(overlay);
             input.focus();
             input.select();
 
