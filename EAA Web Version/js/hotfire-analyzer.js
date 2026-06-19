@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /**
  * ERPL Hotfire Data Analysis App - JavaScript Implementation
  * Complete port of the Python Tkinter application
@@ -176,19 +177,27 @@ function showColumnSelectionModal() {
     if (ctx.oxidizerCol) oxidizerSelect.value = ctx.oxidizerCol;
 
     // Thrust checkboxes
-    thrustContainer.innerHTML = '';
     const fragment = document.createDocumentFragment();
     ctx.columns.forEach(col => {
         const div = document.createElement('div');
         div.className = 'checkbox-wrapper';
-        div.innerHTML = `
-      <input type="checkbox" class="checkbox-input thrust-checkbox" value="${col}" 
-             ${ctx.thrustCols.includes(col) ? 'checked' : ''}>
-      <label>${col}</label>
-    `;
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.className = 'checkbox-input thrust-checkbox';
+        input.value = col;
+        if (ctx.thrustCols.includes(col)) {
+            input.checked = true;
+        }
+
+        const label = document.createElement('label');
+        label.textContent = col;
+
+        div.appendChild(input);
+        div.appendChild(label);
         fragment.appendChild(div);
     });
-    thrustContainer.appendChild(fragment);
+    thrustContainer.replaceChildren(fragment);
 
     ModalManager.open('columnSelectionModal');
 }
@@ -241,7 +250,8 @@ function computeMetrics(targetThrust) {
     const thrustTotal = getTotalThrust();
 
     // Check for custom splice
-    const useCustomSplice = document.getElementById('customSpliceCheckbox')?.checked;
+    const customSpliceCheckbox = document.getElementById('customSpliceCheckbox');
+    const useCustomSplice = customSpliceCheckbox ? customSpliceCheckbox.checked : false;
     let mask;
 
     if (useCustomSplice) {
@@ -302,17 +312,25 @@ function displayMetrics() {
     }
 
     section.style.display = 'block';
-    container.innerHTML = '';
 
+    const fragment = document.createDocumentFragment();
     for (const [key, value] of Object.entries(ctx.metrics)) {
         const card = document.createElement('div');
         card.className = 'metric-card';
-        card.innerHTML = `
-      <div class="metric-label">${key}</div>
-      <div class="metric-value">${value}</div>
-    `;
-        container.appendChild(card);
+
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'metric-label';
+        labelDiv.textContent = key;
+
+        const valueDiv = document.createElement('div');
+        valueDiv.className = 'metric-value';
+        valueDiv.textContent = value;
+
+        card.appendChild(labelDiv);
+        card.appendChild(valueDiv);
+        fragment.appendChild(card);
     }
+    container.replaceChildren(fragment);
 }
 
 // ============================================
@@ -797,7 +815,7 @@ function savePlot() {
     if (!currentChart) return;
 
     const canvas = document.getElementById('plotCanvas');
-    const title = currentPlotData?.title || 'plot';
+    const title = (currentPlotData && currentPlotData.title) || 'plot';
     const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '');
     const filename = title.replace(/[^a-zA-Z0-9]/g, '_') + '_' + timestamp + '.png';
 
@@ -1154,18 +1172,27 @@ function openCustomPlot() {
 
     // Populate column checkboxes
     const container = document.getElementById('customPlotColumnsContainer');
-    container.innerHTML = '';
+
+    const fragment = document.createDocumentFragment();
 
     // Add data columns with unit detection
     ctx.columns.forEach(col => {
         const div = document.createElement('div');
         div.className = 'checkbox-wrapper';
         const unit = Utils.extractUnit(col) || 'unknown';
-        div.innerHTML = `
-      <input type="checkbox" class="checkbox-input custom-col-checkbox" value="${col}" data-unit="${unit}">
-      <label>${col}</label>
-    `;
-        container.appendChild(div);
+
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.className = 'checkbox-input custom-col-checkbox';
+        input.value = col;
+        input.dataset.unit = unit;
+
+        const label = document.createElement('label');
+        label.textContent = col;
+
+        div.appendChild(input);
+        div.appendChild(label);
+        fragment.appendChild(div);
     });
 
     // Add generated columns
@@ -1179,13 +1206,25 @@ function openCustomPlot() {
         if (col.condition) {
             const div = document.createElement('div');
             div.className = 'checkbox-wrapper';
-            div.innerHTML = `
-        <input type="checkbox" class="checkbox-input custom-col-checkbox" value="${col.name}" data-generated="true" data-unit="${col.unit}">
-        <label style="color: var(--accent-primary);">${col.name} (Generated)</label>
-      `;
-            container.appendChild(div);
+
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.className = 'checkbox-input custom-col-checkbox';
+            input.value = col.name;
+            input.dataset.generated = 'true';
+            input.dataset.unit = col.unit;
+
+            const label = document.createElement('label');
+            label.style.color = 'var(--accent-primary)';
+            label.textContent = `${col.name} (Generated)`;
+
+            div.appendChild(input);
+            div.appendChild(label);
+            fragment.appendChild(div);
         }
     });
+
+    container.replaceChildren(fragment);
 
     ModalManager.open('customPlotModal');
 }
@@ -1223,22 +1262,35 @@ function updateConstantLinesList() {
     const container = document.getElementById('constantLinesList');
     if (!container) return;
 
-    container.innerHTML = '';
     if (customPlotConstantLines.length === 0) {
-        container.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem;">No constant lines added</span>';
+        const span = document.createElement('span');
+        span.style.color = 'var(--text-muted)';
+        span.style.fontSize = '0.85rem';
+        span.textContent = 'No constant lines added';
+        container.replaceChildren(span);
         return;
     }
 
+    const fragment = document.createDocumentFragment();
     customPlotConstantLines.forEach((line, i) => {
         const div = document.createElement('div');
         div.className = 'constant-line-item';
         const unitStr = line.unit ? ` (${line.unit})` : '';
-        div.innerHTML = `
-      <span>${line.label}: ${line.value}${unitStr}</span>
-      <button type="button" class="btn btn-small btn-secondary" onclick="removeConstantLine(${i})">✕</button>
-    `;
-        container.appendChild(div);
+
+        const span = document.createElement('span');
+        span.textContent = `${line.label}: ${line.value}${unitStr}`;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn btn-small btn-secondary';
+        btn.textContent = '✕';
+        btn.onclick = () => removeConstantLine(i);
+
+        div.appendChild(span);
+        div.appendChild(btn);
+        fragment.appendChild(div);
     });
+    container.replaceChildren(fragment);
 }
 
 // FIXED: Custom plot with multiple Y-axes and smoothing support

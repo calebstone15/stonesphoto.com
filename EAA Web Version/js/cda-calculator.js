@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /**
  * ERPL CdA Calculator - JavaScript Implementation
  * Complete port of the Python cda_calculator.py

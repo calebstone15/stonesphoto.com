@@ -22,9 +22,9 @@ const Utils = {
         if (windowSize <= 1) return [...data];
         if (data.length === 0) return [];
 
-        const result = [];
-        const halfWindow = Math.floor(windowSize / 2);
         const len = data.length;
+        const result = new Array(len);
+        const halfWindow = Math.floor(windowSize / 2);
 
         // Initialize sum and count for the first window centered at i=0
         // Window range: [0, min(len-1, halfWindow)]
@@ -33,13 +33,13 @@ const Utils = {
 
         for (let j = 0; j <= Math.min(len - 1, halfWindow); j++) {
             const val = data[j];
-            if (!isNaN(val)) {
+            if (!isNaN(val) && val !== null) {
                 sum += val;
                 count++;
             }
         }
 
-        result.push(count > 0 ? sum / count : data[0]);
+        result[0] = count > 0 ? sum / count : data[0];
 
         // Sliding window
         for (let i = 1; i < len; i++) {
@@ -47,7 +47,7 @@ const Utils = {
             const removeIdx = i - halfWindow - 1;
             if (removeIdx >= 0) {
                 const removeVal = data[removeIdx];
-                if (!isNaN(removeVal)) {
+                if (!isNaN(removeVal) && removeVal !== null) {
                     sum -= removeVal;
                     count--;
                 }
@@ -57,13 +57,13 @@ const Utils = {
             const addIdx = i + halfWindow;
             if (addIdx < len) {
                 const addVal = data[addIdx];
-                if (!isNaN(addVal)) {
+                if (!isNaN(addVal) && addVal !== null) {
                     sum += addVal;
                     count++;
                 }
             }
 
-            result.push(count > 0 ? sum / count : data[i]);
+            result[i] = count > 0 ? sum / count : data[i];
         }
 
         return result;
@@ -162,7 +162,6 @@ const Utils = {
         const len = timeData.length;
         const numeric = new Array(len);
         const dates = new Array(len);
-        let anyNumber = false;
         let anyValidDate = false;
         let minTs = Infinity;
 
@@ -180,7 +179,6 @@ const Utils = {
             numeric[i] = n;
 
             if (!isNaN(n)) {
-                anyNumber = true;
                 // Optimization: switch to numeric-only parsing for the rest
                 for (let j = i + 1; j < len; j++) {
                     const nextV = timeData[j];
