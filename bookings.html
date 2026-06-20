@@ -207,20 +207,19 @@
                 <form id="booking-form">
                     <div class="form-group">
                         <label for="name">Your Name</label>
-                        <input type="text" id="name" name="name" placeholder="Please enter your full name" required>
+                        <input type="text" id="name" name="name" placeholder="Please enter your full name" autocomplete="name" required>
                         <div id="nameError" class="form-error">Please enter your name</div>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" placeholder="Your email address for confirmation"
-                            required>
+                        <input type="email" id="email" name="email" placeholder="Your email address for confirmation" autocomplete="email" required>
                         <div id="emailError" class="form-error">Please enter a valid email address</div>
                     </div>
 
                     <div class="form-group">
                         <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" placeholder="Your phone number" required>
+                        <input type="tel" id="phone" name="phone" placeholder="Your phone number" autocomplete="tel" required>
                         <div id="phoneError" class="form-error">Please enter a valid phone number</div>
                     </div>
 

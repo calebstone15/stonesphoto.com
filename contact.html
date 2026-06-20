@@ -199,19 +199,19 @@
                 <form id="contact-form">
                     <div style="margin-bottom: 20px;">
                         <label for="name">Your Name</label><br>
-                        <input type="text" id="name" name="name" placeholder="Please enter your name" required aria-describedby="nameError"
+                        <input type="text" id="name" name="name" placeholder="Please enter your name" autocomplete="name" required aria-describedby="nameError"
                             style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
                         <div id="nameError" class="form-error" role="alert">Please enter your name</div>
                     </div>
                     <div style="margin-bottom: 20px;">
                         <label for="email">Email Address</label><br>
                         <input type="email" id="email" name="email" placeholder="Please enter a valid email address"
-                            required aria-describedby="emailError" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
+                            autocomplete="email" required aria-describedby="emailError" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
                         <div id="emailError" class="form-error" role="alert">Please enter a valid email address</div>
                     </div>
                     <div style="margin-bottom: 20px;">
                         <label for="phone">Phone Number (Optional)</label><br>
-                        <input type="tel" id="phone" name="phone" placeholder="Please enter a valid phone number" aria-describedby="phoneError"
+                        <input type="tel" id="phone" name="phone" placeholder="Please enter a valid phone number" autocomplete="tel" aria-describedby="phoneError"
                             style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc;">
                         <div id="phoneError" class="form-error" role="alert">Please enter a valid phone number</div>
                     </div>
