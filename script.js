@@ -183,6 +183,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.body.style.overflow = "hidden"; // Prevent scrolling
                 }
             });
+
+            // Add keyboard accessibility
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    item.click();
+                }
+            });
+        });
+
+        // Add escape key to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.style.display === "block") {
+                closeLightbox();
+            }
         });
     }
 });

@@ -466,3 +466,6 @@ footer p {
   from {transform: translate(-50%, -50%) scale(0.9); opacity: 0;}
   to {transform: translate(-50%, -50%) scale(1); opacity: 1;}
 }
+
+.gallery-item:focus { outline: 3px solid #2193b0; outline-offset: 4px; border-radius: 8px; }
+
