@@ -120,11 +120,9 @@ function inferColumns() {
         const lower = col.toLowerCase();
 
         // Time column — prioritize elapsed_s/elapsed_ms over timestamp
-        if (lower === 'elapsed_s' || lower === 'elapsed time') {
+        if (lower === 'elapsed_s' || lower === 'elapsed_ms' || lower === 'elapsed time') {
             ctx.timeCol = col;
-        } else if (lower === 'elapsed_ms') {
-            ctx.timeCol = col;
-        } else if (!ctx.timeCol && (lower === 'time' || lower === 't' || lower === 'time (s)' || lower.includes('time'))) {
+        } else if (!ctx.timeCol && (lower === 'time' || lower === 't' || lower === 'time (s)' || lower.includes('time') || lower.includes('timestamp'))) {
             ctx.timeCol = col;
         }
 
@@ -139,12 +137,12 @@ function inferColumns() {
         }
 
         // Fuel weight
-        if (!ctx.fuelCol && lower.includes('fuel') && lower.includes('weight')) {
+        if (!ctx.fuelCol && (lower.includes('fuel tank weight') || (lower.includes('fuel') && lower.includes('weight')) || lower.includes('tank weight (lc2)') || lower === 'lc2_lbf' || lower.includes('tank mass'))) {
             ctx.fuelCol = col;
         }
 
         // Oxidizer weight
-        if (!ctx.oxidizerCol && (lower.includes('ox') || lower.includes('oxidizer')) && lower.includes('weight')) {
+        if (!ctx.oxidizerCol && (lower.includes('lox tank weight') || lower.includes('oxidizer tank weight') || ((lower.includes('ox') || lower.includes('oxidizer')) && lower.includes('weight')) || lower === 'lc3_lbf')) {
             ctx.oxidizerCol = col;
         }
     }
@@ -1235,7 +1233,7 @@ function updateConstantLinesList() {
         const unitStr = line.unit ? ` (${line.unit})` : '';
         div.innerHTML = `
       <span>${line.label}: ${line.value}${unitStr}</span>
-      <button type="button" class="btn btn-small btn-secondary" onclick="removeConstantLine(${i})">✕</button>
+      <button type="button" class="btn btn-small btn-secondary" onclick="removeConstantLine(${i})">X</button>
     `;
         container.appendChild(div);
     });

@@ -28,9 +28,9 @@ class ToastManager {
 
     getIcon(type) {
         const icons = {
-            success: '✓',
-            error: '✗',
-            warning: '⚠',
+            success: '[+]',
+            error: '[x]',
+            warning: '[!]',
             info: 'ℹ'
         };
         return icons[type] || icons.info;
