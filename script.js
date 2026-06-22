@@ -149,17 +149,20 @@ document.addEventListener('DOMContentLoaded', function() {
 	const nav = document.querySelector('.header-nav');
 
 	if (menuBtn && nav) {
-		menuBtn.onclick = function() {
+		menuBtn.addEventListener('click', function() {
 			nav.classList.toggle('show');
-		};
+			const isExpanded = nav.classList.contains('show');
+			menuBtn.setAttribute('aria-expanded', isExpanded);
+		});
 
 		// Close menu when clicking a link (on mobile)
 		document.querySelectorAll('.header-nav a').forEach(link => {
-			link.onclick = () => {
+			link.addEventListener('click', () => {
 				if (window.innerWidth <= 1500) {
 					nav.classList.remove('show');
+					menuBtn.setAttribute('aria-expanded', 'false');
 				}
-			};
+			});
 		});
 	}
 });
