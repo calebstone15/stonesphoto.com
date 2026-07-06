@@ -1,0 +1,3 @@
+## 2026-06-20 - Custom Lightbox Keyboard Accessibility
+**Learning:** Native non-interactive elements like `div` or `img` used as gallery items require not just `tabindex="0"`, `role="button"`, and `aria-label` to be accessible, but *also* must explicitly manage focus state when opened as a modal dialog.
+**Action:** When implementing custom lightboxes or modals, always store a reference to the triggering element (e.g., `window.lastFocusedItem = document.activeElement`) before opening, move focus into the modal, and restore focus back to the original element when closing to maintain logical keyboard flow.
