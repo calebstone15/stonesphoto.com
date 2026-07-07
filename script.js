@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		});
 
-		function validateField(input) {
+		const validateField = function(input) {
 			const errorId = input.getAttribute('aria-describedby');
 			if (!errorId) return;
 
@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add escape key to close
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && lightbox.style.display === "block") {
-                closeLightbox();
+                window.closeLightbox();
             }
         });
     }
