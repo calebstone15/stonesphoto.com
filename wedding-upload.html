@@ -14,14 +14,17 @@
     :root {
       --font-heading: 'Playfair Display', serif;
       --font-body: 'Outfit', sans-serif;
-      --text-dark: #1a1a2e;
+      --text-dark: #2c3e50;
       --text-light: #ffffff;
-      --text-muted: #4a4a6a;
-      --accent: #d4af37;
-      --accent-hover: #f1c40f;
-      --glass-bg: rgba(255, 255, 255, 0.72);
-      --glass-border: rgba(255, 255, 255, 0.35);
-      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+      --text-muted: #6b8299;
+      --accent: #8badc4;           /* Dusty blue */
+      --accent-dark: #5f8ea8;      /* Deeper blue for hover */
+      --gold: #c9a84c;             /* Warm gold */
+      --gold-hover: #dbbe5e;
+      --ivory: #faf8f5;
+      --glass-bg: rgba(250, 248, 245, 0.82);
+      --glass-border: rgba(255, 255, 255, 0.6);
+      --glass-shadow: 0 8px 32px rgba(44, 62, 80, 0.12);
       --glass-blur: blur(18px);
     }
 
@@ -35,7 +38,7 @@
 
     body {
       font-family: var(--font-body);
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+      background: linear-gradient(160deg, #d4e4ed 0%, #a7c7d7 35%, #8badc4 65%, #c6d8e3 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -50,14 +53,14 @@
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(2px 2px at 20% 30%, rgba(212, 175, 55, 0.4), transparent),
-        radial-gradient(2px 2px at 40% 70%, rgba(212, 175, 55, 0.3), transparent),
-        radial-gradient(1px 1px at 60% 20%, rgba(255, 255, 255, 0.3), transparent),
-        radial-gradient(2px 2px at 80% 50%, rgba(212, 175, 55, 0.25), transparent),
-        radial-gradient(1px 1px at 10% 80%, rgba(255, 255, 255, 0.25), transparent),
-        radial-gradient(1px 1px at 70% 85%, rgba(212, 175, 55, 0.35), transparent),
-        radial-gradient(2px 2px at 50% 10%, rgba(255, 255, 255, 0.2), transparent),
-        radial-gradient(1px 1px at 90% 15%, rgba(212, 175, 55, 0.3), transparent);
+        radial-gradient(2px 2px at 20% 30%, rgba(201, 168, 76, 0.35), transparent),
+        radial-gradient(2px 2px at 40% 70%, rgba(255, 255, 255, 0.5), transparent),
+        radial-gradient(1px 1px at 60% 20%, rgba(255, 255, 255, 0.4), transparent),
+        radial-gradient(2px 2px at 80% 50%, rgba(201, 168, 76, 0.25), transparent),
+        radial-gradient(1px 1px at 10% 80%, rgba(255, 255, 255, 0.35), transparent),
+        radial-gradient(1px 1px at 70% 85%, rgba(201, 168, 76, 0.3), transparent),
+        radial-gradient(2px 2px at 50% 10%, rgba(255, 255, 255, 0.3), transparent),
+        radial-gradient(1px 1px at 90% 15%, rgba(201, 168, 76, 0.25), transparent);
       background-size: 200% 200%;
       animation: shimmer 20s ease-in-out infinite alternate;
       pointer-events: none;
@@ -131,11 +134,11 @@
       font-size: 1.2rem;
       font-weight: 600;
       color: var(--text-light);
-      background: var(--text-dark);
+      background: var(--accent-dark);
       border: none;
       border-radius: 50px;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 4px 20px rgba(95, 142, 168, 0.35);
       transition: all 0.3s ease;
       -webkit-tap-highlight-color: transparent;
     }
@@ -265,11 +268,11 @@
       font-size: 1.2rem;
       font-weight: 600;
       color: var(--text-dark);
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-hover) 100%);
       border: none;
       border-radius: 50px;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.35);
+      box-shadow: 0 4px 20px rgba(201, 168, 76, 0.35);
       transition: all 0.3s ease;
       -webkit-tap-highlight-color: transparent;
     }
@@ -313,7 +316,7 @@
     .progress-bar-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+      background: linear-gradient(90deg, var(--accent), var(--accent-dark));
       border-radius: 20px;
       transition: width 0.4s ease;
     }
@@ -353,7 +356,7 @@
       display: none;
       margin-top: 16px;
       font-size: 0.95rem;
-      color: var(--accent);
+      color: var(--accent-dark);
       text-decoration: underline;
       cursor: pointer;
       font-weight: 500;
@@ -362,7 +365,7 @@
     }
 
     .reset-link.visible { display: inline-block; }
-    .reset-link:hover { color: var(--accent-hover); }
+    .reset-link:hover { color: var(--gold); }
 
     /* ── Footer ── */
     .card-footer {
