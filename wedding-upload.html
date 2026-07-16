@@ -11,7 +11,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <style>
-    /* ── Design Tokens (mirrored from main site) ── */
     :root {
       --font-heading: 'Playfair Display', serif;
       --font-body: 'Outfit', sans-serif;
@@ -82,7 +81,7 @@
       border: 1px solid var(--glass-border);
       border-radius: 28px;
       box-shadow: var(--glass-shadow);
-      padding: 48px 32px 40px;
+      padding: 48px 28px 40px;
       text-align: center;
       animation: cardEntry 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
@@ -92,7 +91,6 @@
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* ── Decorative ring icon ── */
     .icon-rings {
       font-size: 3rem;
       margin-bottom: 8px;
@@ -121,88 +119,150 @@
       font-weight: 300;
     }
 
-    /* ── Drop zone ── */
-    .drop-zone {
-      border: 2px dashed rgba(212, 175, 55, 0.5);
-      border-radius: 20px;
-      padding: 40px 20px;
+    /* ── Big select button ── */
+    .select-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 20px 24px;
+      font-family: var(--font-body);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-light);
+      background: var(--text-dark);
+      border: none;
+      border-radius: 50px;
       cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
       transition: all 0.3s ease;
-      background: rgba(212, 175, 55, 0.04);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .select-btn:active {
+      transform: scale(0.97);
+    }
+
+    .select-btn .btn-icon {
+      font-size: 1.5rem;
+    }
+
+    .select-btn-hint {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+
+    /* Hidden file input */
+    #file-input {
+      display: none;
+    }
+
+    /* ── Thumbnail grid ── */
+    .preview-grid {
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .preview-grid.visible {
+      display: grid;
+    }
+
+    .thumb-wrapper {
       position: relative;
+      aspect-ratio: 1;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
     }
 
-    .drop-zone:hover,
-    .drop-zone.drag-over {
-      border-color: var(--accent);
-      background: rgba(212, 175, 55, 0.1);
-      transform: scale(1.02);
-    }
-
-    .drop-zone-icon {
-      font-size: 2.6rem;
-      margin-bottom: 12px;
+    .thumb-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: block;
     }
 
-    .drop-zone-text {
-      font-size: 1.1rem;
-      color: var(--text-dark);
-      font-weight: 500;
-    }
-
-    .drop-zone-hint {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 6px;
-    }
-
-    #file-input {
+    /* Per-photo status overlay */
+    .thumb-overlay {
       position: absolute;
       inset: 0;
-      width: 100%;
-      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.45);
       opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 14px;
+    }
+
+    .thumb-overlay.uploading,
+    .thumb-overlay.done,
+    .thumb-overlay.failed {
+      opacity: 1;
+    }
+
+    .thumb-overlay .overlay-icon {
+      font-size: 1.8rem;
+    }
+
+    /* Thumbnail spinner */
+    .thumb-spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Remove button on each thumb */
+    .thumb-remove {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      font-size: 1rem;
+      line-height: 26px;
+      text-align: center;
       cursor: pointer;
+      z-index: 2;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.2s;
     }
 
-    /* ── Preview ── */
-    .preview-area {
+    .thumb-remove:hover { background: rgba(200, 50, 50, 0.8); }
+
+    .photo-count {
       display: none;
-      margin-top: 24px;
-      animation: fadeUp 0.4s ease both;
-    }
-
-    .preview-area.visible { display: block; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .preview-thumb {
-      width: 100%;
-      max-height: 260px;
-      object-fit: cover;
-      border-radius: 16px;
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
-    }
-
-    .file-name {
-      font-size: 0.9rem;
+      margin-top: 16px;
+      font-size: 0.95rem;
       color: var(--text-muted);
-      margin-top: 10px;
-      word-break: break-all;
+      font-weight: 400;
     }
+
+    .photo-count.visible { display: block; }
 
     /* ── Upload button ── */
     .upload-btn {
       display: none;
       width: 100%;
-      margin-top: 24px;
-      padding: 16px 32px;
+      margin-top: 20px;
+      padding: 18px 32px;
       font-family: var(--font-body);
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       font-weight: 600;
       color: var(--text-dark);
       background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
@@ -211,19 +271,13 @@
       cursor: pointer;
       box-shadow: 0 4px 20px rgba(212, 175, 55, 0.35);
       transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .upload-btn.visible { display: block; }
 
-    .upload-btn:hover:not(:disabled) {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 30px rgba(212, 175, 55, 0.5);
-    }
-
     .upload-btn:active:not(:disabled) {
-      transform: translateY(-1px);
+      transform: scale(0.97);
     }
 
     .upload-btn:disabled {
@@ -231,8 +285,8 @@
       cursor: not-allowed;
     }
 
-    /* ── Spinner ── */
-    .spinner {
+    /* ── Inline spinner for upload button ── */
+    .btn-spinner {
       display: inline-block;
       width: 20px;
       height: 20px;
@@ -244,14 +298,30 @@
       margin-right: 8px;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    /* ── Progress bar ── */
+    .progress-bar-wrapper {
+      display: none;
+      margin-top: 16px;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: 20px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .progress-bar-wrapper.visible { display: block; }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+      border-radius: 20px;
+      transition: width 0.4s ease;
     }
 
     /* ── Status messages ── */
     .status-msg {
       display: none;
-      margin-top: 24px;
+      margin-top: 20px;
       padding: 16px 20px;
       border-radius: 16px;
       font-size: 1rem;
@@ -273,13 +343,12 @@
       border: 1px solid rgba(231, 76, 60, 0.25);
     }
 
-    .status-icon {
-      font-size: 1.3rem;
-      margin-right: 6px;
-      vertical-align: middle;
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── "Upload another" link ── */
+    /* ── Reset link ── */
     .reset-link {
       display: none;
       margin-top: 16px;
@@ -289,6 +358,7 @@
       cursor: pointer;
       font-weight: 500;
       transition: color 0.2s;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .reset-link.visible { display: inline-block; }
@@ -307,11 +377,14 @@
     /* ── Responsive ── */
     @media (max-width: 520px) {
       .upload-card {
-        padding: 36px 20px 32px;
+        padding: 36px 18px 32px;
         border-radius: 22px;
       }
       .upload-card h1 { font-size: 1.7rem; }
-      .drop-zone { padding: 32px 16px; }
+    }
+
+    @media (max-width: 360px) {
+      .preview-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -321,39 +394,44 @@
     <span class="icon-rings" aria-hidden="true">💍</span>
     <h1>Share Your Photos</h1>
     <p class="subtitle">
-      Snap a photo or choose one from your library — we'd love to see the day through your eyes!
+      Choose photos from your library — we'd love to see the day through your eyes!
     </p>
 
-    <!-- Drop zone / file picker -->
-    <div class="drop-zone" id="drop-zone">
-      <span class="drop-zone-icon" aria-hidden="true">📸</span>
-      <p class="drop-zone-text">Tap to take or choose a photo</p>
-      <p class="drop-zone-hint">or drag & drop an image here</p>
-      <input
-        type="file"
-        id="file-input"
-        accept="image/*"
-        capture="environment"
-        aria-label="Select a photo to upload"
-      >
-    </div>
+    <!-- Big select button -->
+    <button class="select-btn" id="select-btn" type="button">
+      <span class="btn-icon" aria-hidden="true">📸</span>
+      Choose Photos
+    </button>
+    <p class="select-btn-hint" id="select-hint">You can select multiple photos at once</p>
 
-    <!-- Image preview -->
-    <div class="preview-area" id="preview-area">
-      <img class="preview-thumb" id="preview-img" alt="Preview of selected photo">
-      <p class="file-name" id="file-name"></p>
-    </div>
+    <!-- Hidden file input — no capture so it opens photo library picker -->
+    <input
+      type="file"
+      id="file-input"
+      accept="image/*"
+      multiple
+      aria-label="Select photos to upload"
+    >
+
+    <!-- Thumbnail grid preview -->
+    <div class="preview-grid" id="preview-grid"></div>
+    <p class="photo-count" id="photo-count"></p>
 
     <!-- Upload action -->
     <button class="upload-btn" id="upload-btn" type="button">
-      Upload Photo
+      Upload Photos
     </button>
+
+    <!-- Progress bar -->
+    <div class="progress-bar-wrapper" id="progress-wrapper">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
 
     <!-- Status feedback -->
     <div class="status-msg" id="status-msg"></div>
 
     <!-- Reset -->
-    <span class="reset-link" id="reset-link">Upload another photo</span>
+    <span class="reset-link" id="reset-link">Upload more photos</span>
 
     <div class="card-footer">
       With love — thank you for celebrating with us! 🤍
@@ -362,83 +440,104 @@
 
   <script>
     // ═══════════════════════════════════════════════════════
-    // CONFIGURATION — Replace with your deployed Apps Script URL
+    // CONFIGURATION
     // ═══════════════════════════════════════════════════════
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx3smHc0KP5l_1NYHE6Pfwm75NsDNWSLL3bEMdfQQD-HRxHK4oVxcJ3mQTKPiEQXEDBFQ/exec';
-
-    // Maximum dimension (width or height) for the resized image
     const MAX_IMAGE_DIMENSION = 2048;
-
-    // JPEG quality for the resized output (0.0 – 1.0)
     const JPEG_QUALITY = 0.85;
 
     // ═══════════════════════════════════════════════════════
     // DOM References
     // ═══════════════════════════════════════════════════════
-    const dropZone    = document.getElementById('drop-zone');
-    const fileInput   = document.getElementById('file-input');
-    const previewArea = document.getElementById('preview-area');
-    const previewImg  = document.getElementById('preview-img');
-    const fileNameEl  = document.getElementById('file-name');
-    const uploadBtn   = document.getElementById('upload-btn');
-    const statusMsg   = document.getElementById('status-msg');
-    const resetLink   = document.getElementById('reset-link');
+    const selectBtn       = document.getElementById('select-btn');
+    const selectHint      = document.getElementById('select-hint');
+    const fileInput       = document.getElementById('file-input');
+    const previewGrid     = document.getElementById('preview-grid');
+    const photoCount      = document.getElementById('photo-count');
+    const uploadBtn       = document.getElementById('upload-btn');
+    const progressWrapper = document.getElementById('progress-wrapper');
+    const progressFill    = document.getElementById('progress-fill');
+    const statusMsg       = document.getElementById('status-msg');
+    const resetLink       = document.getElementById('reset-link');
 
-    let selectedFile = null;
-
-    // ═══════════════════════════════════════════════════════
-    // Drag & Drop Handlers
-    // ═══════════════════════════════════════════════════════
-    ['dragenter', 'dragover'].forEach(evt => {
-      dropZone.addEventListener(evt, e => {
-        e.preventDefault();
-        dropZone.classList.add('drag-over');
-      });
-    });
-
-    ['dragleave', 'drop'].forEach(evt => {
-      dropZone.addEventListener(evt, e => {
-        e.preventDefault();
-        dropZone.classList.remove('drag-over');
-      });
-    });
-
-    dropZone.addEventListener('drop', e => {
-      const file = e.dataTransfer.files[0];
-      if (file && file.type.startsWith('image/')) {
-        handleFileSelect(file);
-      }
-    });
+    let selectedFiles = []; // Array of File objects
 
     // ═══════════════════════════════════════════════════════
     // File Selection
     // ═══════════════════════════════════════════════════════
+    selectBtn.addEventListener('click', () => fileInput.click());
+
     fileInput.addEventListener('change', () => {
-      if (fileInput.files.length > 0) {
-        handleFileSelect(fileInput.files[0]);
-      }
+      if (fileInput.files.length === 0) return;
+
+      // Add new files to the existing selection
+      const newFiles = Array.from(fileInput.files);
+      selectedFiles = selectedFiles.concat(newFiles);
+
+      renderPreviews();
+      statusMsg.classList.remove('visible');
+      resetLink.classList.remove('visible');
     });
 
-    function handleFileSelect(file) {
-      selectedFile = file;
+    function renderPreviews() {
+      previewGrid.innerHTML = '';
 
-      // Show preview
-      const reader = new FileReader();
-      reader.onload = e => {
-        previewImg.src = e.target.result;
-        previewArea.classList.add('visible');
-        fileNameEl.textContent = file.name;
+      selectedFiles.forEach((file, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'thumb-wrapper';
+        wrapper.dataset.index = index;
+
+        const img = document.createElement('img');
+        img.alt = file.name;
+        const url = URL.createObjectURL(file);
+        img.src = url;
+        img.onload = () => URL.revokeObjectURL(url);
+
+        // Remove button
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'thumb-remove';
+        removeBtn.innerHTML = '✕';
+        removeBtn.setAttribute('aria-label', 'Remove ' + file.name);
+        removeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          selectedFiles.splice(index, 1);
+          renderPreviews();
+        });
+
+        // Status overlay (used during upload)
+        const overlay = document.createElement('div');
+        overlay.className = 'thumb-overlay';
+        overlay.id = 'overlay-' + index;
+
+        wrapper.appendChild(img);
+        wrapper.appendChild(removeBtn);
+        wrapper.appendChild(overlay);
+        previewGrid.appendChild(wrapper);
+      });
+
+      const count = selectedFiles.length;
+      if (count > 0) {
+        previewGrid.classList.add('visible');
+        photoCount.classList.add('visible');
+        photoCount.textContent = count + (count === 1 ? ' photo selected' : ' photos selected');
         uploadBtn.classList.add('visible');
-        statusMsg.classList.remove('visible');
-        resetLink.classList.remove('visible');
-      };
-      reader.readAsDataURL(file);
+        uploadBtn.textContent = count === 1 ? 'Upload Photo' : `Upload ${count} Photos`;
+        selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">➕</span> Add More Photos';
+        selectHint.style.display = 'none';
+      } else {
+        previewGrid.classList.remove('visible');
+        photoCount.classList.remove('visible');
+        uploadBtn.classList.remove('visible');
+        selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">📸</span> Choose Photos';
+        selectHint.style.display = '';
+      }
+
+      // Reset the input so the same files can be re-selected if needed
+      fileInput.value = '';
     }
 
     // ═══════════════════════════════════════════════════════
     // Image Resize via Canvas
-    // Scales the image so the longest side ≤ MAX_IMAGE_DIMENSION
-    // Returns a Base64 string (without the data:… prefix)
     // ═══════════════════════════════════════════════════════
     function resizeAndEncode(file) {
       return new Promise((resolve, reject) => {
@@ -446,7 +545,6 @@
         img.onload = () => {
           let { width, height } = img;
 
-          // Only scale down, never up
           if (width > MAX_IMAGE_DIMENSION || height > MAX_IMAGE_DIMENSION) {
             const ratio = Math.min(MAX_IMAGE_DIMENSION / width, MAX_IMAGE_DIMENSION / height);
             width  = Math.round(width * ratio);
@@ -456,87 +554,132 @@
           const canvas = document.createElement('canvas');
           canvas.width  = width;
           canvas.height = height;
-
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          // Export as JPEG data URL, then strip the prefix
           const dataUrl = canvas.toDataURL('image/jpeg', JPEG_QUALITY);
           const base64  = dataUrl.split(',')[1];
+          URL.revokeObjectURL(img.src);
           resolve(base64);
         };
-        img.onerror = () => reject(new Error('Failed to load image for resizing.'));
+        img.onerror = () => reject(new Error('Failed to load image.'));
         img.src = URL.createObjectURL(file);
       });
     }
 
     // ═══════════════════════════════════════════════════════
-    // Upload Handler
+    // Upload Handler — sequential, one at a time
     // ═══════════════════════════════════════════════════════
     uploadBtn.addEventListener('click', async () => {
-      if (!selectedFile) return;
+      if (selectedFiles.length === 0) return;
 
-      // UI → loading state
+      const total = selectedFiles.length;
+      let uploaded = 0;
+      let failed = 0;
+
+      // Lock UI
       uploadBtn.disabled = true;
-      uploadBtn.innerHTML = '<span class="spinner"></span> Uploading…';
+      uploadBtn.innerHTML = `<span class="btn-spinner"></span> Uploading 0/${total}…`;
+      selectBtn.style.display = 'none';
+      progressWrapper.classList.add('visible');
+      progressFill.style.width = '0%';
       statusMsg.classList.remove('visible');
 
-      try {
-        const base64Data = await resizeAndEncode(selectedFile);
+      // Hide all remove buttons during upload
+      document.querySelectorAll('.thumb-remove').forEach(b => b.style.display = 'none');
 
-        const payload = {
-          filename: selectedFile.name,
-          mimeType: 'image/jpeg',       // Always JPEG after canvas resize
-          data: base64Data
-        };
+      for (let i = 0; i < total; i++) {
+        const overlay = document.getElementById('overlay-' + i);
 
-        // CRITICAL: Use text/plain to avoid CORS preflight with Apps Script
-        const response = await fetch(APPS_SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload),
-          redirect: 'follow'            // Apps Script redirects on deploy
-        });
-
-        const result = await response.json();
-
-        if (result.status === 'success') {
-          showStatus('success', '✨ Photo uploaded — thank you!');
-          dropZone.style.display = 'none';
-          previewArea.classList.remove('visible');
-          uploadBtn.classList.remove('visible');
-          resetLink.classList.add('visible');
-        } else {
-          showStatus('error', `Something went wrong: ${result.message || 'Unknown error'}`);
+        // Show spinner on this thumbnail
+        if (overlay) {
+          overlay.innerHTML = '<div class="thumb-spinner"></div>';
+          overlay.className = 'thumb-overlay uploading';
         }
-      } catch (err) {
-        console.error('Upload failed:', err);
-        showStatus('error', 'Upload failed — please check your connection and try again.');
-      } finally {
-        uploadBtn.disabled = false;
-        uploadBtn.innerHTML = 'Upload Photo';
+
+        try {
+          const base64Data = await resizeAndEncode(selectedFiles[i]);
+
+          const payload = {
+            filename: selectedFiles[i].name,
+            mimeType: 'image/jpeg',
+            data: base64Data
+          };
+
+          const response = await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload),
+            redirect: 'follow'
+          });
+
+          const result = await response.json();
+
+          if (result.status === 'success') {
+            uploaded++;
+            if (overlay) {
+              overlay.innerHTML = '<span class="overlay-icon">✅</span>';
+              overlay.className = 'thumb-overlay done';
+            }
+          } else {
+            failed++;
+            if (overlay) {
+              overlay.innerHTML = '<span class="overlay-icon">❌</span>';
+              overlay.className = 'thumb-overlay failed';
+            }
+          }
+        } catch (err) {
+          console.error('Upload failed for', selectedFiles[i].name, err);
+          failed++;
+          if (overlay) {
+            overlay.innerHTML = '<span class="overlay-icon">❌</span>';
+            overlay.className = 'thumb-overlay failed';
+          }
+        }
+
+        // Update progress
+        const progress = Math.round(((i + 1) / total) * 100);
+        progressFill.style.width = progress + '%';
+        uploadBtn.innerHTML = `<span class="btn-spinner"></span> Uploading ${i + 1}/${total}…`;
       }
+
+      // Done
+      uploadBtn.classList.remove('visible');
+      progressWrapper.classList.remove('visible');
+
+      if (failed === 0) {
+        showStatus('success', `✨ ${uploaded} photo${uploaded !== 1 ? 's' : ''} uploaded — thank you!`);
+      } else {
+        showStatus('error', `${uploaded} uploaded, ${failed} failed — try those again.`);
+      }
+
+      resetLink.classList.add('visible');
     });
 
     // ═══════════════════════════════════════════════════════
     // Status & Reset
     // ═══════════════════════════════════════════════════════
     function showStatus(type, message) {
-      const icon = type === 'success' ? '✅' : '⚠️';
       statusMsg.className = `status-msg visible ${type}`;
-      statusMsg.innerHTML = `<span class="status-icon">${icon}</span> ${message}`;
+      statusMsg.textContent = message;
     }
 
     resetLink.addEventListener('click', () => {
-      // Reset everything for another upload
-      selectedFile = null;
+      selectedFiles = [];
       fileInput.value = '';
-      previewImg.src = '';
-      previewArea.classList.remove('visible');
+      previewGrid.innerHTML = '';
+      previewGrid.classList.remove('visible');
+      photoCount.classList.remove('visible');
       uploadBtn.classList.remove('visible');
+      uploadBtn.disabled = false;
+      uploadBtn.textContent = 'Upload Photos';
       statusMsg.classList.remove('visible');
       resetLink.classList.remove('visible');
-      dropZone.style.display = '';
+      progressWrapper.classList.remove('visible');
+      progressFill.style.width = '0%';
+      selectBtn.style.display = '';
+      selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">📸</span> Choose Photos';
+      selectHint.style.display = '';
     });
   </script>
 </body>
