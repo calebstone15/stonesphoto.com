@@ -362,6 +362,35 @@
     .reset-link.visible { display: inline-block; }
     .reset-link:hover { color: var(--gold); }
 
+    /* ── Gallery link ── */
+    .gallery-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      margin-top: 16px;
+      padding: 16px 24px;
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent-dark);
+      background: transparent;
+      border: 2px solid var(--accent);
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .gallery-link:active {
+      transform: scale(0.97);
+    }
+
+    .gallery-link .link-icon {
+      font-size: 1.2rem;
+    }
+
     /* ── Footer ── */
     .card-footer {
       margin-top: 32px;
@@ -430,6 +459,15 @@
 
     <!-- Reset -->
     <span class="reset-link" id="reset-link">Upload more photos</span>
+
+    <!-- Gallery link -->
+    <a class="gallery-link"
+       href="https://drive.google.com/drive/folders/1vUKNqnx5WmxusxlU1k4d4j0EO2pGvo1G"
+       target="_blank"
+       rel="noopener noreferrer">
+      <span class="link-icon" aria-hidden="true">🖼️</span>
+      View the Guest Album
+    </a>
 
     <div class="card-footer">
       Thank you for celebrating with Gunner & Perla! 🤍
