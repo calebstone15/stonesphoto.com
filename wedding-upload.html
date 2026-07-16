@@ -151,11 +151,6 @@
       font-size: 1.5rem;
     }
 
-    .select-btn-hint {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 12px;
-    }
 
     /* Hidden file input */
     #file-input {
@@ -395,9 +390,9 @@
 <body>
   <div class="upload-card">
     <span class="icon-rings" aria-hidden="true">💍</span>
-    <h1>Share Your Photos</h1>
+    <h1>Gunner & Perla</h1>
     <p class="subtitle">
-      Choose photos from your library — we'd love to see the day through your eyes!
+      Share your photos from our special day — we'd love to see it through your eyes!
     </p>
 
     <!-- Big select button -->
@@ -405,7 +400,7 @@
       <span class="btn-icon" aria-hidden="true">📸</span>
       Choose Photos
     </button>
-    <p class="select-btn-hint" id="select-hint">You can select multiple photos at once</p>
+
 
     <!-- Hidden file input — no capture so it opens photo library picker -->
     <input
@@ -437,7 +432,7 @@
     <span class="reset-link" id="reset-link">Upload more photos</span>
 
     <div class="card-footer">
-      With love — thank you for celebrating with us! 🤍
+      Thank you for celebrating with Gunner & Perla! 🤍
     </div>
   </div>
 
@@ -453,7 +448,7 @@
     // DOM References
     // ═══════════════════════════════════════════════════════
     const selectBtn       = document.getElementById('select-btn');
-    const selectHint      = document.getElementById('select-hint');
+
     const fileInput       = document.getElementById('file-input');
     const previewGrid     = document.getElementById('preview-grid');
     const photoCount      = document.getElementById('photo-count');
@@ -526,13 +521,13 @@
         uploadBtn.classList.add('visible');
         uploadBtn.textContent = count === 1 ? 'Upload Photo' : `Upload ${count} Photos`;
         selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">➕</span> Add More Photos';
-        selectHint.style.display = 'none';
+
       } else {
         previewGrid.classList.remove('visible');
         photoCount.classList.remove('visible');
         uploadBtn.classList.remove('visible');
         selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">📸</span> Choose Photos';
-        selectHint.style.display = '';
+
       }
 
       // Reset the input so the same files can be re-selected if needed
@@ -682,7 +677,7 @@
       progressFill.style.width = '0%';
       selectBtn.style.display = '';
       selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">📸</span> Choose Photos';
-      selectHint.style.display = '';
+
     });
   </script>
 </body>
