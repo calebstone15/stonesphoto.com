@@ -122,16 +122,23 @@
       font-weight: 300;
     }
 
-    /* ── Big select button ── */
+    /* ── Button row ── */
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    /* ── Big select buttons ── */
     .select-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      width: 100%;
-      padding: 20px 24px;
+      gap: 10px;
+      flex: 1;
+      padding: 18px 16px;
       font-family: var(--font-body);
-      font-size: 1.2rem;
+      font-size: 1.05rem;
       font-weight: 600;
       color: var(--text-light);
       background: var(--accent-dark);
@@ -148,7 +155,14 @@
     }
 
     .select-btn .btn-icon {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
+    }
+
+    .camera-btn {
+      background: transparent;
+      color: var(--accent-dark);
+      border: 2px solid var(--accent);
+      box-shadow: none;
     }
 
 
@@ -424,21 +438,21 @@
       Share your photos from our special day — we'd love to see it through your eyes!
     </p>
 
-    <!-- Big select button -->
-    <button class="select-btn" id="select-btn" type="button">
-      <span class="btn-icon" aria-hidden="true">📸</span>
-      Choose Photos
-    </button>
+    <!-- Button row: gallery + camera -->
+    <div class="btn-row" id="btn-row">
+      <button class="select-btn" id="select-btn" type="button">
+        <span class="btn-icon" aria-hidden="true">🖼️</span>
+        Choose Photos
+      </button>
+      <button class="select-btn camera-btn" id="camera-btn" type="button">
+        <span class="btn-icon" aria-hidden="true">📸</span>
+        Take Photo
+      </button>
+    </div>
 
-
-    <!-- Hidden file input — no capture so it opens photo library picker -->
-    <input
-      type="file"
-      id="file-input"
-      accept="image/*"
-      multiple
-      aria-label="Select photos to upload"
-    >
+    <!-- Hidden file inputs -->
+    <input type="file" id="file-input" accept="image/*" multiple aria-label="Select photos from library" style="display:none">
+    <input type="file" id="camera-input" accept="image/*" capture="environment" aria-label="Take a photo" style="display:none">
 
     <!-- Thumbnail grid preview -->
     <div class="preview-grid" id="preview-grid"></div>
@@ -486,6 +500,9 @@
     // DOM References
     // ═══════════════════════════════════════════════════════
     const selectBtn       = document.getElementById('select-btn');
+    const cameraBtn       = document.getElementById('camera-btn');
+    const btnRow          = document.getElementById('btn-row');
+    const cameraInput     = document.getElementById('camera-input');
 
     const fileInput       = document.getElementById('file-input');
     const previewGrid     = document.getElementById('preview-grid');
@@ -502,18 +519,20 @@
     // File Selection
     // ═══════════════════════════════════════════════════════
     selectBtn.addEventListener('click', () => fileInput.click());
+    cameraBtn.addEventListener('click', () => cameraInput.click());
 
-    fileInput.addEventListener('change', () => {
-      if (fileInput.files.length === 0) return;
-
-      // Add new files to the existing selection
-      const newFiles = Array.from(fileInput.files);
+    // Handle files from either input
+    function handleNewFiles(input) {
+      if (input.files.length === 0) return;
+      const newFiles = Array.from(input.files);
       selectedFiles = selectedFiles.concat(newFiles);
-
       renderPreviews();
       statusMsg.classList.remove('visible');
       resetLink.classList.remove('visible');
-    });
+    }
+
+    fileInput.addEventListener('change', () => handleNewFiles(fileInput));
+    cameraInput.addEventListener('change', () => handleNewFiles(cameraInput));
 
     function renderPreviews() {
       previewGrid.innerHTML = '';
@@ -558,14 +577,14 @@
         photoCount.textContent = count + (count === 1 ? ' photo selected' : ' photos selected');
         uploadBtn.classList.add('visible');
         uploadBtn.textContent = count === 1 ? 'Upload Photo' : `Upload ${count} Photos`;
-        selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">➕</span> Add More Photos';
-
+        selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">➕</span> Add More';
+        cameraBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">📸</span> Take More';
       } else {
         previewGrid.classList.remove('visible');
         photoCount.classList.remove('visible');
         uploadBtn.classList.remove('visible');
-        selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">📸</span> Choose Photos';
-
+        selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">🖼️</span> Choose Photos';
+        cameraBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">📸</span> Take Photo';
       }
 
       // Reset the input so the same files can be re-selected if needed
@@ -616,7 +635,7 @@
       // Lock UI
       uploadBtn.disabled = true;
       uploadBtn.innerHTML = `<span class="btn-spinner"></span> Uploading 0/${total}…`;
-      selectBtn.style.display = 'none';
+      btnRow.style.display = 'none';
       progressWrapper.classList.add('visible');
       progressFill.style.width = '0%';
       statusMsg.classList.remove('visible');
@@ -703,6 +722,7 @@
     resetLink.addEventListener('click', () => {
       selectedFiles = [];
       fileInput.value = '';
+      cameraInput.value = '';
       previewGrid.innerHTML = '';
       previewGrid.classList.remove('visible');
       photoCount.classList.remove('visible');
@@ -713,9 +733,9 @@
       resetLink.classList.remove('visible');
       progressWrapper.classList.remove('visible');
       progressFill.style.width = '0%';
-      selectBtn.style.display = '';
-      selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">📸</span> Choose Photos';
-
+      btnRow.style.display = '';
+      selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">🖼️</span> Choose Photos';
+      cameraBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">📸</span> Take Photo';
     });
   </script>
 </body>
