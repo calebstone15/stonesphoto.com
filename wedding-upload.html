@@ -94,6 +94,17 @@
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
+    .icon-rings {
+      font-size: 3rem;
+      margin-bottom: 8px;
+      display: block;
+      animation: ringPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes ringPulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.08); }
+    }
 
     .upload-card h1 {
       font-family: var(--font-heading);
@@ -428,6 +439,7 @@
 <body>
   <div class="upload-card">
 
+    <span class="icon-rings" aria-hidden="true">💍</span>
     <h1>Gunner & Perla</h1>
     <p class="subtitle">
       Share your photos from our special day — we'd love to see it through your eyes!
@@ -477,7 +489,7 @@
     </a>
 
     <div class="card-footer">
-      Thank you for celebrating with Gunner & Perla!
+      Thank you for celebrating with Gunner & Perla! 🤍
     </div>
   </div>
 
@@ -666,13 +678,13 @@
           if (result.status === 'success') {
             uploaded++;
             if (overlay) {
-              overlay.innerHTML = '<span class="overlay-icon">✓</span>';
+              overlay.innerHTML = '<span class="overlay-icon">✅</span>';
               overlay.className = 'thumb-overlay done';
             }
           } else {
             failed++;
             if (overlay) {
-              overlay.innerHTML = '<span class="overlay-icon">✗</span>';
+              overlay.innerHTML = '<span class="overlay-icon">❌</span>';
               overlay.className = 'thumb-overlay failed';
             }
           }
@@ -696,7 +708,7 @@
       progressWrapper.classList.remove('visible');
 
       if (failed === 0) {
-        showStatus('success', `${uploaded} photo${uploaded !== 1 ? 's' : ''} uploaded — thank you!`);
+        showStatus('success', `✨ ${uploaded} photo${uploaded !== 1 ? 's' : ''} uploaded — thank you!`);
       } else {
         showStatus('error', `${uploaded} uploaded, ${failed} failed — try those again.`);
       }
