@@ -94,17 +94,6 @@
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    .icon-rings {
-      font-size: 3rem;
-      margin-bottom: 8px;
-      display: block;
-      animation: ringPulse 3s ease-in-out infinite;
-    }
-
-    @keyframes ringPulse {
-      0%, 100% { transform: scale(1); }
-      50%      { transform: scale(1.08); }
-    }
 
     .upload-card h1 {
       font-family: var(--font-heading);
@@ -403,6 +392,12 @@
 
     .gallery-link .link-icon {
       font-size: 1.2rem;
+      display: none;
+    }
+
+    .gallery-link {
+      background: rgba(139, 173, 196, 0.12);
+      border-color: rgba(139, 173, 196, 0.3);
     }
 
     /* ── Footer ── */
@@ -432,7 +427,7 @@
 
 <body>
   <div class="upload-card">
-    <span class="icon-rings" aria-hidden="true">💍</span>
+
     <h1>Gunner & Perla</h1>
     <p class="subtitle">
       Share your photos from our special day — we'd love to see it through your eyes!
@@ -441,11 +436,9 @@
     <!-- Button row: gallery + camera -->
     <div class="btn-row" id="btn-row">
       <button class="select-btn" id="select-btn" type="button">
-        <span class="btn-icon" aria-hidden="true">🖼️</span>
         Choose Photos
       </button>
       <button class="select-btn camera-btn" id="camera-btn" type="button">
-        <span class="btn-icon" aria-hidden="true">📸</span>
         Take Photo
       </button>
     </div>
@@ -479,12 +472,12 @@
        href="https://drive.google.com/drive/folders/1vUKNqnx5WmxusxlU1k4d4j0EO2pGvo1G"
        target="_blank"
        rel="noopener noreferrer">
-      <span class="link-icon" aria-hidden="true">🖼️</span>
+      <span class="link-icon" aria-hidden="true"></span>
       View the Guest Album
     </a>
 
     <div class="card-footer">
-      Thank you for celebrating with Gunner & Perla! 🤍
+      Thank you for celebrating with Gunner & Perla!
     </div>
   </div>
 
@@ -577,14 +570,14 @@
         photoCount.textContent = count + (count === 1 ? ' photo selected' : ' photos selected');
         uploadBtn.classList.add('visible');
         uploadBtn.textContent = count === 1 ? 'Upload Photo' : `Upload ${count} Photos`;
-        selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">➕</span> Add More';
-        cameraBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">📸</span> Take More';
+        selectBtn.innerHTML = 'Add More';
+        cameraBtn.innerHTML = 'Take More';
       } else {
         previewGrid.classList.remove('visible');
         photoCount.classList.remove('visible');
         uploadBtn.classList.remove('visible');
-        selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">🖼️</span> Choose Photos';
-        cameraBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">📸</span> Take Photo';
+        selectBtn.innerHTML = 'Choose Photos';
+        cameraBtn.innerHTML = 'Take Photo';
       }
 
       // Reset the input so the same files can be re-selected if needed
@@ -673,13 +666,13 @@
           if (result.status === 'success') {
             uploaded++;
             if (overlay) {
-              overlay.innerHTML = '<span class="overlay-icon">✅</span>';
+              overlay.innerHTML = '<span class="overlay-icon">✓</span>';
               overlay.className = 'thumb-overlay done';
             }
           } else {
             failed++;
             if (overlay) {
-              overlay.innerHTML = '<span class="overlay-icon">❌</span>';
+              overlay.innerHTML = '<span class="overlay-icon">✗</span>';
               overlay.className = 'thumb-overlay failed';
             }
           }
@@ -687,7 +680,7 @@
           console.error('Upload failed for', selectedFiles[i].name, err);
           failed++;
           if (overlay) {
-            overlay.innerHTML = '<span class="overlay-icon">❌</span>';
+            overlay.innerHTML = '<span class="overlay-icon">✗</span>';
             overlay.className = 'thumb-overlay failed';
           }
         }
@@ -703,7 +696,7 @@
       progressWrapper.classList.remove('visible');
 
       if (failed === 0) {
-        showStatus('success', `✨ ${uploaded} photo${uploaded !== 1 ? 's' : ''} uploaded — thank you!`);
+        showStatus('success', `${uploaded} photo${uploaded !== 1 ? 's' : ''} uploaded — thank you!`);
       } else {
         showStatus('error', `${uploaded} uploaded, ${failed} failed — try those again.`);
       }
@@ -734,8 +727,8 @@
       progressWrapper.classList.remove('visible');
       progressFill.style.width = '0%';
       btnRow.style.display = '';
-      selectBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">🖼️</span> Choose Photos';
-      cameraBtn.innerHTML = '<span class="btn-icon" aria-hidden="true">📸</span> Take Photo';
+      selectBtn.innerHTML = 'Choose Photos';
+      cameraBtn.innerHTML = 'Take Photo';
     });
   </script>
 </body>
