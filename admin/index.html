@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-M2SYJ5X13M"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-M2SYJ5X13M');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Stone's Photos</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/x-icon" href="../Websitelogo.ico">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+
+    :root {
+      --font-heading: 'Playfair Display', serif;
+      --font-body: 'Outfit', sans-serif;
+      --accent: #d4af37;
+      --accent-hover: #f1c40f;
+      --accent-dim: rgba(212, 175, 55, 0.15);
+      --bg-dark: #0a0a0f;
+      --bg-card: rgba(255, 255, 255, 0.06);
+      --bg-card-hover: rgba(255, 255, 255, 0.1);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(212, 175, 55, 0.3);
+      --text-primary: #f5f5f5;
+      --text-secondary: rgba(255, 255, 255, 0.6);
+      --text-muted: rgba(255, 255, 255, 0.35);
+      --glass-blur: blur(20px);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --success: #22c55e;
+      --danger: #ef4444;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Background gradient mesh */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(30, 30, 60, 0.3) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ============ LOGIN SCREEN ============ */
+    #login-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      background: var(--bg-dark);
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    #login-screen::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse at 30% 40%, rgba(212, 175, 55, 0.1) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 60%, rgba(212, 175, 55, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    #login-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .login-card {
+      position: relative;
+      background: var(--bg-card);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      animation: loginSlideUp 0.6s ease-out;
+    }
+
+    @keyframes loginSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+      20%, 40%, 60%, 80% { transform: translateX(6px); }
+    }
+
+    .login-card.shake { animation: shake 0.5s ease; }
+
+    .login-logo {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .login-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 36px;
+      font-weight: 300;
+    }
+
+    .login-input-wrap {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .login-input-wrap input {
+      width: 100%;
+      padding: 16px 50px 16px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .login-input-wrap input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+    }
+
+    .login-input-wrap input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 4px;
+      transition: color 0.2s ease;
+    }
+
+    .toggle-password:hover { color: var(--text-secondary); }
+
+    .login-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--accent), #b8860b);
+      color: #0a0a0f;
+      border: none;
+      border-radius: 14px;
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.35);
+      background: linear-gradient(135deg, var(--accent-hover), var(--accent));
+    }
+
+    .login-btn:active { transform: translateY(0); }
+
+    .login-error {
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-top: 16px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      height: 20px;
+    }
+
+    .login-error.visible { opacity: 1; }
+
+    /* ============ DASHBOARD ============ */
+    #dashboard {
+      display: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    #dashboard.visible { display: block; }
+
+    .dash-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 32px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .dash-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .dash-header-left h1 {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .dash-header-left .badge {
+      background: var(--accent-dim);
+      color: var(--accent);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .dash-header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-btn {
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+    }
+
+    .header-btn:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+      border-color: var(--border-hover);
+    }
+
+    .header-btn.danger:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .header-btn.accent {
+      background: var(--accent-dim);
+      color: var(--accent);
+      border-color: rgba(212, 175, 55, 0.2);
+    }
+
+    .header-btn.accent:hover {
+      background: rgba(212, 175, 55, 0.25);
+    }
+
+    .dash-content {
+      padding: 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .last-updated {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+    }
+
+    /* Overview Cards */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .stat-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .stat-card:hover::before { opacity: 1; }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .stat-value {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-trend {
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-trend.up { color: var(--success); }
+    .stat-trend.down { color: var(--danger); }
+    .stat-trend.neutral { color: var(--text-muted); }
+
+    /* Charts */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .chart-card {
+      background: var(--bg-card);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: all 0.3s ease;
+    }
+
+    .chart-card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .chart-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+    }
+
+    .chart-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .chart-container.line-chart { height: 300px; }
+    .chart-container.bar-chart { height: 300px; }
+    .chart-container.doughnut-chart { height: 280px; max-width: 280px; margin: 0 auto; }
+
+    /* Tables */
+    .table-card {
+      background: var(--bg-card);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 32px;
+      transition: all 0.3s ease;
+    }
+
+    .table-card:hover { border-color: var(--border-hover); }
+
+    .table-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 12px 16px;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table td {
+      padding: 14px 16px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      transition: background 0.2s ease;
+    }
+
+    .data-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .data-table td:first-child { border-radius: 8px 0 0 8px; }
+    .data-table td:last-child { border-radius: 0 8px 8px 0; }
+
+    .device-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .device-badge.desktop {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+    }
+
+    .device-badge.mobile {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+    }
+
+    .device-badge.tablet {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+    }
+
+    .referrer-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .referrer-bar-fill {
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--accent), rgba(212, 175, 55, 0.3));
+      transition: width 0.6s ease;
+    }
+
+    .tables-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .empty-state p {
+      font-size: 0.95rem;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .stat-card:nth-child(1) { animation: fadeInUp 0.5s ease 0.1s both; }
+    .stat-card:nth-child(2) { animation: fadeInUp 0.5s ease 0.2s both; }
+    .stat-card:nth-child(3) { animation: fadeInUp 0.5s ease 0.3s both; }
+    .stat-card:nth-child(4) { animation: fadeInUp 0.5s ease 0.4s both; }
+    .chart-card { animation: fadeInUp 0.5s ease 0.3s both; }
+    .table-card { animation: fadeInUp 0.5s ease 0.4s both; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .overview-grid { grid-template-columns: repeat(2, 1fr); }
+      .charts-grid { grid-template-columns: 1fr; }
+      .tables-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .dash-header {
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px 20px;
+      }
+      .dash-header-right { flex-wrap: wrap; justify-content: center; }
+      .dash-content { padding: 20px 16px; }
+      .stat-value { font-size: 1.8rem; }
+      .login-card { margin: 20px; padding: 36px 28px; }
+    }
+
+    @media (max-width: 480px) {
+      .overview-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen">
+    <div class="login-card" id="login-card">
+      <div class="login-logo">Stone's Photos</div>
+      <div class="login-subtitle">Admin Dashboard</div>
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="login-input-wrap">
+          <input type="password" id="login-password" placeholder="Enter password" autocomplete="off" autofocus>
+          <button type="button" class="toggle-password" onclick="togglePassword()" aria-label="Toggle password visibility">👁</button>
+        </div>
+        <button type="submit" class="login-btn">Access Dashboard</button>
+      </form>
+      <div class="login-error" id="login-error">Incorrect password. Please try again.</div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard">
+    <div class="dash-header">
+      <div class="dash-header-left">
+        <h1>Analytics</h1>
+        <span class="badge">Live</span>
+      </div>
+      <div class="dash-header-right">
+        <button class="header-btn accent" onclick="exportData()">↓ Export JSON</button>
+        <button class="header-btn danger" onclick="clearData()">Clear Data</button>
+        <button class="header-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="dash-content">
+      <div class="last-updated">
+        <span class="pulse-dot"></span>
+        <span id="last-updated-text">Auto-refreshes every 30s</span>
+      </div>
+
+      <!-- Overview Cards -->
+      <div class="overview-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Page Views</div>
+          <div class="stat-value" id="stat-views">0</div>
+          <div class="stat-trend neutral" id="trend-views">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Unique Visitors</div>
+          <div class="stat-value" id="stat-visitors">0</div>
+          <div class="stat-trend neutral" id="trend-visitors">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Session Duration</div>
+          <div class="stat-value" id="stat-duration">0s</div>
+          <div class="stat-trend neutral" id="trend-duration">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pages / Session</div>
+          <div class="stat-value" id="stat-pps">0</div>
+          <div class="stat-trend neutral" id="trend-pps">—</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>Traffic Over Time</h3>
+          <div class="chart-container line-chart">
+            <canvas id="trafficChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3>Device Breakdown</h3>
+          <div class="chart-container doughnut-chart">
+            <canvas id="deviceChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page Popularity -->
+      <div class="chart-card" style="margin-bottom: 32px;">
+        <h3>Page Popularity</h3>
+        <div class="chart-container bar-chart">
+          <canvas id="pageChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Tables Row -->
+      <div class="tables-grid">
+        <div class="table-card">
+          <h3>Referrer Sources</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Source</th>
+                <th>Visits</th>
+                <th>Share</th>
+              </tr>
+            </thead>
+            <tbody id="referrer-body"></tbody>
+          </table>
+        </div>
+        <div class="table-card">
+          <h3>Recent Visitors</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Page</th>
+                <th>Device</th>
+              </tr>
+            </thead>
+            <tbody id="recent-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../analytics.js"></script>
+  <script>
+    // ============ AUTH ============
+    const PASSWORD_HASH = '428d5aa5f82a5ebf6c4292b471ee9494538bc2a73a1d391e20083fc35d59e952';
+
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const pw = document.getElementById('login-password').value;
+      const hash = await sha256(pw);
+
+      if (hash === PASSWORD_HASH) {
+        sessionStorage.setItem('sp_admin_auth', 'true');
+        showDashboard();
+      } else {
+        const card = document.getElementById('login-card');
+        const err = document.getElementById('login-error');
+        card.classList.remove('shake');
+        void card.offsetWidth; // trigger reflow
+        card.classList.add('shake');
+        err.classList.add('visible');
+        document.getElementById('login-password').value = '';
+        document.getElementById('login-password').focus();
+      }
+    }
+
+    function togglePassword() {
+      const input = document.getElementById('login-password');
+      const btn = document.querySelector('.toggle-password');
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁';
+      }
+    }
+
+    function logout() {
+      sessionStorage.removeItem('sp_admin_auth');
+      document.getElementById('dashboard').classList.remove('visible');
+      document.getElementById('login-screen').classList.remove('hidden');
+      document.getElementById('login-password').value = '';
+      document.getElementById('login-error').classList.remove('visible');
+    }
+
+    function showDashboard() {
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('dashboard').classList.add('visible');
+      loadDashboard();
+    }
+
+    // Check session on load
+    if (sessionStorage.getItem('sp_admin_auth') === 'true') {
+      showDashboard();
+    }
+
+    // ============ DASHBOARD DATA ============
+    const STORAGE_KEY = 'sp_analytics_events';
+    let trafficChartInstance = null;
+    let deviceChartInstance = null;
+    let pageChartInstance = null;
+
+    function getEvents() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      } catch { return []; }
+    }
+
+    function loadDashboard() {
+      const events = getEvents();
+      const now = Date.now();
+
+      // ---- Overview Stats ----
+      document.getElementById('stat-views').textContent = events.length.toLocaleString();
+
+      const uniqueVisitors = new Set(events.map(e => e.visitorId)).size;
+      document.getElementById('stat-visitors').textContent = uniqueVisitors.toLocaleString();
+
+      // Session duration: group events by sessionId, compute avg duration
+      const sessions = {};
+      events.forEach(e => {
+        if (!sessions[e.sessionId]) sessions[e.sessionId] = { start: e.sessionStart, lastActivity: e.timestamp, pages: 0 };
+        sessions[e.sessionId].lastActivity = Math.max(sessions[e.sessionId].lastActivity, e.timestamp);
+        sessions[e.sessionId].pages = Math.max(sessions[e.sessionId].pages, e.pagesViewedInSession || 1);
+      });
+
+      const sessionList = Object.values(sessions);
+      const avgDuration = sessionList.length > 0
+        ? sessionList.reduce((sum, s) => sum + (s.lastActivity - s.start), 0) / sessionList.length
+        : 0;
+      document.getElementById('stat-duration').textContent = formatDuration(avgDuration);
+
+      const avgPPS = sessionList.length > 0
+        ? (sessionList.reduce((sum, s) => sum + s.pages, 0) / sessionList.length).toFixed(1)
+        : '0';
+      document.getElementById('stat-pps').textContent = avgPPS;
+
+      // Trends (compare last 7 days vs prior 7 days)
+      const oneWeek = 7 * 24 * 60 * 60 * 1000;
+      const recentEvents = events.filter(e => e.timestamp > now - oneWeek);
+      const priorEvents = events.filter(e => e.timestamp > now - 2 * oneWeek && e.timestamp <= now - oneWeek);
+      setTrend('trend-views', recentEvents.length, priorEvents.length);
+      setTrend('trend-visitors',
+        new Set(recentEvents.map(e => e.visitorId)).size,
+        new Set(priorEvents.map(e => e.visitorId)).size
+      );
+
+      // ---- Traffic Over Time (last 30 days) ----
+      renderTrafficChart(events, now);
+
+      // ---- Device Breakdown ----
+      renderDeviceChart(events);
+
+      // ---- Page Popularity ----
+      renderPageChart(events);
+
+      // ---- Referrer Sources ----
+      renderReferrerTable(events);
+
+      // ---- Recent Visitors ----
+      renderRecentTable(events);
+
+      // Update timestamp
+      document.getElementById('last-updated-text').textContent =
+        `Last updated: ${new Date().toLocaleTimeString()} · Auto-refreshes every 30s`;
+    }
+
+    function formatDuration(ms) {
+      const sec = Math.floor(ms / 1000);
+      if (sec < 60) return sec + 's';
+      const min = Math.floor(sec / 60);
+      const remainder = sec % 60;
+      if (min < 60) return min + 'm ' + remainder + 's';
+      const hr = Math.floor(min / 60);
+      return hr + 'h ' + (min % 60) + 'm';
+    }
+
+    function setTrend(elementId, current, previous) {
+      const el = document.getElementById(elementId);
+      if (previous === 0 && current === 0) {
+        el.className = 'stat-trend neutral';
+        el.textContent = 'No data yet';
+        return;
+      }
+      if (previous === 0) {
+        el.className = 'stat-trend up';
+        el.textContent = '↑ New';
+        return;
+      }
+      const change = ((current - previous) / previous * 100).toFixed(0);
+      if (change > 0) {
+        el.className = 'stat-trend up';
+        el.textContent = `↑ ${change}% vs last week`;
+      } else if (change < 0) {
+        el.className = 'stat-trend down';
+        el.textContent = `↓ ${Math.abs(change)}% vs last week`;
+      } else {
+        el.className = 'stat-trend neutral';
+        el.textContent = '→ No change vs last week';
+      }
+    }
+
+    // ---- Charts ----
+    const chartColors = {
+      gold: 'rgba(212, 175, 55, 1)',
+      goldFade: 'rgba(212, 175, 55, 0.1)',
+      blue: 'rgba(96, 165, 250, 1)',
+      purple: 'rgba(192, 132, 252, 1)',
+      green: 'rgba(74, 222, 128, 1)',
+      gridLine: 'rgba(255, 255, 255, 0.05)',
+      tickText: 'rgba(255, 255, 255, 0.35)',
+    };
+
+    Chart.defaults.color = chartColors.tickText;
+    Chart.defaults.font.family = "'Outfit', sans-serif";
+
+    function renderTrafficChart(events, now) {
+      const days = 30;
+      const labels = [];
+      const data = [];
+
+      for (let i = days - 1; i >= 0; i--) {
+        const dayStart = new Date(now - i * 86400000);
+        dayStart.setHours(0, 0, 0, 0);
+        const dayEnd = new Date(dayStart.getTime() + 86400000);
+        const label = dayStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        labels.push(label);
+        data.push(events.filter(e => e.timestamp >= dayStart.getTime() && e.timestamp < dayEnd.getTime()).length);
+      }
+
+      const ctx = document.getElementById('trafficChart').getContext('2d');
+      if (trafficChartInstance) trafficChartInstance.destroy();
+
+      trafficChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Page Views',
+            data,
+            borderColor: chartColors.gold,
+            backgroundColor: chartColors.goldFade,
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 0,
+            pointHitRadius: 10,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: chartColors.gold,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(10, 10, 15, 0.9)',
+              borderColor: 'rgba(255, 255, 255, 0.1)',
+              borderWidth: 1,
+              cornerRadius: 10,
+              padding: 12,
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: chartColors.gridLine },
+              ticks: { maxTicksLimit: 8, font: { size: 11 } }
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: chartColors.gridLine },
+              ticks: { font: { size: 11 }, stepSize: 1 }
+            }
+          }
+        }
+      });
+    }
+
+    function renderDeviceChart(events) {
+      const devices = { desktop: 0, mobile: 0, tablet: 0 };
+      events.forEach(e => { devices[e.device] = (devices[e.device] || 0) + 1; });
+
+      const ctx = document.getElementById('deviceChart').getContext('2d');
+      if (deviceChartInstance) deviceChartInstance.destroy();
+
+      deviceChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Desktop', 'Mobile', 'Tablet'],
+          datasets: [{
+            data: [devices.desktop, devices.mobile, devices.tablet],
+            backgroundColor: [chartColors.blue, chartColors.purple, chartColors.green],
+            borderColor: 'rgba(10, 10, 15, 0.8)',
+            borderWidth: 3,
+            hoverOffset: 8,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '65%',
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { padding: 16, usePointStyle: true, pointStyleWidth: 10, font: { size: 12 } }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(10, 10, 15, 0.9)',
+              borderColor: 'rgba(255, 255, 255, 0.1)',
+              borderWidth: 1,
+              cornerRadius: 10,
+              padding: 12,
+            }
+          }
+        }
+      });
+    }
+
+    function renderPageChart(events) {
+      const pages = {};
+      events.forEach(e => {
+        let name = e.url || '/';
+        // Clean up path names for display
+        name = name.replace(/\.html$/, '').replace(/^\//, '') || 'Home';
+        if (name === 'index') name = 'Home';
+        pages[name] = (pages[name] || 0) + 1;
+      });
+
+      const sorted = Object.entries(pages).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      const labels = sorted.map(s => s[0]);
+      const data = sorted.map(s => s[1]);
+
+      const barColors = labels.map((_, i) => {
+        const alpha = 1 - (i * 0.1);
+        return `rgba(212, 175, 55, ${Math.max(alpha, 0.3)})`;
+      });
+
+      const ctx = document.getElementById('pageChart').getContext('2d');
+      if (pageChartInstance) pageChartInstance.destroy();
+
+      pageChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Views',
+            data,
+            backgroundColor: barColors,
+            borderRadius: 8,
+            borderSkipped: false,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: 'y',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(10, 10, 15, 0.9)',
+              borderColor: 'rgba(255, 255, 255, 0.1)',
+              borderWidth: 1,
+              cornerRadius: 10,
+              padding: 12,
+            }
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              grid: { color: chartColors.gridLine },
+              ticks: { font: { size: 11 }, stepSize: 1 }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { size: 12 } }
+            }
+          }
+        }
+      });
+    }
+
+    function renderReferrerTable(events) {
+      const refs = {};
+      events.forEach(e => {
+        let source = e.referrer || 'Direct';
+        if (source === 'Direct' || source === '') {
+          source = 'Direct';
+        } else {
+          try {
+            source = new URL(source).hostname.replace('www.', '');
+          } catch { /* keep as-is */ }
+        }
+        refs[source] = (refs[source] || 0) + 1;
+      });
+
+      const sorted = Object.entries(refs).sort((a, b) => b[1] - a[1]).slice(0, 10);
+      const maxCount = sorted.length > 0 ? sorted[0][1] : 1;
+      const total = events.length || 1;
+      const tbody = document.getElementById('referrer-body');
+
+      if (sorted.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:30px;">No data yet</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = sorted.map(([source, count]) => `
+        <tr>
+          <td>${escapeHtml(source)}</td>
+          <td>${count}</td>
+          <td>
+            <div class="referrer-bar">
+              <div class="referrer-bar-fill" style="width: ${(count / maxCount) * 100}px;"></div>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">${((count / total) * 100).toFixed(1)}%</span>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderRecentTable(events) {
+      const recent = events.slice(-20).reverse();
+      const tbody = document.getElementById('recent-body');
+
+      if (recent.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:30px;">No visits recorded yet</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = recent.map(e => {
+        const time = new Date(e.timestamp);
+        const timeStr = time.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' +
+                       time.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        let page = (e.url || '/').replace(/\.html$/, '').replace(/^\//, '') || 'Home';
+        if (page === 'index') page = 'Home';
+        return `
+          <tr>
+            <td style="white-space:nowrap;font-size:0.8rem;">${timeStr}</td>
+            <td>${escapeHtml(page)}</td>
+            <td><span class="device-badge ${e.device}">${e.device}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    // ---- Actions ----
+    function exportData() {
+      const events = getEvents();
+      const blob = new Blob([JSON.stringify(events, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `stonesphotos-analytics-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function clearData() {
+      if (confirm('Are you sure you want to clear all analytics data? This cannot be undone.')) {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem('sp_visitor_id');
+        loadDashboard();
+      }
+    }
+
+    // Auto-refresh every 30 seconds
+    setInterval(() => {
+      if (document.getElementById('dashboard').classList.contains('visible')) {
+        loadDashboard();
+      }
+    }, 30000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="myChart"></canvas>
+    <script>
+        const ctx = document.getElementById('myChart');
+        new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Test',
+                    data: [{x: NaN, y: 0}, {x: 0, y: 10}, {x: 1, y: 20}],
+                    showLine: true
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
