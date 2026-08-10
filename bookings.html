@@ -273,6 +273,15 @@
                     </div>
 
                     <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 500;">
+                            <input type="checkbox" id="raw-files" name="raw-files"
+                                style="width: 20px; height: 20px; accent-color: #2193b0; cursor: pointer;">
+                            Include RAW files (free)
+                        </label>
+                        <p style="font-size: 0.85rem; color: #666; margin-top: 6px; padding-left: 30px;">14-bit 45mp RAW files for maximum editing flexibility.</p>
+                    </div>
+
+                    <div class="form-group">
                         <label for="notes">Additional Notes</label>
                         <textarea id="notes" name="notes"
                             placeholder="Please provide any additional details about your photoshoot"
@@ -446,6 +455,7 @@
                         alternative_date: document.getElementById('alternative-date').value || "Not provided",
                         location: document.getElementById('location').value,
                         film_photography: document.getElementById('film-photography').checked ? "Yes (+$75)" : "No",
+                        raw_files: document.getElementById('raw-files').checked ? "Yes" : "No",
                         notes: document.getElementById('notes').value || "No additional notes"
                     };
 
