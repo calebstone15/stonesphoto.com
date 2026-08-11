@@ -747,34 +747,35 @@
         });
       }
 
-      // Call lazy load on scroll and resize
-      window.addEventListener('scroll', lazyLoadGalleryImages);
-      window.addEventListener('resize', lazyLoadGalleryImages);
-
-      // Initial call for images that might be visible
+      // ⚡ Bolt: No longer attaching scroll/resize listeners for lazy loading.
+      // Modern browsers handle loading="lazy" natively and efficiently.
+      // Just set the attribute once on DOM load.
       lazyLoadGalleryImages();
     });
 
-    // Scroll animation - show sections when scrolled into view
-    function checkScroll() {
+    // ⚡ Bolt: Replaced synchronous scroll listener calling getBoundingClientRect()
+    // with IntersectionObserver to prevent layout thrashing and main thread blocking.
+    document.addEventListener('DOMContentLoaded', function() {
       const sections = document.querySelectorAll('.gallery-section');
 
-      sections.forEach(section => {
-        const sectionTop = section.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
-
-        // Increase threshold to 1.2 so it triggers sooner without scrolling
-        if (sectionTop < windowHeight * 1.2) {
-          section.classList.add('visible');
-        }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            // Unobserve once visible to save resources
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        // Equivalent to checking if top is within 1.2x of viewport height
+        rootMargin: "0px 0px 20% 0px",
+        threshold: 0
       });
-    }
 
-    // Check scroll position immediately and on scroll
-    document.addEventListener('DOMContentLoaded', checkScroll);
-    window.addEventListener('scroll', checkScroll);
-    // Initial check just in case DOM is already loaded
-    checkScroll();
+      sections.forEach(section => {
+        observer.observe(section);
+      });
+    });
   </script>
 
   <!-- Lightbox Modal -->
