@@ -171,20 +171,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightboxImg = document.getElementById('lightboxImg');
 
     if (lightbox && galleryItems.length > 0) {
+        // Add tabindex to the lightbox so it can receive focus
+        lightbox.setAttribute('tabindex', '-1');
+
         galleryItems.forEach(item => {
+            // Make gallery items keyboard focusable and identify them as buttons
+            item.setAttribute('tabindex', '0');
+            item.setAttribute('role', 'button');
+            item.setAttribute('aria-label', 'View full size image');
+
             item.addEventListener('click', () => {
                 const img = item.querySelector('img');
                 if (img) {
+                    // Store the focused item to return focus later
+                    window.lastFocusedGalleryItem = item;
+
                     let highResSrc = img.src.split('?')[0];
                     lightboxImg.removeAttribute('srcset');
                     lightboxImg.removeAttribute('sizes');
                     lightboxImg.src = highResSrc;
                     lightbox.style.display = "block";
                     document.body.style.overflow = "hidden"; // Prevent scrolling
+
+                    // Move focus to the lightbox
+                    lightbox.focus();
                 }
             });
 
-            // Add keyboard accessibility
+            // Handle keyboard accessibility (Enter/Space to activate fake button)
             item.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -196,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add escape key to close
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && lightbox.style.display === "block") {
-                closeLightbox();
+                window.closeLightbox();
             }
         });
     }
@@ -207,5 +221,12 @@ window.closeLightbox = function() {
     if (lightbox) {
         lightbox.style.display = "none";
         document.body.style.overflow = "auto";
+
+        // Restore focus to the last clicked gallery item
+        if (window.lastFocusedGalleryItem) {
+            window.lastFocusedGalleryItem.focus();
+            // Clear the reference
+            window.lastFocusedGalleryItem = null;
+        }
     }
 }
