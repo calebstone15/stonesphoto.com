@@ -734,47 +734,31 @@
           }
         };
       });
-
-      // Lazy load images for later pages
-      function lazyLoadGalleryImages() {
-        document.querySelectorAll('.gallery-item[data-page]:not([data-page="1"])').forEach(item => {
-          const img = item.querySelector('img');
-          if (img && !img.dataset.lazyLoaded) {
-            // Set src attribute only when nearing viewport
-            img.setAttribute('loading', 'lazy');
-            img.dataset.lazyLoaded = 'true';
-          }
-        });
-      }
-
-      // Call lazy load on scroll and resize
-      window.addEventListener('scroll', lazyLoadGalleryImages);
-      window.addEventListener('resize', lazyLoadGalleryImages);
-
-      // Initial call for images that might be visible
-      lazyLoadGalleryImages();
     });
 
-    // Scroll animation - show sections when scrolled into view
-    function checkScroll() {
+    // Scroll animation - show sections when scrolled into view using IntersectionObserver
+    document.addEventListener('DOMContentLoaded', () => {
       const sections = document.querySelectorAll('.gallery-section');
 
-      sections.forEach(section => {
-        const sectionTop = section.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
-
-        // Increase threshold to 1.2 so it triggers sooner without scrolling
-        if (sectionTop < windowHeight * 1.2) {
-          section.classList.add('visible');
-        }
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          // Use a negative rootMargin or intersectionRatio to trigger slightly before/after depending on needs
+          // isIntersecting ensures it is entering the viewport
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target); // Stop observing once visible
+          }
+        });
+      }, {
+        root: null,
+        rootMargin: '20% 0px', // Trigger slightly before it comes into view (similar to 1.2 height threshold)
+        threshold: 0
       });
-    }
 
-    // Check scroll position immediately and on scroll
-    document.addEventListener('DOMContentLoaded', checkScroll);
-    window.addEventListener('scroll', checkScroll);
-    // Initial check just in case DOM is already loaded
-    checkScroll();
+      sections.forEach(section => {
+        observer.observe(section);
+      });
+    });
   </script>
 
   <!-- Lightbox Modal -->
